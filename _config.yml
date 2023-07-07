@@ -283,8 +283,10 @@ defaults:
       author_profile: true
       read_time: #true
       show_date: true
-      comments: true
+      comments: true # 댓글기능
       # share: true
       related: true
       sidebar:
         nav: "categories"
+  
+  # _pages

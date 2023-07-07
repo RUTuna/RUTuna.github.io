@@ -21,6 +21,10 @@ main:
 # sidebar navigation (categories)
 # 2022.09.24 sidebar ver2.0 : main-sub version
 categories:
+  - title: "Study in class"
+    children:
+      - title: "[2023]Operating System"
+        url: /categories/study/2023_OS/
   - title: "Title1"
     children:
       - title: "Categories1"
