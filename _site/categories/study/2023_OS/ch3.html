@@ -1,0 +1,1435 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch3. Processes | RUTuna</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="RUTuna">
+  
+  <meta property="article:author" content="RUTuna">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch3. Processes">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch3">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-03-27T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-03-27T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch3">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "RUTuna",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://github-account.github.io/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github-account.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github-account.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://github-account.github.io/assets/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="https://github-account.github.io/assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.png" alt="RUTuna" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">RUTuna</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://github.com/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 10</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (3)</a></li>
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title1</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/categories1/">Categories1 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/categories2/">Categories2 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories3/">Categories3 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories4/">Categories4 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title2</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories5/">Categories5 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories6/">Categories6 (1)</a></li>
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title3</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories7/">Categories7 (1)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch3. Processes">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-03-27T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-03-27T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch3. Processes
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-27T00:00:00+09:00">March 27, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#process-concept">Process Concept</a><ul><li><a href="#--process-concept">- Process Concept</a></li><li><a href="#--process-state">- Process State</a></li><li><a href="#--process-lift-cycle">- Process Lift Cycle</a></li><li><a href="#--process-control-block-pcb">- Process Control Block (PCB)</a></li></ul></li><li><a href="#process-scheduling">Process Scheduling</a><ul><li><a href="#--context-switch">- Context Switch</a></li><li><a href="#--process-scheduling-queues">- Process Scheduling Queues</a></li><li><a href="#--schedulers">- Schedulers</a></li></ul></li><li><a href="#operation-on-processes">Operation on Processes</a><ul><li><a href="#--process-creation-프로세스-생성">- Process Creation (프로세스 생성)</a></li><li><a href="#--process-creation-in-unix">- Process Creation in UNIX</a></li><li><a href="#--process-termination">- Process Termination</a></li></ul></li><li><a href="#interprocess-communication">Interprocess Communication</a><ul><li><a href="#--cooperating-processes-협력-프로세스">- Cooperating Processes (협력 프로세스)</a></li><li><a href="#--interprocess-communication-ipc">- Interprocess Communication (IPC)</a></li><li><a href="#--shard-memory">- Shard Memory</a></li><li><a href="#--producer---consumer-problem-in-shard-memory">- Producer - Consumer Problem (in shard memory)</a></li><li><a href="#--message-passing">- Message Passing</a></li><li><a href="#--synchronization-in-message-passing">- Synchronization (in message passing)</a></li><li><a href="#--buffering">- Buffering</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="process-concept">Process Concept</h1>
+
+<h2 id="--process-concept">- Process Concept</h2>
+<center>
+    <img src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/9817e0e7-bf5b-4eee-89d6-17d83e978150" width="300" />
+</center>
+<center>
+    <img width="200" alt="Untitled 1" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/f5a845bf-f4d4-48ec-aed0-0f95d7846b48" />
+</center>
+
+<ul>
+  <li><strong>Process</strong> : 실행 중인 progeam <strong>→ 실행되었으니 memory 에 적제되었고, 자신만의 memory 영역이 있는 것 !</strong></li>
+  <li>Process 실행은 무조건 순차적으로 실행되어야 함</li>
+  <li>Process에 포함 된 것
+    <ol>
+      <li>Text Section (loaded Progeam)</li>
+      <li>Program Counter</li>
+      <li>Stack (Temporay data) : 함수 parameter나, reture address, local variable을 저장하는 일시적인 memory 영역</li>
+      <li>Head : 동적으로 할당된 memory <strong>→ Stack 이랑 비슷하지만 동적으로 할당된다는 점이 다름! 더 static하고 global함</strong></li>
+      <li>Data Section (Global Variables) : Global variable등 초기화된 data를 저장</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--process-state">- Process State</h2>
+
+<ul>
+  <li>Process가 실행되는 동안 process의 state는 계속해서 변경됨
+    <ul>
+      <li><strong>new</strong> : Process가 생성되는 중</li>
+      <li><strong>running</strong> :  Instriction이 실행되고 있는 상태</li>
+      <li><strong>waiting</strong> : Process가 어떤 event가 발생하기를 기다리는 중</li>
+      <li><strong>ready</strong> : Process가 processor에 할당되기를 기다리는 중</li>
+      <li><strong>terminated</strong> : process가 실행을 완료함</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="--process-lift-cycle">- Process Lift Cycle</h2>
+
+<center>
+<img width="500" alt="Untitled 2" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/c289a038-9784-41f4-b9c4-c63f5e4fa95a" />
+</center>
+
+<ol>
+  <li><strong>New → Ready :</strong> 새로 생성되는 New에서 실행 가능한 상태인 Ready 로 전환</li>
+  <li><strong>Ready → Running</strong> : Kernel이 scheduling 할 때 process는 ready 상태에서 running으로 전환</li>
+  <li><strong>Running → Waiting :</strong> 만약, Process가 blocked되어 event가 발생하기를 기다린다면 waiting으로 전환 ex) I/O</li>
+  <li><strong>Waiting → Ready :</strong> Event가 완료되면 다시 Ready 상대로 전환</li>
+  <li><strong>Running → Ready :</strong> Interrupt가 발생하면 실행 되다가 다시 실행 가능 상태인 ready로 전환</li>
+  <li><strong>Running → Terminated :</strong> exit()가 호출되면 실행 완료한 것이므로 종료하기 위해 terminated로 전환</li>
+</ol>
+
+<h2 id="--process-control-block-pcb">- Process Control Block (PCB)</h2>
+<center>
+<img width="200" alt="Untitled 3" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/245b4bdc-5e3a-4a1b-a1cf-c022fc758d31" />
+</center>
+
+<ul>
+  <li>Particular process를 관리하기 위해 필요한 정보가 포함된 OS의 데이터 구조</li>
+  <li>각 Process와 관련된 정보들 <strong>→ OS에서 process를 표현하는 .. !</strong>
+    <ol>
+      <li>Process State</li>
+      <li>Program Counter</li>
+      <li>CPU registers</li>
+      <li>CPU Scheduling information</li>
+      <li>Memory-management information</li>
+      <li>Accountin information</li>
+      <li>I/O status information</li>
+    </ol>
+  </li>
+</ul>
+
+<h1 id="process-scheduling">Process Scheduling</h1>
+
+<h2 id="--context-switch">- Context Switch</h2>
+
+<center>
+<img width="500" alt="Untitled 4" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/d956aab6-6c5c-41e5-b8ff-566e4cd3b832" />
+</center>
+
+<ol>
+  <li>P1가 CPU 사용중인 상황인데, P2가 CPU를 사용해야하는 일이 발생</li>
+  <li>Kernel의 Interttupt Handler가 P1을 중지하고 PCB0에 P1에 대한 정보(reg 정보, process state 등)를 저장함</li>
+  <li>다음에 실행할 P2에 대한 정보를 PCB1에서 가져옴</li>
+  <li>Interrupt Handler는 다시 CPU를 P2에 할당하고, P2에서 PCB1에서 받아온 reg 정보, process state를 읽어와 CPU가 실행하도록 함</li>
+  <li>P2 실행
+    <ul>
+      <li>CPU Switch from Process to Procee</li>
+      <li>CPU가 다른 process로 전환된다면 system은 무조건 이전 process의 state를 save하고, 새로운 process의 state를 load 해야함</li>
+      <li>Process의 Context는 PCB로 표현됨</li>
+      <li>Context Switch 과정은 사실 유용한 작업을 수행하는 것은 아니고 단지 전환이기에 순전한 overhead 임 ㅜㅜ</li>
+      <li>switch되는 속도는 memory 속도나, 복사해야하는 reg 수 등등에 따라 달라짐</li>
+    </ul>
+    <ul>
+      <li>보통은 마이크로 초 단위</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="--process-scheduling-queues">- Process Scheduling Queues</h2>
+
+<center>
+<img width="500" alt="Untitled 5" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/df320cfe-c780-413c-9fa4-e8b80bba2195" />
+<img width="600" alt="Untitled 6" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/7e95ac7b-456a-44f3-a565-67eb949fbdd6" />
+</center>
+
+<ol>
+  <li><strong>Job Queue</strong> : System의 모든 실행 가능한 process들의 set</li>
+  <li><strong>Ready Queue</strong> : Main memory에 상주하며, 실행될 준비가 되었거나(ready) 기다리는 (waiting) 상태의 process들의 set</li>
+  <li><strong>Device Queue (I/O wait Queue)</strong> : I/O Device를 기다리는 procee들의 set
+    <ul>
+      <li>process는 다양한 Queue들 사이에서 이동함</li>
+      <li>Queue는 보통 linked list로 구현</li>
+      <li>Process schduling하는 과정 Queueing-Diagram으로 표현</li>
+    </ul>
+
+    <center>
+ <img width="500" alt="Untitled 7" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/729bdcde-e967-4e20-8792-1188e1ff517f" />
+ </center>
+
+    <ul>
+      <li>Process는 I/O request를 발생 시킨 후 I/O Wait Queue에 추가될 수 있음</li>
+      <li>process는 새로운 child process를 생성한 다음, child의 종료를 기다리는 동안 ready Queue에 추가될 수 있음</li>
+      <li>Process가 interrupt 또는 time slice expired에 의해 강제로 core 에서 제거 되었다면 Ready Queue에 추가될 수 있음</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="--schedulers">- Schedulers</h2>
+
+<ul>
+  <li><strong>Long-term Scheduler (Job Scheduler)</strong> : Ready Queue로 추가할 process 선택하는 것이 목적
+    <ul>
+      <li>매우 드물게 호출 : (second, miniutes) <strong>→ 느려도 괜찮앙</strong></li>
+      <li>Degree of multiprogramming를 제어</li>
+    </ul>
+  </li>
+  <li>S<strong>hort-term Scheduler (CPU Scheduler)</strong> : 다음에 실행되고 CPU에 할당할 process 선택하는 것이 목적
+    <ul>
+      <li>매우 자주 호출 : (milliseceons) <strong>→ 빨라야함!!</strong></li>
+    </ul>
+  </li>
+  <li>Process는 둘 중 하나로 설명 가능
+    <ul>
+      <li><strong>CPU-bound-process</strong> : 계산에 더 많은 시간을 소비하고, 적고 긴 CPU Burssts → Long-term
+        <ul>
+          <li>그래서 Long-term Scheduler는 결정을 신중해야해야함..</li>
+        </ul>
+      </li>
+      <li><strong>I/O-bound-process</strong> : 계산보다 I/O 를 수행하는데 더 많은 시간을 소비하고. 많고 짧은 CPU Bursts →Short-term</li>
+      <li><strong>CPU Bursts</strong> : Process가 CPU를 사용하는 시간</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 8" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/bab29730-0e13-4354-babc-193535b433fe" />
+</center>
+
+<p><strong>+) Medium-term Scheduler</strong> :</p>
+
+<p>Time-sharing system 에서 Degree of multiprogramming (동시에 실행 중인 program 수?)를 줄이기 위해 process를 memory에서 temporarily(일시적)으로 제거함  → 나중에 process 재시작함!!</p>
+
+<p>→ Swapping</p>
+
+<p><br /></p>
+
+<h1 id="operation-on-processes">Operation on Processes</h1>
+
+<h2 id="--process-creation-프로세스-생성">- Process Creation (프로세스 생성)</h2>
+
+<center>
+<img width="500" alt="Untitled 9" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/c8ba3a2e-0695-47ea-b1cf-eab7296d1c14" />
+</center>
+
+<ul>
+  <li>Creating precess를 Parent Process라고 하고 이때 생성되는 새 process를 Child Process라고 함 → Parent가 Child Process 생성</li>
+  <li>생성된 Child Process가 또 다른 Process를 생성하면서 Process tree를 만듦</li>
+  <li>일반적으로 Process는 식별자<strong>(PID)</strong> 를 통해 식별되고 관리됨</li>
+  <li>Resource Sharing
+    <ol>
+      <li>부모와 자식은 모든 리소스를 공유 → 둘 다 동일한 리소스에 접근 가능</li>
+      <li>자식은 부모의 일부 리소스를 공유 → 자식은 부모의 일부 리소스에만 접근할 수 있음</li>
+      <li>부모와 자식은 리소스를 공유하지 않음 →  서로 독립적</li>
+    </ol>
+  </li>
+  <li>Execution
+    <ol>
+      <li>부모와 자식이 동시에 실행</li>
+      <li>부모는 자식이 terminate될 떄 까지 wait</li>
+    </ol>
+  </li>
+  <li>Address Space
+    <ol>
+      <li>자식은 부모의 duplicate</li>
+      <li>자식은 새로운 program을 load</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--process-creation-in-unix">- Process Creation in UNIX</h2>
+
+<ul>
+  <li>UNIX에서 process를 생성하는 system call들</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 10" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/b6ad9acc-097b-42ec-8c8a-c4f41ea30653" />
+<img width="600" alt="Untitled 11" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/50f93116-e95a-4368-b0ea-f5318f102b3f" />
+</center>
+
+<ul>
+  <li><strong>fork()</strong> : 새로운 process를 생성함! → 부모 process의 모든 것을 <strong>그대로 복제</strong>시켜 자식 process 생성</li>
+  <li><strong>exec()</strong> : Process의 memory space를 fork로 생성된 새 process로 대체하기 위해 fork 다음으로 실행되는 system call
+    <ul>
+      <li>fork할 때 부모를 그대로 복제하면서 메모리 공간도 그대로 복제시켜버림..</li>
+      <li>복제된 process가 같은 program이 아니라 다른 program을 실행시켜야 하므로 새 memory space로 덮어씌움</li>
+    </ul>
+
+    <p><strong>→ 즉 그대로 복제 한 다음에 실행할 program 으로 덮어씌우는 형태로 보통 fork-exec  같이 사용함</strong></p>
+  </li>
+  <li><strong>wait()</strong> : 부모에 의해 호출됨! 자식 process가 종료 될 떄 까지 부모 process를 일시적으로 중단하고 대기시킴</li>
+  <li><strong>exit()</strong> : 호출한 prcoess를 종료</li>
+</ul>
+
+<h2 id="--process-termination">- Process Termination</h2>
+
+<ul>
+  <li>process는 마지막 statement를 실행하고 OS에게 삭제를 요청하여 종료함 (exit)
+    <ul>
+      <li>Process는 부모에게 state value를 return할 수도 있음 → wait를 통해!</li>
+      <li>Process의 리소스는 OS에 의해 해제됨</li>
+    </ul>
+  </li>
+  <li>부모는 자식 process의 실행을 종료 시킬 수도 있음 (abort)
+    <ol>
+      <li>자식이 할당된 리소스를 초과하는 경우</li>
+      <li>자식에게 할당된 작업이 더 이상 필요하지 않은 경우</li>
+      <li>부모가 종료된 경우
+        <ul>
+          <li>일부 OS는 부모가 종료되면 자식의 계속 실행을 허용하지 않는 것도 있음 → 그럼 이제 모든 자식이 연쇄적으로 다 종료되는..</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h1 id="interprocess-communication">Interprocess Communication</h1>
+
+<h2 id="--cooperating-processes-협력-프로세스">- Cooperating Processes (협력 프로세스)</h2>
+
+<ul>
+  <li>Cooperating Process는 독립적인 proces와 달리 다른 process의 실행에 영향을 줄 수도, 받을 수도 있음!!
+    <ul>
+      <li>+) 독립적인 Process는 다른 process의 실행에 영향을 줄 수도, 받을 수도 없음</li>
+      <li>서로 상호작용하면서 특정 기능을 수행</li>
+    </ul>
+  </li>
+  <li><strong>장점</strong> (Process Cooperation 환경을 제공하는 이유)
+    <ol>
+      <li><strong>정보 공유</strong> : 같은 데이터에 여러 user가 관심을 가질 수 있음 (ex. shared files) 그러면 제한된 리소스 사용 효율성 증가</li>
+      <li><strong>연산 속도 향상</strong> : task를 subtask로 나눠서 병렬로 실행할 수 있음</li>
+      <li><strong>모듈성</strong> : 모듈 방식으로 system을 디자인하면서 system function을 separeate process로 나눌 수 있음</li>
+      <li><strong>편리성</strong> : 동시에 개별 사용자가 많은 task를 를 수행 할 수도 있게 됨</li>
+    </ol>
+  </li>
+  <li><strong>단점</strong>
+    <ul>
+      <li>병행 process간의 synchronization 되어야한다는 문제와 이때의 reace condition</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--interprocess-communication-ipc">- Interprocess Communication (IPC)</h2>
+
+<ul>
+  <li>Process간 통신하고 synchronize하는 매커니즘!</li>
+  <li>
+    <p>IPC에는 2가지 모델(방법)이 있고 둘다 OS에서 일반적으로 사용</p>
+
+    <center>
+  <img width="500" alt="Untitled 12" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/3427760f-7543-472b-bbc5-4a98261849db" />
+  <p>왼) Message Passing         오) Shard Memory</p>
+  </center>
+    <p><br /></p>
+
+    <ol>
+      <li>Shard Memory : 동일한 주소 공간과 공유 변수 사용 → 즉 공유되는 memory 공간이 있다는 뜻
+        <ul>
+          <li>어디에 메모 남기고 가면 다른 사람이 보고 확인하는 방식이랑 비슷 ㅋㅋ</li>
+          <li>system call은 공유 memory 영역을 설정하는데만 필요함</li>
+          <li>모든 access는 routine memory access로 처리됨</li>
+        </ul>
+      </li>
+      <li>Message Passing : 공유 변수에 의존하지 않고 process가 각각 통신함
+        <ul>
+          <li>카톡 보내는거랑 비슷합니다요</li>
+          <li>작은 양의 data(simple data)를 교환하는데 유용함</li>
+          <li>충돌 없이 구현하기게 쉬움</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--shard-memory">- Shard Memory</h2>
+
+<ul>
+  <li>통신하는 Process간 공유되는 memory 공간이 있음</li>
+  <li>통신은 OS가 아닌 User process의 제어 아래에 있음 → User process에 따라서 통신</li>
+  <li>User process가 공유 메모리에 접근 할 때 동기화 하는 방법을 제공하는 것이 가장 큰 문제! → Producer - Consumer 문제</li>
+  <li>동기화에 대해서는 나중에 . . .</li>
+</ul>
+
+<h2 id="--producer---consumer-problem-in-shard-memory">- Producer - Consumer Problem (in shard memory)</h2>
+
+<ul>
+  <li>
+    <p>Cooperatin process의 패러다임, 생산자 프로세스는 소비자 프로세스가 소비하는 정보를 생산함</p>
+
+    <p>→ 정보가 없는데 소비자가 소비하려하거나, 정보가 가득 찼는데 정보를 생성하려는 문제가 발생하지 않도록</p>
+  </li>
+  <li>공유 memory는  Buffer를 사용하여 Buffer의 item이 Producer에 의해 채워지고, Consumer에 의해 비워지는 방식 사용
+    <ul>
+      <li>동시에 접근하는 문제를 해결하기 위한 방법임!</li>
+    </ul>
+  </li>
+  <li><strong>Unbounded-Buffer</strong>
+    <ul>
+      <li>Buffer의 크기에 실질적인 제한을 두지 않아 producer는 항상 생산하도록</li>
+      <li>Consumer는 buffer가 empty라면 기다려야함</li>
+    </ul>
+  </li>
+  <li><strong>Bounded-Buffer → Circular Buffer</strong>
+    <ul>
+      <li>Buffer의 크기가 고정되어있다고 가정하여 Producer는 buffer가 가득 찼다면 기다려야함</li>
+      <li>Consumer는 마찬가지로 buffer가 empty라면 기다려야함</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="bounded-buffer">[Bounded-Buffer]</h3>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define BUFFER_SIZE 10 
+</span><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="p">...</span>
+<span class="p">}</span> <span class="n">item</span><span class="p">;</span>
+
+<span class="n">item</span> <span class="n">buffer</span><span class="p">[</span><span class="n">BUFFER_SIZE</span><span class="p">];</span> 
+<span class="kt">int</span> <span class="n">in</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// point to next free position (Producer가 생성해서 넣을 위치)</span>
+<span class="kt">int</span> <span class="n">out</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>         <span class="c1">// point to first full position (Consumer가 받을 위치)*</span>
+</code></pre></div></div>
+
+<center>
+<img width="200" alt="Untitled 13" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/5ab7de8e-a90c-46ca-bec4-471b34fbf434" />
+</center>
+
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">in == out</code> : Buffer is Empty <strong>→ 넣을 곳과 가져올 곳이 동일하니</strong></li>
+  <li>If <code class="language-plaintext highlighter-rouge">((in+1) % BUFFER_SIZE) == out</code> : Buffer is Full <strong>→ 넣을 곳 다음이 바로 가져올 곳이니 한바퀴 돌았다는 뜻</strong>
+    <ul>
+      <li>왜? <code class="language-plaintext highlighter-rouge">in+1 == out</code>  이면 가득찼다는 것인데 overflow 방지를 위해 순환식으로 사용하다보니까 모듈값이 out이 되어야함</li>
+    </ul>
+  </li>
+  <li>
+    <p>이 해결 방법이 제대로 작동하긴 하지만 <code class="language-plaintext highlighter-rouge">BUFFER_SIZE-1</code> 개의 element만 사용할 수 있다는 단점이 있음</p>
+
+    <p>→ Full 일 때 in과 out 이 차이가 나야 Full 과 Empty 구별가능하니까 하나 비워두기</p>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Producer</span>
+<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+	<span class="cm">/* Produce an item */</span>
+	<span class="k">while</span> <span class="p">((</span><span class="o">**</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">BUFFER_SIZE</span><span class="p">)</span><span class="o">**</span>  <span class="o">==</span> <span class="n">out</span><span class="p">);</span>    <span class="cm">/* free buffer가 없는 동안에는 (full 상태) 아무것도 안함 */</span> 
+
+	<span class="cm">/* full 이 아니면 */</span>
+	<span class="n">buffer</span><span class="p">[</span><span class="n">in</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">;</span>
+	<span class="n">in</span> <span class="o">=</span> <span class="o">**</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">BUFFER</span> <span class="n">SIZE</span><span class="o">**</span><span class="p">;</span>                 <span class="cm">/* overflow 방지하기 위해 순환방식을 사용하고자 modular */</span>
+<span class="p">}</span>
+
+<span class="c1">// Consumer</span>
+<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">in</span> <span class="o">==</span> <span class="n">out</span><span class="p">);</span>                           <span class="cm">/*  buffer 안에 아무것도 없는 동안 (empty 상태) 아무것도 안함 */</span>
+
+	<span class="c1">// remove an item from the buffer</span>
+	<span class="n">item</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="n">out</span><span class="p">];</span> 
+	<span class="n">out</span> <span class="o">=</span> <span class="o">**</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">BUFFER</span> <span class="n">SIZE</span><span class="o">**</span><span class="p">;</span>               <span class="cm">/* overflow 방지하기 위해 순환방식을 사용하고자 modular */</span>
+<span class="p">}</span><span class="o">*</span>
+</code></pre></div></div>
+
+<h2 id="--message-passing">- Message Passing</h2>
+
+<ul>
+  <li>Process간 서로 통신하고 <strong>행동을 동기화</strong>하는 매커니즘 <strong>→ 동기화한다는 점에서 공유 메모리랑 다르죠</strong>
+    <ul>
+      <li>shard memory 는 mem 을 동기화, 얘는 행동을 동기화</li>
+    </ul>
+  </li>
+  <li>동일한 주소 공간을 쓰지 않고, Process간 직접 통신하고 동기화할 수 있도록 허용</li>
+  <li>Direct / Indirect 2가지 통신이 있음
+    <ul>
+      <li>Direct는 누구한테 보내고 받는 지를 명시 <strong>→ 직배송</strong></li>
+      <li>Indirect는 mail box같은 것을 통해서 전달함 <strong>→ 배대지 사용하는 느낌?</strong></li>
+    </ul>
+  </li>
+  <li>2가지 Operation (직접 통신 버전) 제공
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Send(receiverID, message)</code> → message size는 구현에 따라 고정일 수도 있고, 변수일 수도 있음</li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">Receive(senderID, message)</code></p>
+
+        <p><strong>*  Indirect였다면 ID 가 아니라 mailbox 위치가 파라미터로 사용</strong></p>
+      </li>
+    </ul>
+  </li>
+  <li>두 Process간 통신 할 때 다음 과정이 필요
+    <ol>
+      <li>그들간 communication link 설정 <strong>→ 통신망 느낌</strong></li>
+      <li>send/receive 를 통해 message 교환
+        <ul>
+          <li>Soket programming처럼 soket만들고 연결 link 만들고 soket 보내는 방식과 유사</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>구현 문제..
+    <ul>
+      <li>link 어케 설정해?</li>
+      <li>모든 통신 process 쌍 간에 몇개의 link가 있을 수 있을까?</li>
+      <li>link의 capacity는?</li>
+      <li>message 크기는 고정이야 가변이야?</li>
+      <li>link는 단방향이야 양방향이야?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--synchronization-in-message-passing">- Synchronization (in message passing)</h2>
+
+<ul>
+  <li>message passing 에는 block / non-block 방식이 있음</li>
+  <li><strong>Blocking</strong> <strong>→ rendezvous (랑데뷰) 방식</strong>
+    <ul>
+      <li><strong>Synchronize</strong>로 간주됨 (응답 올 때 까지 대기! 암거도 못해!)</li>
+      <li>Block-send : Sender가 msg 보낸 후, Reciver가 받을 때 까지 Send를 block (sender 아님!!! send method를 블락한다는거)</li>
+      <li>Block-receive : Msg를 사용할 수 있을 때 까지 Receive를 block (reveiver 아님!!! receive method를 블락한다는거)</li>
+    </ul>
+  </li>
+  <li><strong>Non-blocking</strong>
+    <ul>
+      <li><strong>Asynchonize</strong>로 간주됨 (응답 오던 말던 다 함 ㅋ)</li>
+      <li>Nonblock-send  <strong>**</strong>:<strong>**</strong> Sender가 msg보낸 후에도 계속 send 할 수 있도록 허용</li>
+      <li>Nonblock-receive : vaild message나 null을 retrieve할 수 있도록 허용 (받는 담에 vaild일 떄만 ㄹㅇ 받아융)</li>
+    </ul>
+  </li>
+  <li>non-block 방식이 더 유용함!</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">message</span> <span class="n">next_produced</span><span class="p">;</span> 
+
+<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+	<span class="cm">/* produce an item in next produced */</span>
+	<span class="n">send</span><span class="p">(</span><span class="n">next_produced</span><span class="p">);</span>  <span class="c1">// 계속 보냄</span>
+<span class="p">}</span>
+
+<span class="n">message</span> <span class="n">next_consumed</span><span class="p">;</span> 
+
+<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">receive</span><span class="p">(</span><span class="n">next_consumed</span><span class="p">);</span> <span class="c1">// -&gt; 일단 받고 ㅋㅋ</span>
+	<span class="cm">/* consume the item in next consumed */</span> 
+<span class="p">}</span><span class="o">*</span>
+</code></pre></div></div>
+
+<h2 id="--buffering">- Buffering</h2>
+
+<ul>
+  <li>Indirect 방식에서 사용 . . ? Message 수용하는..</li>
+  <li>Link에 message Queue를 연결하는 방식으로 다음 3가지 중 보통 하나는 사용
+    <ol>
+      <li><strong>Zero capacity</strong> : 0 message 가능</li>
+    </ol>
+    <ul>
+      <li>Queue의 수용 공간이 0이라 <strong>msg 보관이 안됨</strong></li>
+      <li>그렇기에 sender는 receiver가 받을 때까지 기다려야함 (block) <strong>→ rendezvous (랑데뷰) 방식</strong>
+        <ol>
+          <li><strong>Bounded capacity</strong> : <strong>유한한</strong> N 개의 message 가능</li>
+        </ol>
+      </li>
+      <li>N 길이의 Queue를 가짐</li>
+      <li>Link가 Full이라면 sender는 기다려야함 <strong>(block)</strong>
+        <ol>
+          <li><strong>Unbounded capacity</strong> : <strong>무한한</strong> message . . 가능</li>
+        </ol>
+      </li>
+      <li>Sender가 기다릴 일이 없어용 ~  !</li>
+    </ul>
+  </li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-03-27">March 27, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch2" class="pagination--pager" title="[OS] Ch2. Operating-System Structure
+">Prev</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch2" rel="permalink">[OS] Ch2. Operating-System Structure
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-15T00:00:00+09:00">March 15, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch1" rel="permalink">[OS] Ch1. Introduction
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-08T00:00:00+09:00">March 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories7/post-name-here-7/" rel="permalink">[포스팅 예시] 이곳에 제목을 입력하세요
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2022-09-23T00:00:00+09:00">September 23, 2022</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">본문의 주요 내용을 여기에 입력하세요
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories6/post-name-here-6/" rel="permalink">[포스팅 예시] 이곳에 제목을 입력하세요
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2022-09-23T00:00:00+09:00">September 23, 2022</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">본문의 주요 내용을 여기에 입력하세요
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 RUTuna. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'github-account/repo-name');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+
+  </body>
+</html>
