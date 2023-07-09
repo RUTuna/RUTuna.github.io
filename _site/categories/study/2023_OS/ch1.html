@@ -52,7 +52,7 @@
     
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>[OS] Ch2. Operating-System Structure | RUTuna</title>
+<!-- begin _includes/seo.html --><title>[OS] Ch1. Introduction | RUTuna</title>
 <meta name="description" content="참치는 할 수 있다">
 
 
@@ -65,7 +65,7 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="참치는 할 수 있다">
-<meta property="og:title" content="[OS] Ch2. Operating-System Structure">
+<meta property="og:title" content="[OS] Ch1. Introduction">
 <meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch1">
 
 
@@ -77,11 +77,11 @@
 
 
 
-  <meta property="article:published_time" content="2023-03-15T00:00:00+09:00">
+  <meta property="article:published_time" content="2023-03-08T00:00:00+09:00">
 
 
 
-  <meta property="article:modified_time" content="2023-03-15T00:00:00+09:00">
+  <meta property="article:modified_time" content="2023-03-08T00:00:00+09:00">
 
 
 
@@ -571,15 +571,15 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="[OS] Ch2. Operating-System Structure">
+    <meta itemprop="headline" content="[OS] Ch1. Introduction">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2023-03-15T00:00:00+09:00">
-    <meta itemprop="dateModified" content="2023-03-15T00:00:00+09:00">
+    <meta itemprop="datePublished" content="2023-03-08T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-03-08T00:00:00+09:00">
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch2. Operating-System Structure
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch1. Introduction
 </h1>
           
 
@@ -588,7 +588,7 @@
       
       <span class="page__meta-date">
         <i class="far fa-calendar-alt" aria-hidden="true"></i>
-        <time datetime="2023-03-15T00:00:00+09:00">March 15, 2023</time>
+        <time datetime="2023-03-08T00:00:00+09:00">March 8, 2023</time>
       </span>
     
 
@@ -603,447 +603,387 @@
 
       <section class="page__content" itemprop="text">
         
-        <h1 id="os-services">OS Services</h1>
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#operating-system">Operating System</a><ul><li><a href="#--computer-system-sturcture의-component">- Computer System Sturcture의 component</a></li><li><a href="#--os-란">- OS 란?</a></li><li><a href="#--definition-of-os-os-역할">- Definition of OS? OS 역할!</a></li></ul></li><li><a href="#computer-system-architecture">Computer System Architecture</a><ul><li><a href="#--single-processor-system">- Single Processor System</a></li><li><a href="#--multi-processor-systme">- Multi-Processor Systme</a></li><li><a href="#--multi-core-processor-system">- Multi-core Processor System</a></li><li><a href="#--용어-정리">- 용어 정리?</a></li><li><a href="#--operating-system-structure">- Operating System Structure</a></li></ul></li><li><a href="#computer-system-operation">Computer System Operation</a><ul><li><a href="#--computer-system-operation">- Computer System Operation</a></li><li><a href="#--computer-system-operation들">- Computer System Operation들</a></li><li><a href="#--dual-mode">- Dual-mode</a></li></ul></li><li><a href="#management">Management</a><ul><li><a href="#--timer">- Timer</a></li><li><a href="#--ghz">- GHz</a></li><li><a href="#--process-management">- Process Management</a></li><li><a href="#--memory-management">- Memory Management</a></li><li><a href="#--storage-management">- Storage Management</a></li></ul></li></ul>
 
+            </nav>
+          </aside>
+        
+        <h1 id="operating-system">Operating System</h1>
+<h2 id="--computer-system-sturcture의-component">- Computer System Sturcture의 component</h2>
 <center>
-    <img src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/77e5284f-9ad2-425e-a484-32ee9f686e9b" title="OS Services" width="400" />
-    <br />OS Services<br />
+    <img src="https://user-images.githubusercontent.com/87251867/235542668-c476d7db-8e1c-4986-af34-c48fe15a09a5.png" title="OS 구조" width="400" />
 </center>
 
-<h2 id="--operating-system-service">- Operating System Service</h2>
+<ol>
+  <li>HW : 기본 computing resource 제공<br />
+ ex) CPU, Memory, I/O Device</li>
+  <li>Operating Systme : 여러 application과 user 간의 HW 사용을 제어하고 조정</li>
+  <li>Application Program : System resource 가 user computin probelm 을 해결하는데 사용되는 방식 정의<br /> 
+ ex) word processes, web browser</li>
+  <li>User<br />
+ ex) people, machines, other computer</li>
+</ol>
+
+<h2 id="--os-란">- OS 란?</h2>
 
 <ul>
-  <li>OS 별로 차이가 있긴 하나 보통 다음 4가지의 service로 구성
+  <li>computer의 user와 computer 의 HW 간 intermediary (중개자) 역할을 함
+    <ul>
+      <li>HW control &amp; manage</li>
+      <li>basic application 제공</li>
+    </ul>
+  </li>
+  <li>Goal of OS <strong>→ 결국 성능을 어떻게 더 좋게 할 것인가 . .</strong>
+    <ul>
+      <li>user program 실행하고, user problem 을 쉽게 해결할 수 있도록 제어 서비스 향상</li>
+      <li>computer system 을 사용하기 쉽게 user 에게 편리한 환경 제공하지</li>
+      <li>computer HW 를 효율적으로 사용하게 system 성능 향상</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--definition-of-os-os-역할">- Definition of OS? OS 역할!</h2>
+
+<ol>
+  <li>OS는 Resource allocator
+    <ul>
+      <li>모든 리소스 관리하고 할당하는 역할</li>
+      <li>효과적이고 공평한 리소스 사용을 위해 상충되는 요청들 (여러 application 이 동일 resouce 에 접근하는 경우) 사이에서 결정내려줌</li>
+    </ul>
+  </li>
+  <li>OS 는 Program controler
+    <ul>
+      <li>application과 I/O device를 제어감</li>
+      <li>program 실행을 제어해서 computer 사용의 error 와 improper 방지</li>
+    </ul>
+  </li>
+</ol>
+
+<ul>
+  <li>사실 보편적인 정의는 없음 . . <strong>→ OS 명령 시 오는 모든 것 정도로 생각하면 ㅇㅇ</strong></li>
+  <li><strong>Kernel</strong> : computer 에서 항상 실행 중인 한 program 으로 OS 의 core part 임 → 그 외는 system program (OS 와 함께 제공) 이거나 application program 임</li>
+  <li>system program (system utllities)
+    <ul>
+      <li>OS 와 associated 이지만 kernel 의 일부는 아님</li>
+      <li>program 개발과 실행하는데 편한 환경 제공<br />
+  ex) editer, compiler, debugger, shell …</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="computer-system-architecture">Computer System Architecture</h1>
+
+<h2 id="--single-processor-system">- Single Processor System</h2>
+
+<ul>
+  <li>single general-purpose processor 사용</li>
+  <li>special-purpose processor 사용하는 경우도 있긴 함!
+    <ul>
+      <li>graphics controller 나 disk controller</li>
+      <li>여기선 user process 실행하지 않음</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--multi-processor-systme">- Multi-Processor Systme</h2>
+
+<ul>
+  <li>paraller system 이나 tightly-coupled system 이라고도 알려져 있음</li>
+  <li>장점
+    <ul>
+      <li>throughtput 증가</li>
+      <li>multi single processor system 보다 경제적임</li>
+      <li>신뢰성 증가 <strong>→ 서로의 영역에 접근을 안해서, , ?</strong></li>
+    </ul>
+  </li>
+  <li>Type
     <ol>
-      <li><strong>Booting Service</strong> : Couputer HW를 관리하고 Program을 실행 할 수 있도록 부팅함</li>
-      <li><strong>User Service</strong> : 프로그래머가 programming 작업을 쉽게 할 수 있도록 함</li>
-      <li><strong>System Service</strong> : System 이 효율적으로 동작하도록 보장</li>
-      <li><strong>System Call</strong> : Program과 OS 간의 interface 를 제공하여 System 기능을 사용 할 수 있도록
-<br /></li>
-    </ol>
-  </li>
-</ul>
+      <li><strong>Asymmetric Multiprocessor (AMP)</strong> : 각 process에는 특정 task 가 할당되어 그 task 만 수행함! 그리고 master / slave procesor 로 나뉘어 master 가 slave 들 scheduling 하거나 관리</li>
+      <li><strong>Sysmmetric Multiprocessor (SMP)</strong> : 모든 process 는 동일하며 모든 task 수행 가능! <strong>→ 일반적으로는 보통 이 type</strong>
+        <center><img src="https://user-images.githubusercontent.com/87251867/235542774-01c017e2-d813-42a3-aab5-901378ed98f4.png" title="SMP" width="500" /></center>
 
-<h2 id="---user-service">-  User Service</h2>
-
-<ul>
-  <li>
-    <p><strong>User Interface</strong> :  대부분의 OS는 user unterface (UI)를 가지고 있음</p>
-
-    <p>ex) Comman-Line(CLI), Graphics User Interface(GUI) 등..</p>
-  </li>
-  <li>
-    <p><strong>Program Execution</strong> : system은 program을 memory에 로드, 해당 program을 실행하고 정상 또는 비정싱 시 실행을 종료 할 수 있어야 함</p>
-
-    <p>ex) 메모리 할당, 해제, 프로세서 스케줄링</p>
-  </li>
-  <li><strong>I/O Operation</strong> : 실행 중인 program에는 I/O가 필요할 수 있음! OS 는 I/O 동작 방법을 제공</li>
-  <li><strong>File-System Manipulation</strong> : program은  file과 directory를 읽고 쓰고, 생성하고, 삭제하고, 검색하고 나열하고 권한을 관리해야함</li>
-  <li><strong>Communications(통신)</strong> : proces는 같은 computer 내  process들이나, 네트워크로 연결된 다른 computer의  process들과 information을 교환할 수 있음
-    <ul>
-      <li>공유 memory 나 message 전달을 통해 통신이 이루어질 수 있음</li>
-    </ul>
-  </li>
-  <li><strong>Error Detection</strong> : OS 는  가능한 모든 HW/SW 수준에서의  error을 탐지하고 system을 모니터링하여 조정함으로 HW 문제를 예방해야함
-    <ul>
-      <li>user program, CPU, memory hardware, I/O device 등에서의 error 탐지</li>
-      <li>각 error에 대해 OS는 적절한 조치를  취해야함!</li>
-      <li>Debugging facilites가 도움이 될 수 있음</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="--system-service">- System Service</h2>
-
-<ul>
-  <li><strong>Resource Allocation</strong> : 다수의 user나 job이 동시에 실행 될 경우 각각에 res를 할당해주어야함
-    <ul>
-      <li>다른 scheduling 방식을 가진 여러 종류의 resource 존재</li>
-    </ul>
-  </li>
-  <li><strong>Accounmtin / Logging</strong> : 어떤 user가 어떤 종류의 resource를 얼마나 많이 사용하고 있는지 정보를 저장하고 추천
-    <ul>
-      <li>user service를 개선하고 system을 재구성하는 연구, 통계 자료로도 사용</li>
-    </ul>
-  </li>
-  <li><strong>Protection and Security</strong> : computer system에 저장된 정보의 소유자의 사용을 제한할 수 있음. 그리고 서로 관련이 없는 여러 perocess이 동시에 실행 될 때는 다른 process나 OS를 방해하지 못하도록 보호해야함
-    <ul>
-      <li><strong>Protection</strong> : resource에 대한 모든 액세스를 제어</li>
-      <li><strong>Security</strong> : 외부 I/O를 방어하고 외부 user에 대해 인증을 요구</li>
-    </ul>
-  </li>
-</ul>
-
-<h1 id="system-calls">System Calls</h1>
-
-<h2 id="--system-calls">- System Calls</h2>
-
-<ul>
-  <li>OS에서 제공하는 service에 대한 programming interface → 실행 중인 prgram과 OS 간의 interface</li>
-  <li>일반적으로 high-level language인 C/C++ 로 작성됨</li>
-  <li>직접적인  system call 사용이라 아니라 주로 high-level  Application Program Interface (API)을 통해 system call 에 엑세스
-    <ul>
-      <li>potrability (이식)이 편함 system call은 더 자세하고 작업하기 어렵기 때문에!</li>
-    </ul>
-  </li>
-  <li>일반적인 3가지 API
-    <ul>
-      <li>Window를 위한 Windows API</li>
-      <li>POSIX-based system(모든 버전의 UNIX, Linux, Mac OS X 포함)을 위한 POSIX API
-        <ul>
-          <li>휴대용 OS Interface (POSIX) : OS 간의 호환성을 위해 IEEE가 정한 표준 제품군</li>
-        </ul>
+        <p>-&gt; CPU 간은 BUS 나 Switch 로 연결되어 있고, 각 CPU 는 identical</p>
       </li>
-      <li>Java Virtual Machine (JVM)을 위한 JAVA API</li>
-    </ul>
-  </li>
-  <li>
-    <p>ex)</p>
-
-    <center>
-  <img width="634" alt="한 file의 내용을 다른 file로 복사하는 system call" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/3d9e2165-a1ca-40d1-9026-0b204e1fd85e" />
-  <br />
-  한 file의 내용을 다른 file로 복사하는 system call<br />
-  </center>
-    <p><br /></p>
-
-    <center>
-  <img width="714" alt="standard api" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/d16505db-7e7c-4419-a985-e7c3177439df" />
-  <br />
-  standard api
-  </center>
-  </li>
-</ul>
-
-<h2 id="--system-call-implementation">- System Call Implementation</h2>
-
-<ul>
-  <li>System call interface는 API에서 function call을 가로채 OS Kernel에서 의도한 system call을 호출하고, system call의 state, 및 returen value를 반환함</li>
-  <li>일반적으로 각 system call에는 번호가 할당됨
-    <ul>
-      <li>system call interface는 이러한 번호에 따라 indexing된 table 을 유지, 관리함</li>
-    </ul>
-  </li>
-  <li>caller는 system call이 어떻게 구현되어있는지 알 필요가 없음.
-    <ul>
-      <li>그냥 API를 따르고 호출 결과로 OS 가 수행할 작업만 이해하면 됨 <strong>→ 걍 쓸거니까,,</strong></li>
-      <li>API에 의해 OS Interface의 자세한 부분은 programer에게 숨겨짐</li>
-    </ul>
-  </li>
-</ul>
-
-<center>
-<img width="706" alt="API - System Call - OS 관계도" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/484f88b9-2e6c-4797-bad0-33b66dee28d8" />
-<br />API - System Call - OS 관계도<br />
-</center>
-
-<ul>
-  <li>User Application이 open()이라는 system call을 호출한 경우
-    <ol>
-      <li>Application이 open()이라는 system call 호출</li>
-      <li>system call interface는 open()의 system call number를 확인하고, 이를 실행하기 위해 <strong>kernel mode</strong>로 변경</li>
-      <li>kernel mode 에서 open()에 필요한 parameter들을 검사</li>
-      <li>file system 에서 file의 meta data를 읽어와 File Descriptor에게 할당하고, file table에 등록</li>
-      <li>File Descriptor는  open() 의 반환 값으로 user application에게 반환됨</li>
-      <li>반환된 File Descriptor를 이용하여 user application은 file을 읽거나 쓸 수 있음</li>
     </ol>
   </li>
 </ul>
 
-<h2 id="--standard-c-library-example">- Standard C Library Example</h2>
-
-<center>
-<img width="433" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/f128a0fc-7bad-40bd-a746-cccee828c07b" />
-</center>
+<h2 id="--multi-core-processor-system">- Multi-core Processor System</h2>
 
 <ul>
-  <li>Standard C Library 는 Linux와 UNIX 에게 일부 system call interface를 제공함</li>
-  <li>C program에서 printf()를 호출하면, system call인 write()를 호출함</li>
-</ul>
+  <li>single chip 에 multi computing core 가 존재 → CPU 의 한 Chip 에 여러 core 가 존재</li>
+  <li>N-core 가 있는 multi-core processor 는 N standard processor 로 OS 가 인식함</li>
+  <li>Type
+    <ol>
+      <li><strong>Uniform Memory Access (UMA)</strong> : 모든 core 는 모든 memory 모듈에 대해 동일한 access time 을 가짐</li>
+      <li><strong>Non-uniform Memory Access (NUMA)</strong> : core 마다 각 memory 모듈의 access time 이 다를 수 있음</li>
+    </ol>
+    <center><img src="https://user-images.githubusercontent.com/87251867/235542784-9fb1bfcd-a161-450b-b54e-5da45dd51d4b.png" title="Multi-core Processor System Type" width="600" /></center>
 
-<h1 id="os-design-and-implementation-osdi">OS Design and Implementation (OSDI)</h1>
-
-<h2 id="--os-design-and-implementation">- OS Design and Implementation</h2>
-
-<ul>
-  <li>OS 의 Design과 Implementaion은 해결하지 못 하는 문제이지만, 일부 approache들은 성공적으로 증명되었다 <strong>→ 나중에 나와요</strong></li>
-  <li>다양한 OS 내부 구조들은 크게 달라질 수 있음</li>
-  <li>Goal과 Specification을 먼저 정의해서 OS 설계를 시작해야함!</li>
-  <li>System design은 HW 선택과 system type에 의해 영향을 받음
     <ul>
-      <li>Batch, time shared, single user, multiuser, …</li>
-    </ul>
-  </li>
-  <li>User goals &amp; System goal
-    <ul>
-      <li>User goal : OS는 사용하기 편하고, 배우기 쉬우며, 신뢰성이 있고, 안정하고 빠르게 동작해야함</li>
-      <li>System goal : OS 는 설계, 구현, 유지 보수가 용이해야하고, 유연하,며 신뢰성이 있으며, 오류가 없고, 효율적이어야함</li>
-    </ul>
-  </li>
-  <li>OS의 requirement를 정의가 (정의하는 솔루션이) 유일한 것은 아님!!
-    <ul>
-      <li>다양하기에 OS 가 다양한 것</li>
+      <li>UMA 는 물리적 거리가 같기에 접근 시간이 동일한데</li>
+      <li>NUMA 는 물리적 거리가 다르기에 접근 시간이 다름</li>
     </ul>
   </li>
 </ul>
 
-<h2 id="---seperate-mechanism--policy">-  Seperate Mechanism &amp; Policy</h2>
+<h2 id="--용어-정리">- 용어 정리?</h2>
 
 <ul>
-  <li>Mechanism와 Policy를 분리하는 것이 OS 설계 및 구현에서의 중요한 principle
+  <li><strong>Processor</strong> : logical 실행 단위 or 물리적 chip을 설명하기 위해 사용 <strong>→ CPU 자체를 의미하기도 함! 근데 multi-core 에서는 좀 애매해짐</strong></li>
+  <li><strong>Core</strong> : L1 cache 및 funtional unit 을 포함하는 logical 실행 단위 <strong>→ Processor 에 포함된 작업 단위</strong></li>
+  <li><strong>Chip</strong> : computer 에 있는 물리적 intergrated circuit (IC)</li>
+  <li><strong>Soket</strong> : computer matherboard (메인모드) 에 있는 물리적인 connector 로 signle phtsical ship 을 수용 → soket 여러개인 메인보드는 multi-core chip 을 수용할 수 있음</li>
+</ul>
+
+<h2 id="--operating-system-structure">- Operating System Structure</h2>
+
+<ul>
+  <li>효율성을 위해 <strong>Multiprogramming</strong>이 필요함!
+    <ul>
+      <li>why? <br />
+  → single programe은 CPU 및 I/O 장치를 항상 사용할 수 없는데 (독점 못하니까 ㅜㅜ) user는 여러 program을 실행해야함</li>
+      <li>Multiporgramming은 작업(code &amp; data)를 organize하여 CPU가 항상 하나만 실행 할 수 있도록 해줌 <br />
+  <strong>→ 여러 process 들이 CPU 사용할 수 있게</strong></li>
+      <li>system의 전체 작업 중 일부는 memory에 보관됨</li>
+      <li>Job Scheduling을 통해 실행할 하나의 작업이 선택됨</li>
+      <li>대기해야 할 때 (I/O Burst) OS는 다른 작업으로 전환됨</li>
+    </ul>
+  </li>
+  <li><strong>Timesharing</strong> (Multitasking)은 CPU가 작업을 너무 자주 전환해서 사용자 작업이 실행되는 동안 해당 작업과 상호작용 할 수 있는 interactive Computing (대화형 컴퓨팅)을 만들어내는 logical extension
+    <ul>
+      <li>respones time (요청 보내고 응답 받는데 걸리는 시간) 이 1초보다 짧아야함</li>
+      <li>각 사용자는 momory에서 실행되는 적어도 하나의 프로그램을 가지고 있음 → process</li>
+      <li>여러 작업이 동시에 실행될 준비가 된 경우 → CPU Scheduling을 통해 나눠주는</li>
+      <li>만약 process가 memory에 맞지 않으면 swapping을 통해 momory 밖으로 옮겨 실행할 수 있도록 함</li>
+      <li>가상 momory는 완전히 memory 에 있지 않은 process의 실행을 허용함 <strong>→ Ch9 에서 좀 더 자세히</strong></li>
+    </ul>
+
+    <p>+) 사실 명확하게는 multitasking이랑은 다름 ! Timesharing 은 CPU 시간을 작은 단위로 분할하여 여러 사용자가 동시에 접근 할 수 있게하는 것</p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="computer-system-operation">Computer System Operation</h1>
+
+<h2 id="--computer-system-operation">- Computer System Operation</h2>
+
+<ul>
+  <li>I/O device 와 CPU는 동시에 실행될 수 있음 <strong>→ 그래서 I/O burst 와 CPU Burst 가 따로인겨 !</strong></li>
+  <li>각 device controller는 특정 device type을 담당하고 local buffer를 가지고 있음</li>
+  <li>CPU는 Main Memory ↔ local buffe 양 방향으로 data를 이동시킴</li>
+  <li>Device controller는 <strong>Interrupt</strong>를 발생시켜 CPU에게 operation이 끝났다는 것을 알림</li>
+</ul>
+
+<h2 id="--computer-system-operation들">- Computer System Operation들</h2>
+
+<ul>
+  <li>
+    <p>Interrupt : 중요 event를 알리기 위해 processor에게 전달되는 signal</p>
+
+    <p>ex) 마우스 클릭 이벤드</p>
+
+    <ul>
+      <li>HW와 SW는 interrupt를 유발할 수 있음</li>
+      <li>
+        <p>intterupt는 interrupt vector를 통해 보통 interrupt service routine으로 control을 전달하며, 이 interrupt vector에는 모든 service rouine의 address가 포함되어 있음</p>
+
+        <p>→ 어디부터 실행하면 되는지 알려줘서 control 전달</p>
+      </li>
+    </ul>
+
+    <p><strong>+) interrupt service routine</strong> : Computer System에서 발생하는 interrupt를 처리하기 위해 미리 정의된 code block <strong>→ 즉 발생했을 때 어떻게 처리할 것인지</strong></p>
+  </li>
+  <li>HW-generated interrupt 는 OS</li>
+  <li>SW-generated interrupt 에는 Trap과 Exception가 있음
     <ul>
       <li>
-        <table>
-          <tbody>
-            <tr>
-              <td><strong>Mechanism</strong> : <strong>어떻게</strong> 할 건가?</td>
-              <td><strong>Policy</strong> : <strong>무엇을</strong> 할 건가?</td>
-            </tr>
-          </tbody>
-        </table>
+        <p><strong>Trap</strong> : OS service를 위한 software request <strong>→ 개발자가 의도를 가지고 design한</strong></p>
+
+        <p>ex) file open.. 과 같은 system call</p>
+      </li>
+      <li>
+        <p><strong>Exception</strong> : software error <strong>→ trap과 달리 bug..</strong></p>
+
+        <p>ex) division by zero</p>
       </li>
     </ul>
+  </li>
+</ul>
 
-    <p><strong>ex) CPU 보호를 보장해야함!!</strong></p>
+<p>[<strong>Interrupt 과정]</strong></p>
 
-    <table>
-      <tbody>
-        <tr>
-          <td>**→  Mechanism : Timer 구조를 사용하자</td>
-          <td>Policy :  특정 user에 대해서 timer를 얼마나 길게 설정하지?**</td>
-        </tr>
-      </tbody>
-    </table>
+<ol>
+  <li>현재 실행 중인 instruction 완료 (중단)</li>
+  <li>user program의 state를 reg나 stack에 저장</li>
+  <li>고정된 위치 (서비스 루틴의 address) 곳으로 실행 이동</li>
+  <li>interrupt service routine 실행</li>
+  <li>저장된 user program의 state로 restore</li>
+  <li>1에서 중단된 user program 실행 재개</li>
+</ol>
+
+<ul>
+  <li>OS와 user는 computer system의 HW/SW resource를 공유함 <strong>→ 여기서 OS의 user 신뢰 문제 발생…</strong>
+    <ul>
+      <li>user program이 다른 program 이나 system 을 kill 해서는 안됨</li>
+      <li>그래서 <strong>Dual-mode를 사용함 !!</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--dual-mode">- Dual-mode</h2>
+
+<ul>
+  <li>OS가 자신과 다른 sysptem component들을 보호하도록 하기 위해 사용하는</li>
+  <li>User mode / kernel mode 로 나뉨</li>
+  <li><strong>User mode</strong> : 제한된 operation만 수행 가능 <strong>→ application은 기본이 이 mode</strong></li>
+  <li><strong>Kernel mode (supervisor, system, privileged)</strong> : 모든 operation 수행 가능 <strong>→ kernel은 이 mode</strong></li>
+  <li>Mode bit (HW 에서 제공)
+    <ul>
+      <li>system이 User(<code class="language-plaintext highlighter-rouge">mode bit = 1</code>) / Kernel code(<code class="language-plaintext highlighter-rouge">mode bit = 0</code>) 중 뭐를 실행하고 있는지 구별 할 수 있도록</li>
+      <li>특권으로 설정된 어떤 instruction (다른 user나 system에게 영향을 줄 수 있는)은 kenel에서만 실행 가능함 (only kernel mode)</li>
+      <li>system call은 mode를 kernel mode로 변경하고 실행한 다음 return 되면 user mode로 다시 변경함 <strong>→ kenel 에서 실행되는 동작이라서</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://user-images.githubusercontent.com/87251867/235542794-7085c096-7a34-4610-90ec-dbfaa3086ea3.png" alt="Untitled" /></p>
+
+<ul>
+  <li>system call이 될 경우 trap을 발생시키고, mode bit를 0으로 바꿈</li>
+  <li>그리고 system call 처리후에 bit를 다시 1로 돌린 다음에  return</li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="management">Management</h1>
+
+<h2 id="--timer">- Timer</h2>
+
+<ul>
+  <li>무한 루프나 process가 과하게 resource를 차지하는 것을 막기 위한 방법 <strong>→ OS 는 효율적이게 동작하기 위해 관리하는 manager니까</strong></li>
+  <li>특정 주기 이후에 interrupt 설정되게끔 → 주기마다 작업이 실행
+    <ul>
+      <li>OS는 counter를 설정하고 매 clock tick 마다 counter를 감소 시킴</li>
+      <li>counter 가 0이 되면 interrupt 설정</li>
+    </ul>
   </li>
   <li>
-    <p>Mechanism와 Policy를 분리는 policy 결정이 나중에 변경되는 경우에 대처할 수 있는 유연성을 제공함</p>
+    <p>control을 되찾거나 할당된 시간을 초과한 program을 종료시키기 위하여 process scheduling 전에 설정</p>
 
-    <p>ex) CPU-intensive 한 program보다 I/O-intensive한 program에 우선순위를 부여하는 policy</p>
+    <p><strong>→ scheduling 전에 timer 확인! 그래야 지난 애 있으면 대기나 다른 상태로 바꿔야 schduling 때 처리되니까</strong></p>
   </li>
 </ul>
 
-<h1 id="os-structure">OS Structure</h1>
-
-<h2 id="--simple-structure-monolithic-단일구조">- Simple Structure (Monolithic, 단일구조)</h2>
+<h2 id="--ghz">- GHz</h2>
 
 <ul>
-  <li>OS 기능을 kernel 과 동일한 memory 공간에 두고 system call 만으로 사용함</li>
-  <li><strong>Not Well-definde</strong>인 구조</li>
-  <li>작고 단순하며 제한된 system으로 시작하여 성장!</li>
-  <li>module로 나누지 않음</li>
-</ul>
+  <li>CPU 에서 GHz는 clock frequency이며, clock rate, clock speed라고 하기도 함</li>
+  <li>일반적으로 clock speed가 빠를수록 CPU가 빠름</li>
+  <li>
+    <p>clock speed는 CPU 가 초당 실행하는 cycle 수로 측정하며 그 단위가 GHz</p>
 
-<h3 id="ms-dos">[MS-DOS]</h3>
-<center>
-<img width="529" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/18cc7cbb-de7f-4b80-9437-4d9a54f1c043" />
-</center>
-
-<ul>
-  <li>초기에는 memory 공간이 제한적이었기에, <strong>최대한 적은 공간</strong>을 차지하면서 <strong>최대한 많은 기능</strong>을 제공하기 위해 초기에 작성됨</li>
-  <li>처음에는 간단한 OS 였지만, 시간에 따라 컴퓨터 기술이 발전하면서 새로운 기능이 계속해서 추가됨 <strong>→ 초기에 계획된 제한적 범위를 넘어섬</strong></li>
-  <li>초기에는 I/O Interface와 level이 분리되어 있지 않아 application이 직접 I/O Device에 접근할 수 있음
-    <ul>
-      <li>오작동과 악성 프로그램의 위험성이 높았음 ㅠㅠ</li>
-    </ul>
-  </li>
-  <li>그 당시 HW 도 제한적이었기에 Dual Mode를 지원하지 않았음
-    <ul>
-      <li>그렇기에 이러한 HW에서도 잘 동작되도록 개발</li>
-    </ul>
+    <p>ex) A CPU with a clock speed of 3.2 GHz executes 3.2 billion cycles per second.</p>
   </li>
 </ul>
 
-<h3 id="traditional-unix-monolithic">[Traditional UNIX (Monolithic)]</h3>
-<center>
-<img width="814" alt="Untitled 6" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/be94af29-d776-45ab-9711-86c02a55489d" />
-</center>
+<h2 id="--process-management">- Process Management</h2>
 
 <ul>
-  <li>매우 광범위한 기능이 Kernel에 집약되어있음
+  <li>process는 실행 중인 program이며, system내 작업 단위임</li>
+  <li><strong>Program</strong>은 Passive(패시브 ㅇㅇ) entity이고, <strong>Process</strong>는 Active(실행 중인) entity <strong>→ 즉 program 중 실행 중인 것이 process</strong></li>
+  <li>Process는 작업을 수행하기 위해 resources 가 필요함
+    <ol>
+      <li>CPU, Memory, I/O, File</li>
+      <li>Initializaion data → Input 받거나 . .</li>
+    </ol>
+  </li>
+  <li>process 종료시 재사용 가능한 resources 를 되돌려 받아야함 <strong>→ 다시 반납하쇼</strong></li>
+  <li>Single-threaded process는 하나의 program counter (PC)를 가지고 있다
     <ul>
-      <li>
-        <p>Kernel 아래 System call interface 이하의 모든 기능이 kernel에 통합됨 (단일층 . .)</p>
-
-        <p><strong>→ kenel은 OS 에서 거의 모든 일을 처리함</strong></p>
-      </li>
+      <li>program counter (PC) : 실행할 다음 instruction 의 위치 지정</li>
+      <li>process는 완료 될 때 까지 한번에 하나씩 순차적으로 inst을 실행함</li>
     </ul>
   </li>
-  <li>매우 적은 Layering (계층구조)을 가지고 있으며, 두꺼운 monolthic layer로 구성되어 있다.
+  <li>Multi-thredaded process는 thread당 하나의 program counter를 가지고 있다</li>
+  <li>일반적으로 system은 하나 또는 그 이상의 CPU들에서 동시에 실행 중인 많은 process들(some user, some OS)을 가지고 있다.
     <ul>
-      <li>적은 만큼 각 계층간 interface가 충분하지 않기에, 구현과 유지보수가 어려움</li>
+      <li>process / thred 간 CPU <strong>multiplexing</strong>를 통한 concurrency (동시성)</li>
     </ul>
   </li>
-  <li>즉. Tranditional UNIX는 기능이 통합된 kernel과 layering이 얇은 구조로 인해 확장성이 제한적이며, 구현과 유지 보수가 어려움</li>
-</ul>
-
-<h3 id="monolithic-structure">[Monolithic Structure]</h3>
-<div class="pull-left">
-<center>
-<img width="300" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/72d9a274-d0a7-4258-a196-4703043303d8" />
-</center>
-</div>
-
-<div class="pull-right">
-<center>
-<img width="261" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/663b18bb-a1f0-498d-a453-9b881eb26cfd" />
-</center>
-</div>
-
-<ul>
-  <li>OS는 system Call Interface 아래 하나의 장소에 모두 포함</li>
-  <li>Application은 system call interface를 사용하여 kernel과 상호작용</li>
-  <li>ex) Unix, Window XP, Linux과 같은 상용 system에서 일반적으로 사용</li>
-  <li>장점
-    <ul>
-      <li>성능 우수 <strong>→ 직접 통신이라</strong></li>
-      <li>kernel 개발자가 쉽게 개발 할 수 있음</li>
-    </ul>
-  </li>
-  <li>단점
-    <ul>
-      <li>kernel component 간 보호 없음 <strong>→ 다 통합된 공간에 있으니..</strong></li>
-      <li>쉽게 확장되지 않음 <strong>→ 다 kernel 에 넣어야해서</strong></li>
-      <li>전체 구조가 복잡해짐</li>
-      <li>하나에 문제가 발생하는 순간 어디에 문제가 발생한 것인지 몰라 복구 어려움</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="--layerd-approach">- Layerd Approach</h2>
-
-<div class="pull-left">
-<center>
-<img width="547" alt="Untitled 9" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/64486345-d9f4-45fc-a7cd-f20047577c9e" />
-</center>
-</div>
-
-<div class="pull-right">
-<center>
-<img width="438" alt="Untitled 10" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/cf8c62db-6e69-48d2-ae45-704adaa69723" />
-</center>
-</div>
-
-<ul>
-  <li>OS 는 하위 layer위에 구축된 여러 layer (level)로 나뉨
-    <ul>
-      <li>The bottom layer (level 0) : HW</li>
-      <li>The highest Layer (level N) : User Interface</li>
-    </ul>
-  </li>
-  <li>Moularity를 통해 각 layer는 하위 level layer의 functions(operations) 및 service만을 사용하도록 선택
-    <ul>
-      <li>자신보다 하위인 layer에서 제공하는 functions(operations) 및 service를 이용해 본인 layer를 구축함</li>
-    </ul>
-  </li>
-  <li>장점
-    <ul>
-      <li>각 layer가 서로 분리되어있기에 보안이 강화</li>
-      <li>각 layer의 문제가 전체 system에 영향을 미치는 것을 방지할 수 있고 독립적으로 디버깅 및 교체 가능
+  <li><strong>Process Management Activities</strong>
+    <ol>
+      <li>CPU에서 process 및 thread scheduling</li>
+      <li>user &amp; system processes 생성 및 삭제</li>
+      <li>process 일시 정지 및 재개</li>
+      <li>process synchronization 를 위한 매커니즘 제공
         <ul>
-          <li>low-level routines의 구현 세부사항을 숨김</li>
+          <li>process synchronization : 여러 process가 공유 중인 resouce에 접근하려고 할 때 실행 순서를 제어하여 서로의 작업에 영향을 주지 않도록 하는 기술</li>
         </ul>
       </li>
-      <li>유연하고 확장성이 높은 OS를 만드는데 유용함</li>
-    </ul>
-  </li>
-  <li>단점
-    <ul>
-      <li>여러 layer를 적절하게 정의하는 것에 어려움이 있을 수 있음</li>
-      <li>효율성 → layer가 많을 수록 function간 더 많은 Indirection (간접 참조)가 필요하고 이로 인해 function overhead가 커짐</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="--microkernels-system-structure">- Microkernels System Structure</h2>
-
-<ul>
-  <li>Microkernel은 필수적인 OS 기능만을 포함시킨 축소된 OS core</li>
-  <li>기존 OS에서 kernel에 있던 기능을 user space로 옮겨, kernel에는 기본적인 기능만 남겨둠 <strong>→ 필수만 남긴다!</strong></li>
-  <li>Kernel에 남긴 기능
-    <ul>
-      <li>기본적인 Memory 관리</li>
-      <li>I/O와 iterrup 관리</li>
-      <li>Process간 통신</li>
-      <li>기본 Scheduling</li>
-    </ul>
-  </li>
-  <li>전통 OS에 포함되는 많은 service들이 User Process로 동작
-    <ul>
-      <li>Device driver</li>
-      <li>File system</li>
-      <li>Virual Memory 관리</li>
-      <li>Security sercvice</li>
-      <li>etc..</li>
-    </ul>
-  </li>
-  <li>example: QNIX, Tru64, UNIS, Mach</li>
-  <li>
-    <p>User modules간 통신은 message passing을 통해 이루어짐</p>
-
-    <p>ex) 디스플레이를 필요로 하는 클라이언트 프로그램은 마이크로커널과 메시지 교환을 통해 간접적으로 디스플레이 서비스와 통신</p>
-
-    <center>
-  <img width="535" alt="Untitled 11" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/e337012a-d0ba-458c-bdcc-fd1c221531b0" />
-  </center>
-  </li>
-  <li>장점
-    <ul>
-      <li><strong>확장성</strong> : 새로운 서비스를 Kernel이 아닌 user space에 추가하므로, microkenel 기반 OS를 확장하는 것이 더 쉬움</li>
-      <li><strong>호환성</strong> : Microkernel만 변경하고 그 외의 service는 변경하지 않아도 되기에 다른 CPU로 port하는 것이 쉬움.</li>
-      <li><strong>신뢰성 &amp; 보안성</strong> : 많은 코드가 kenel mode에서 실행되지 않기에 User space service의 error가 kernel space에 영향을 주지 않아 안전함</li>
-    </ul>
-  </li>
-  <li>단점
-    <ul>
-      <li><strong>Performance overhead</strong> : User space와 kernel space 사이에 통신이 많기에 이에 따라 overhead가 발생 할 수 있음</li>
-      <li><strong>Communication from User space to Kernel space</strong> : 사용자 공간의 서비스가 커널 공간과 통신할 때 보안 문제가 발생 가능성</li>
-    </ul>
-  </li>
-  <li>
-    <p>Layer VS Mocrokernel</p>
-
-    <center>
-  <img width="798" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/520e306c-dbd9-4122-a345-a0d78a117064" />
-  </center>
-  </li>
-</ul>
-
-<h2 id="--modules">- Modules</h2>
-
-<ul>
-  <li>많은 최신 OS는 kernel module을 구현함</li>
-  <li>Object-oriented approach와 유사함
-    <ul>
-      <li>각 core component는 분리되어 있음</li>
-      <li>각 component은 알려진 interface를 통해 다른 component와 통신함</li>
-      <li>필요한 경우 kernel 내에서 load 가능함</li>
-    </ul>
-  </li>
-  <li>전반적으로 layer 구조와 비슷하지만 더 flexibility함
-    <ul>
-      <li>어떤 module도 다른 module을 호출 가능함!</li>
-    </ul>
-  </li>
-  <li>Modules은 microkernel 방식과도 유사하지만, Modules은 kernel 내부에 있으며 통신을 위한 message passing이 필요하지 않음</li>
-</ul>
-
-<p><strong>[ex. Solaris Modular Approach]</strong></p>
-
-<center>
-<img src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/4079af31-4081-4058-9802-b86b637c91a1" />
-</center>
-
-<ul>
-  <li>Core Kernel 을 중심으로 7가지 type의 module로 구성한 소프트웨어 모듈화 접급 방식
-    <ol>
-      <li>scheduling classes</li>
-      <li>file systems</li>
-      <li>loadable system calls</li>
-      <li>executable formats</li>
-      <li>STREAMS modules</li>
-      <li>miscellaneous</li>
-      <li>device and bus drivers</li>
+      <li>process communication 을 위한 매커니즘 제공
+        <ul>
+          <li>process communication : 서로 다른 process 간 data나 masseage를 주고 받는 기술</li>
+        </ul>
+      </li>
     </ol>
+  </li>
+</ul>
+
+<h2 id="--memory-management">- Memory Management</h2>
+
+<ul>
+  <li>processing 전 후의 모든 Data은 main memory 에 있음!</li>
+  <li>실행을 위해 memory 에 있는 모든 instruction</li>
+  <li>Momory management는 memory 에 저장될 내용과, 그 시기를 결정함
+    <ul>
+      <li>user를 위해 CPU utilization 와 computer response 최적화</li>
+    </ul>
+  </li>
+  <li><strong>Main Memory Management Acticities</strong>
+    <ul>
+      <li>현재 실행 중인 memory part와 누구에 의해 사용 중인지 추적</li>
+      <li>memory 안팎으로 이동할 process (또는 그 일부) 및 data 결정</li>
+      <li>필요에 따라 memory 공간 할당 및 할당 해제</li>
+    </ul>
+  </li>
+  <li>보조 기억장치도 관리해요 !</li>
+</ul>
+
+<h2 id="--storage-management">- Storage Management</h2>
+
+<ul>
+  <li>OS는 information storage 에 대해 균일하고 논리적인 view를 제공
+    <ul>
+      <li>물리적 속성을 논리적 storage 단위인 file로 abstract <strong>→ file 의 기본 컨셉</strong></li>
+      <li>각 media 은 device (disk srive, tape drive)에 의해 control 됨
+        <ul>
+          <li>access speed, capacity, data-transfer rate, access method (sequential or random) 이 속성에 포함되어 있음</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>File-System Management</strong>
+    <ul>
+      <li>일반적으로 file은 directory들로 organiz됨</li>
+      <li>누가, 무엇에 access할 수 있는지 셜정하기 위해 대부분의 system에 대한 acces control</li>
+      <li>OS Activities
+        <ol>
+          <li>file &amp; directory 생성 및 삭제</li>
+          <li>file &amp; directory 조작을 위한 primiotives</li>
+          <li>보조 storage에 file mapping</li>
+          <li>안정적인 (non-volatile) storage media에 file backup</li>
+        </ol>
+
+        <p>+) 어떻게 power 없이 안정적으로 file을 storage할 것인지가 OS에서는 중요한 도전과제</p>
+      </li>
+    </ul>
   </li>
 </ul>
 
@@ -1088,7 +1028,7 @@
 
 
         
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-03-15">March 15, 2023</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-03-08">March 8, 2023</time></p>
 
 
       </footer>
@@ -1098,11 +1038,12 @@
       
   <nav class="pagination">
     
-      <a href="/categories/study/2023_OS/ch1" class="pagination--pager" title="[OS] Ch1. Introduction
+      <a href="/categories7/post-name-here-7/" class="pagination--pager" title="[포스팅 예시] 이곳에 제목을 입력하세요
 ">Prev</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/categories/study/2023_OS/ch2" class="pagination--pager" title="[OS] Ch2. Operating-System Structure
+">Next</a>
     
   </nav>
 
@@ -1127,7 +1068,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/categories/study/2023_OS/ch1" rel="permalink">[OS] Ch1. Introduction
+        <a href="/categories/study/2023_OS/ch2" rel="permalink">[OS] Ch2. Operating-System Structure
 </a>
       
     </h2>
@@ -1138,7 +1079,7 @@
       
       <span class="page__meta-date">
         <i class="far fa-calendar-alt" aria-hidden="true"></i>
-        <time datetime="2023-03-08T00:00:00+09:00">March 8, 2023</time>
+        <time datetime="2023-03-15T00:00:00+09:00">March 15, 2023</time>
       </span>
     
 

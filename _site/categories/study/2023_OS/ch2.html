@@ -1,0 +1,1365 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch2. Operating-System Structure | RUTuna</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="RUTuna">
+  
+  <meta property="article:author" content="RUTuna">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch2. Operating-System Structure">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch2">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-03-15T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-03-15T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch2">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "RUTuna",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://github-account.github.io/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github-account.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github-account.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://github-account.github.io/assets/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="https://github-account.github.io/assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.png" alt="RUTuna" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">RUTuna</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://github.com/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 9</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (2)</a></li>
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title1</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/categories1/">Categories1 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/categories2/">Categories2 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories3/">Categories3 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories4/">Categories4 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title2</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories5/">Categories5 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories6/">Categories6 (1)</a></li>
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title3</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories7/">Categories7 (1)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch2. Operating-System Structure">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-03-15T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-03-15T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch2. Operating-System Structure
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-15T00:00:00+09:00">March 15, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#os-services">OS Services</a><ul><li><a href="#--operating-system-service">- Operating System Service</a></li><li><a href="#---user-service">-  User Service</a></li><li><a href="#--system-service">- System Service</a></li></ul></li><li><a href="#system-calls">System Calls</a><ul><li><a href="#--system-calls">- System Calls</a></li><li><a href="#--system-call-implementation">- System Call Implementation</a></li><li><a href="#--standard-c-library-example">- Standard C Library Example</a></li></ul></li><li><a href="#os-design-and-implementation-osdi">OS Design and Implementation (OSDI)</a><ul><li><a href="#--os-design-and-implementation">- OS Design and Implementation</a></li><li><a href="#---seperate-mechanism--policy">-  Seperate Mechanism &amp; Policy</a></li></ul></li><li><a href="#os-structure">OS Structure</a><ul><li><a href="#--simple-structure-monolithic-단일구조">- Simple Structure (Monolithic, 단일구조)</a></li><li><a href="#--layerd-approach">- Layerd Approach</a></li><li><a href="#--microkernels-system-structure">- Microkernels System Structure</a></li><li><a href="#--modules">- Modules</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="os-services">OS Services</h1>
+
+<center>
+    <img src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/77e5284f-9ad2-425e-a484-32ee9f686e9b" title="OS Services" width="600" />
+    <br />OS Services<br />
+</center>
+
+<h2 id="--operating-system-service">- Operating System Service</h2>
+
+<ul>
+  <li>OS 별로 차이가 있긴 하나 보통 다음 4가지의 service로 구성
+    <ol>
+      <li><strong>Booting Service</strong> : Couputer HW를 관리하고 Program을 실행 할 수 있도록 부팅함</li>
+      <li><strong>User Service</strong> : 프로그래머가 programming 작업을 쉽게 할 수 있도록 함</li>
+      <li><strong>System Service</strong> : System 이 효율적으로 동작하도록 보장</li>
+      <li><strong>System Call</strong> : Program과 OS 간의 interface 를 제공하여 System 기능을 사용 할 수 있도록</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="---user-service">-  User Service</h2>
+
+<ul>
+  <li>
+    <p><strong>User Interface</strong> :  대부분의 OS는 user unterface (UI)를 가지고 있음</p>
+
+    <p>ex) Comman-Line(CLI), Graphics User Interface(GUI) 등..</p>
+  </li>
+  <li>
+    <p><strong>Program Execution</strong> : system은 program을 memory에 로드, 해당 program을 실행하고 정상 또는 비정싱 시 실행을 종료 할 수 있어야 함</p>
+
+    <p>ex) 메모리 할당, 해제, 프로세서 스케줄링</p>
+  </li>
+  <li><strong>I/O Operation</strong> : 실행 중인 program에는 I/O가 필요할 수 있음! OS 는 I/O 동작 방법을 제공</li>
+  <li><strong>File-System Manipulation</strong> : program은  file과 directory를 읽고 쓰고, 생성하고, 삭제하고, 검색하고 나열하고 권한을 관리해야함</li>
+  <li><strong>Communications(통신)</strong> : proces는 같은 computer 내  process들이나, 네트워크로 연결된 다른 computer의  process들과 information을 교환할 수 있음
+    <ul>
+      <li>공유 memory 나 message 전달을 통해 통신이 이루어질 수 있음</li>
+    </ul>
+  </li>
+  <li><strong>Error Detection</strong> : OS 는  가능한 모든 HW/SW 수준에서의  error을 탐지하고 system을 모니터링하여 조정함으로 HW 문제를 예방해야함
+    <ul>
+      <li>user program, CPU, memory hardware, I/O device 등에서의 error 탐지</li>
+      <li>각 error에 대해 OS는 적절한 조치를  취해야함!</li>
+      <li>Debugging facilites가 도움이 될 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--system-service">- System Service</h2>
+
+<ul>
+  <li><strong>Resource Allocation</strong> : 다수의 user나 job이 동시에 실행 될 경우 각각에 res를 할당해주어야함
+    <ul>
+      <li>다른 scheduling 방식을 가진 여러 종류의 resource 존재</li>
+    </ul>
+  </li>
+  <li><strong>Accounmtin / Logging</strong> : 어떤 user가 어떤 종류의 resource를 얼마나 많이 사용하고 있는지 정보를 저장하고 추천
+    <ul>
+      <li>user service를 개선하고 system을 재구성하는 연구, 통계 자료로도 사용</li>
+    </ul>
+  </li>
+  <li><strong>Protection and Security</strong> : computer system에 저장된 정보의 소유자의 사용을 제한할 수 있음. 그리고 서로 관련이 없는 여러 perocess이 동시에 실행 될 때는 다른 process나 OS를 방해하지 못하도록 보호해야함
+    <ul>
+      <li><strong>Protection</strong> : resource에 대한 모든 액세스를 제어</li>
+      <li><strong>Security</strong> : 외부 I/O를 방어하고 외부 user에 대해 인증을 요구</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="system-calls">System Calls</h1>
+
+<h2 id="--system-calls">- System Calls</h2>
+
+<ul>
+  <li>OS에서 제공하는 service에 대한 programming interface → 실행 중인 prgram과 OS 간의 interface</li>
+  <li>일반적으로 high-level language인 C/C++ 로 작성됨</li>
+  <li>직접적인  system call 사용이라 아니라 주로 high-level  Application Program Interface (API)을 통해 system call 에 엑세스
+    <ul>
+      <li>potrability (이식)이 편함 system call은 더 자세하고 작업하기 어렵기 때문에!</li>
+    </ul>
+  </li>
+  <li>일반적인 3가지 API
+    <ul>
+      <li>Window를 위한 Windows API</li>
+      <li>POSIX-based system(모든 버전의 UNIX, Linux, Mac OS X 포함)을 위한 POSIX API
+        <ul>
+          <li>휴대용 OS Interface (POSIX) : OS 간의 호환성을 위해 IEEE가 정한 표준 제품군</li>
+        </ul>
+      </li>
+      <li>Java Virtual Machine (JVM)을 위한 JAVA API</li>
+    </ul>
+  </li>
+  <li>
+    <p>ex)</p>
+
+    <center>
+  <img width="500" alt="한 file의 내용을 다른 file로 복사하는 system call" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/3d9e2165-a1ca-40d1-9026-0b204e1fd85e" />
+  <br />
+  한 file의 내용을 다른 file로 복사하는 system call<br />
+  </center>
+    <p><br /></p>
+
+    <center>
+  <img width="500" alt="standard api" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/d16505db-7e7c-4419-a985-e7c3177439df" />
+  <br />
+  standard api
+  </center>
+  </li>
+</ul>
+
+<h2 id="--system-call-implementation">- System Call Implementation</h2>
+
+<ul>
+  <li>System call interface는 API에서 function call을 가로채 OS Kernel에서 의도한 system call을 호출하고, system call의 state, 및 returen value를 반환함</li>
+  <li>일반적으로 각 system call에는 번호가 할당됨
+    <ul>
+      <li>system call interface는 이러한 번호에 따라 indexing된 table 을 유지, 관리함</li>
+    </ul>
+  </li>
+  <li>caller는 system call이 어떻게 구현되어있는지 알 필요가 없음.
+    <ul>
+      <li>그냥 API를 따르고 호출 결과로 OS 가 수행할 작업만 이해하면 됨 <strong>→ 걍 쓸거니까,,</strong></li>
+      <li>API에 의해 OS Interface의 자세한 부분은 programer에게 숨겨짐</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="API - System Call - OS 관계도" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/484f88b9-2e6c-4797-bad0-33b66dee28d8" />
+<br />API - System Call - OS 관계도<br />
+</center>
+
+<p><br /></p>
+
+<ul>
+  <li>User Application이 open()이라는 system call을 호출한 경우
+    <ol>
+      <li>Application이 open()이라는 system call 호출</li>
+      <li>system call interface는 open()의 system call number를 확인하고, 이를 실행하기 위해 <strong>kernel mode</strong>로 변경</li>
+      <li>kernel mode 에서 open()에 필요한 parameter들을 검사</li>
+      <li>file system 에서 file의 meta data를 읽어와 File Descriptor에게 할당하고, file table에 등록</li>
+      <li>File Descriptor는  open() 의 반환 값으로 user application에게 반환됨</li>
+      <li>반환된 File Descriptor를 이용하여 user application은 file을 읽거나 쓸 수 있음</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--standard-c-library-example">- Standard C Library Example</h2>
+
+<center>
+<img width="500" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/f128a0fc-7bad-40bd-a746-cccee828c07b" />
+</center>
+
+<ul>
+  <li>Standard C Library 는 Linux와 UNIX 에게 일부 system call interface를 제공함</li>
+  <li>C program에서 printf()를 호출하면, system call인 write()를 호출함</li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="os-design-and-implementation-osdi">OS Design and Implementation (OSDI)</h1>
+
+<h2 id="--os-design-and-implementation">- OS Design and Implementation</h2>
+
+<ul>
+  <li>OS 의 Design과 Implementaion은 해결하지 못 하는 문제이지만, 일부 approache들은 성공적으로 증명되었다 <strong>→ 나중에 나와요</strong></li>
+  <li>다양한 OS 내부 구조들은 크게 달라질 수 있음</li>
+  <li>Goal과 Specification을 먼저 정의해서 OS 설계를 시작해야함!</li>
+  <li>System design은 HW 선택과 system type에 의해 영향을 받음
+    <ul>
+      <li>Batch, time shared, single user, multiuser, …</li>
+    </ul>
+  </li>
+  <li>User goals &amp; System goal
+    <ul>
+      <li>User goal : OS는 사용하기 편하고, 배우기 쉬우며, 신뢰성이 있고, 안정하고 빠르게 동작해야함</li>
+      <li>System goal : OS 는 설계, 구현, 유지 보수가 용이해야하고, 유연하,며 신뢰성이 있으며, 오류가 없고, 효율적이어야함</li>
+    </ul>
+  </li>
+  <li>OS의 requirement를 정의가 (정의하는 솔루션이) 유일한 것은 아님!!
+    <ul>
+      <li>다양하기에 OS 가 다양한 것</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="---seperate-mechanism--policy">-  Seperate Mechanism &amp; Policy</h2>
+
+<ul>
+  <li>Mechanism와 Policy를 분리하는 것이 OS 설계 및 구현에서의 중요한 principle
+    <ul>
+      <li><strong>Mechanism</strong> : <strong>어떻게</strong> 할 건가?</li>
+      <li><strong>Policy</strong> : <strong>무엇을</strong> 할 건가?</li>
+    </ul>
+
+    <p><strong>ex) CPU 보호를 보장해야함!!</strong></p>
+
+    <p><strong>→  Mechanism : Timer 구조를 사용하자, Policy :  특정 user에 대해서 timer를 얼마나 길게 설정하지?</strong></p>
+  </li>
+  <li>
+    <p>Mechanism와 Policy를 분리는 policy 결정이 나중에 변경되는 경우에 대처할 수 있는 유연성을 제공함</p>
+
+    <p>ex) CPU-intensive 한 program보다 I/O-intensive한 program에 우선순위를 부여하는 policy</p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="os-structure">OS Structure</h1>
+
+<h2 id="--simple-structure-monolithic-단일구조">- Simple Structure (Monolithic, 단일구조)</h2>
+
+<ul>
+  <li>OS 기능을 kernel 과 동일한 memory 공간에 두고 system call 만으로 사용함</li>
+  <li><strong>Not Well-definde</strong>인 구조</li>
+  <li>작고 단순하며 제한된 system으로 시작하여 성장!</li>
+  <li>module로 나누지 않음</li>
+</ul>
+
+<h3 id="ms-dos">[MS-DOS]</h3>
+<center>
+<img width="400" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/18cc7cbb-de7f-4b80-9437-4d9a54f1c043" />
+</center>
+
+<ul>
+  <li>초기에는 memory 공간이 제한적이었기에, <strong>최대한 적은 공간</strong>을 차지하면서 <strong>최대한 많은 기능</strong>을 제공하기 위해 초기에 작성됨</li>
+  <li>처음에는 간단한 OS 였지만, 시간에 따라 컴퓨터 기술이 발전하면서 새로운 기능이 계속해서 추가됨 <strong>→ 초기에 계획된 제한적 범위를 넘어섬</strong></li>
+  <li>초기에는 I/O Interface와 level이 분리되어 있지 않아 application이 직접 I/O Device에 접근할 수 있음
+    <ul>
+      <li>오작동과 악성 프로그램의 위험성이 높았음 ㅠㅠ</li>
+    </ul>
+  </li>
+  <li>그 당시 HW 도 제한적이었기에 Dual Mode를 지원하지 않았음
+    <ul>
+      <li>그렇기에 이러한 HW에서도 잘 동작되도록 개발</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="traditional-unix-monolithic">[Traditional UNIX (Monolithic)]</h3>
+<center>
+<img width="500" alt="Untitled 6" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/be94af29-d776-45ab-9711-86c02a55489d" />
+</center>
+
+<ul>
+  <li>매우 광범위한 기능이 Kernel에 집약되어있음
+    <ul>
+      <li>
+        <p>Kernel 아래 System call interface 이하의 모든 기능이 kernel에 통합됨 (단일층 . .)</p>
+
+        <p><strong>→ kenel은 OS 에서 거의 모든 일을 처리함</strong></p>
+      </li>
+    </ul>
+  </li>
+  <li>매우 적은 Layering (계층구조)을 가지고 있으며, 두꺼운 monolthic layer로 구성되어 있다.
+    <ul>
+      <li>적은 만큼 각 계층간 interface가 충분하지 않기에, 구현과 유지보수가 어려움</li>
+    </ul>
+  </li>
+  <li>즉. Tranditional UNIX는 기능이 통합된 kernel과 layering이 얇은 구조로 인해 확장성이 제한적이며, 구현과 유지 보수가 어려움</li>
+</ul>
+
+<h3 id="monolithic-structure">[Monolithic Structure]</h3>
+<div class="pull-left">
+<center>
+<img width="500" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/72d9a274-d0a7-4258-a196-4703043303d8" />
+</center>
+</div>
+
+<div class="pull-right">
+<center>
+<img width="300" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/663b18bb-a1f0-498d-a453-9b881eb26cfd" />
+</center>
+</div>
+
+<ul>
+  <li>OS는 system Call Interface 아래 하나의 장소에 모두 포함</li>
+  <li>Application은 system call interface를 사용하여 kernel과 상호작용</li>
+  <li>ex) Unix, Window XP, Linux과 같은 상용 system에서 일반적으로 사용</li>
+  <li>장점
+    <ul>
+      <li>성능 우수 <strong>→ 직접 통신이라</strong></li>
+      <li>kernel 개발자가 쉽게 개발 할 수 있음</li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li>kernel component 간 보호 없음 <strong>→ 다 통합된 공간에 있으니..</strong></li>
+      <li>쉽게 확장되지 않음 <strong>→ 다 kernel 에 넣어야해서</strong></li>
+      <li>전체 구조가 복잡해짐</li>
+      <li>하나에 문제가 발생하는 순간 어디에 문제가 발생한 것인지 몰라 복구 어려움</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--layerd-approach">- Layerd Approach</h2>
+
+<div class="pull-left">
+<center>
+<img width="500" alt="Untitled 9" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/64486345-d9f4-45fc-a7cd-f20047577c9e" />
+</center>
+</div>
+
+<div class="pull-right">
+<center>
+<img width="300" alt="Untitled 10" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/cf8c62db-6e69-48d2-ae45-704adaa69723" />
+</center>
+</div>
+
+<ul>
+  <li>OS 는 하위 layer위에 구축된 여러 layer (level)로 나뉨
+    <ul>
+      <li>The bottom layer (level 0) : HW</li>
+      <li>The highest Layer (level N) : User Interface</li>
+    </ul>
+  </li>
+  <li>Moularity를 통해 각 layer는 하위 level layer의 functions(operations) 및 service만을 사용하도록 선택
+    <ul>
+      <li>자신보다 하위인 layer에서 제공하는 functions(operations) 및 service를 이용해 본인 layer를 구축함</li>
+    </ul>
+  </li>
+  <li>장점
+    <ul>
+      <li>각 layer가 서로 분리되어있기에 보안이 강화</li>
+      <li>각 layer의 문제가 전체 system에 영향을 미치는 것을 방지할 수 있고 독립적으로 디버깅 및 교체 가능
+        <ul>
+          <li>low-level routines의 구현 세부사항을 숨김</li>
+        </ul>
+      </li>
+      <li>유연하고 확장성이 높은 OS를 만드는데 유용함</li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li>여러 layer를 적절하게 정의하는 것에 어려움이 있을 수 있음</li>
+      <li>효율성 → layer가 많을 수록 function간 더 많은 Indirection (간접 참조)가 필요하고 이로 인해 function overhead가 커짐</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--microkernels-system-structure">- Microkernels System Structure</h2>
+
+<ul>
+  <li>Microkernel은 필수적인 OS 기능만을 포함시킨 축소된 OS core</li>
+  <li>기존 OS에서 kernel에 있던 기능을 user space로 옮겨, kernel에는 기본적인 기능만 남겨둠 <strong>→ 필수만 남긴다!</strong></li>
+  <li>Kernel에 남긴 기능
+    <ul>
+      <li>기본적인 Memory 관리</li>
+      <li>I/O와 iterrup 관리</li>
+      <li>Process간 통신</li>
+      <li>기본 Scheduling</li>
+    </ul>
+  </li>
+  <li>전통 OS에 포함되는 많은 service들이 User Process로 동작
+    <ul>
+      <li>Device driver</li>
+      <li>File system</li>
+      <li>Virual Memory 관리</li>
+      <li>Security sercvice</li>
+      <li>etc..</li>
+    </ul>
+  </li>
+  <li>example: QNIX, Tru64, UNIS, Mach</li>
+  <li>
+    <p>User modules간 통신은 message passing을 통해 이루어짐</p>
+
+    <p>ex) 디스플레이를 필요로 하는 클라이언트 프로그램은 마이크로커널과 메시지 교환을 통해 간접적으로 디스플레이 서비스와 통신</p>
+
+    <center>
+  <img width="535" alt="Untitled 11" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/e337012a-d0ba-458c-bdcc-fd1c221531b0" />
+  </center>
+  </li>
+  <li>장점
+    <ul>
+      <li><strong>확장성</strong> : 새로운 서비스를 Kernel이 아닌 user space에 추가하므로, microkenel 기반 OS를 확장하는 것이 더 쉬움</li>
+      <li><strong>호환성</strong> : Microkernel만 변경하고 그 외의 service는 변경하지 않아도 되기에 다른 CPU로 port하는 것이 쉬움.</li>
+      <li><strong>신뢰성 &amp; 보안성</strong> : 많은 코드가 kenel mode에서 실행되지 않기에 User space service의 error가 kernel space에 영향을 주지 않아 안전함</li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li><strong>Performance overhead</strong> : User space와 kernel space 사이에 통신이 많기에 이에 따라 overhead가 발생 할 수 있음</li>
+      <li><strong>Communication from User space to Kernel space</strong> : 사용자 공간의 서비스가 커널 공간과 통신할 때 보안 문제가 발생 가능성</li>
+    </ul>
+  </li>
+  <li>
+    <p>Layer VS Mocrokernel</p>
+
+    <center>
+  <img width="500" src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/520e306c-dbd9-4122-a345-a0d78a117064" />
+  </center>
+  </li>
+</ul>
+
+<h2 id="--modules">- Modules</h2>
+
+<ul>
+  <li>많은 최신 OS는 kernel module을 구현함</li>
+  <li>Object-oriented approach와 유사함
+    <ul>
+      <li>각 core component는 분리되어 있음</li>
+      <li>각 component은 알려진 interface를 통해 다른 component와 통신함</li>
+      <li>필요한 경우 kernel 내에서 load 가능함</li>
+    </ul>
+  </li>
+  <li>전반적으로 layer 구조와 비슷하지만 더 flexibility함
+    <ul>
+      <li>어떤 module도 다른 module을 호출 가능함!</li>
+    </ul>
+  </li>
+  <li>Modules은 microkernel 방식과도 유사하지만, Modules은 kernel 내부에 있으며 통신을 위한 message passing이 필요하지 않음</li>
+</ul>
+
+<p><strong>[ex. Solaris Modular Approach]</strong></p>
+
+<center>
+<img src="https://github.com/RUTuna/Trend_of_Alcohol/assets/87251867/4079af31-4081-4058-9802-b86b637c91a1" width="400" />
+</center>
+
+<ul>
+  <li>Core Kernel 을 중심으로 7가지 type의 module로 구성한 소프트웨어 모듈화 접급 방식
+    <ol>
+      <li>scheduling classes</li>
+      <li>file systems</li>
+      <li>loadable system calls</li>
+      <li>executable formats</li>
+      <li>STREAMS modules</li>
+      <li>miscellaneous</li>
+      <li>device and bus drivers</li>
+    </ol>
+  </li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-03-15">March 15, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch1" class="pagination--pager" title="[OS] Ch1. Introduction
+">Prev</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch1" rel="permalink">[OS] Ch1. Introduction
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-08T00:00:00+09:00">March 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories7/post-name-here-7/" rel="permalink">[포스팅 예시] 이곳에 제목을 입력하세요
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2022-09-23T00:00:00+09:00">September 23, 2022</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">본문의 주요 내용을 여기에 입력하세요
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories6/post-name-here-6/" rel="permalink">[포스팅 예시] 이곳에 제목을 입력하세요
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2022-09-23T00:00:00+09:00">September 23, 2022</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">본문의 주요 내용을 여기에 입력하세요
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories5/post-name-here-5/" rel="permalink">[포스팅 예시] 이곳에 제목을 입력하세요
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2022-09-23T00:00:00+09:00">September 23, 2022</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">본문의 주요 내용을 여기에 입력하세요
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 RUTuna. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'github-account/repo-name');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+
+  </body>
+</html>
