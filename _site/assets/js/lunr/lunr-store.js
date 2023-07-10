@@ -1,8 +1,14 @@
 var store = [{
-        "title": "개발 블로그로 Github Blog 를 선택한 이유",
-        "excerpt":"개발 블로그 개설 이유      개발을 하다보면 자연스럽게 여러 개발 블로그들을 접하게 되고 이들에게서 정말 무궁무진한 도움을 받게 된다. (사실 상 전부..) 그리고 스타트업에서 일하게 되며 동일한 오류를 보게 되는 경우가 잦아지고, 버그 리포팅의 필요성도 다시 느꼈다.   그리고 강의 필기를 나름 열심히 하는 편이고 친구들에게 필기 좀 팔아봐라는 얘기를 정말 여럿 들었기에, 솔직히 팔기는 좀 그렇고 공유하고 싶어서 이런 기록도 할 겸 블로그를 하자고 다짐 했다.   하지만.. 미루기를 한 세월,, 결국 눈 앞에 닥쳐오고 더 이상 미룰 수 없어서 개설이라도 해보려고 ,,   개발 블로그 플랫폼 선택 과정  종류     Github Blog                       Velog   t-story   Notion   Naver Blog   주로 위의 5가지를 개발 블로그로 많이 사용한다.   개발 블로그 요구사항     심미성            무조건 예뻐야한다. 예뻐야 정이 가고, 정이 가야 자주보고, 자주 봐야 글을 꾸준히 올린다       여기서 필수로 생각되는 것이 바로 커스텀 기능 아무리 본체 틀이 예뻐도 내 맘에 맞게 커스텀 할 수 있어야 만족스럽다           편리성            편하지 않으면 글을 안 쓴다.                 ","categories": ["Github Blog"],
+        "title": "Intro",
+        "excerpt":" ","categories": [],
+        "tags": [],
+        "url": "/intro/",
+        "teaser": null
+      },{
+        "title": "[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기",
+        "excerpt":"DISQUS   내가 작성한 글에 대해 독자와 의사소통 하기 위해서는 댓글 기능은 필수 중에 필수 ! (댓글이 많이 달리진 않겠지만,,,)   댓글 기능을 사용하기 위해선 여러 방법이 있지만 오늘은 DISQUS 을 사용해서 한번 댓글 기능을 추가해보겠다   1. DISQUS 가입하기   자 먼저 DISQUS 사이트에 접속해서 회원가입을 진행하자      이때 반드시 오른쪽을 선택해서 해야한다! 우리는 자기 블로그에다가 댓글 기능을 추가하려는 거니깡   첨에 안 보고 그냥 왼쪽 눌렀다가 왜 없지 하면서 한참 찾음,, ^^          2. 설정 들어가기    이제 설정에 들어가서 자기 블로그랑 연결을 해줘야한다! setting 을 누른 다음        SITE → General 클릭     저기 보면 shortname 이랑 Website URL 이 나올건데 예상하는 대로 잘 넣으면 끝 !   아마 shortname은 가입 했을 때 입력했을 건데 아이디 처럼 생각하면 된당 그리고 나중에 minimal mistakes 에 연결 할 때 이거 쓰니까 잘 기억해두기 ~   3. minimal mistakes (Github Blog) 에 연결  _config.yml 를 수정해주자! 총 3 곳을 수정해야한다   // in _config.yml comments:   provider                : \"disqus\" # false (default), \"disqus\", \"discourse\", \"facebook\", \"staticman\", \"staticman_v2\", \"utterances\", \"custom\"   disqus:     shortname             : rutuna  ...  # Defaults defaults:   # _posts   - scope:       path: \"\"       type: posts     values:       layout: single       author_profile: true       read_time: #true       show_date: true       comments: true # 댓글기능 ...       comments의 provider 를 “disqus” 라고 입력   comments의 disqus - shortname 에 본인 shortname 입력   defaults 의 values - comments 를 true 로 설정해서 comment 기능 활성화   하고 push 하면 끝 !  ","categories": ["Github Blog"],
         "tags": ["Github","Blog"],
-        "url": "/categories/develop/Github_Blog/1",
+        "url": "/categories/develop/Github_Blog/intro",
         "teaser": null
       },{
         "title": "[OS] Ch1. Introduction",
