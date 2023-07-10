@@ -1,0 +1,1627 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch5. CPU Scheduling | zi_orv</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="zi_orv">
+  
+  <meta property="article:author" content="zi_orv">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch5. CPU Scheduling">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch5">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-04-03T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-04-03T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch5">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "zi_orv",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="-8bYhrDyOZjr61EL8z8964D200AyyTFpWGyPjxkesfo" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://github-account.github.io/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github-account.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github-account.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://github-account.github.io/assets/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="https://github-account.github.io/assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.png" alt="zi_orv" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">zi_orv</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="mailto:p000207@naver.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 12</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (5)</a></li>
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title1</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/categories1/">Categories1 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/categories2/">Categories2 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories3/">Categories3 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories4/">Categories4 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title2</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories5/">Categories5 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories6/">Categories6 (1)</a></li>
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title3</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories7/">Categories7 (1)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch5. CPU Scheduling">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-04-03T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-04-03T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch5. CPU Scheduling
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-03T00:00:00+09:00">April 3, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#basic-concepts">Basic Concepts</a><ul><li><a href="#--basic-concept">- Basic Concept</a></li><li><a href="#--cpu-burst와-io-burst의-alternating-sequence">- CPU Burst와 I/O Burst의 Alternating Sequence</a></li><li><a href="#--cpu-scheduler">- CPU Scheduler</a></li><li><a href="#--preemtive-선점형-vs-non-preempitve-비선점형">- Preemtive (선점형) vs Non-preempitve (비선점형)</a></li><li><a href="#--dispatcher">- Dispatcher</a></li></ul></li><li><a href="#scheduling-criteria">Scheduling Criteria</a><ul><li><a href="#--scheduling-criteria-스케줄링-기준">- Scheduling Criteria (스케줄링 기준)</a></li></ul></li><li><a href="#scheduling-algorithms">Scheduling Algorithms</a><ul><li><a href="#--first-come-first-served-fcfs-선착순-scheduling">- First-Come, First-Served (FCFS, 선착순) Scheduling</a></li><li><a href="#--shortest-jop-first-sjf-scheduling">- Shortest-Jop-First (SJF) Scheduling</a></li><li><a href="#--next-cpu-burst-길이-결정">- Next CPU Burst 길이 결정</a></li><li><a href="#--priority-scheduling">- Priority Scheduling</a></li><li><a href="#round-robin-rr">Round Robin (RR)</a></li><li><a href="#multilevel-queue">Multilevel Queue</a></li><li><a href="#multilevel-feedback-queue">Multilevel Feedback Queue</a></li></ul></li><li><a href="#of-queues">of Queues</a></li><li><a href="#multiple-processor-scheduling">Multiple-Processor Scheduling</a><ul><li><a href="#--multiple-processor-schduling">- Multiple-Processor Schduling</a></li><li><a href="#--symmetric-multiprocessing-smp">- Symmetric Multiprocessing (SMP)</a></li><li><a href="#--processor-affinity-프로세서-선호도">- Processor Affinity (프로세서 선호도)</a></li><li><a href="#work-conserving-or-not">Work-Conserving or Not</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="basic-concepts">Basic Concepts</h1>
+<h2 id="--basic-concept">- Basic Concept</h2>
+
+<ul>
+  <li>Multiprogramming : 일부 process가 항상 실행되도록 하여 CPU utilization (사용율)을 최대화 함 <strong>→ 즉 최대한 CPU가 놀지 않도록 하는 것</strong>
+    <ul>
+      <li>한 번에 여러 process들이 메모리에 유지시킴</li>
+      <li>block 될 때 까지 process 실행 시키고, 만약 block 된다면 다른 process를 실행</li>
+    </ul>
+  </li>
+  <li>Process scheduling이랑 Thread Scheduling은 종종 같은 의미로 사용되기도 함 ~~</li>
+</ul>
+
+<h2 id="--cpu-burst와-io-burst의-alternating-sequence">- CPU Burst와 I/O Burst의 Alternating Sequence</h2>
+
+<center>
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled.png" />
+</center>
+
+<ul>
+  <li>CPU-I/O Burst Cycle : CPU 실행 cycle과 I/O Wait로 구성된 Process
+    <ul>
+      <li>이때 CPU 실행이 연속되는 기간을 <strong>CPU Burs</strong>t라고 하고</li>
+      <li>I/O를 연속해서 기다리는 기간을 <strong>I/O Burst</strong>라고 함</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_1.png" />
+</center>
+
+<ul>
+  <li><strong>CPU-bound Process</strong> : CPU-Burst가 길고, I/O-Burst가 드물게 있는 Process
+    <ul>
+      <li>
+        <p>왼쪽 그래프에서 왼쪽 동그라미</p>
+
+        <p>ex) 데이터 마이닝, 이미지 프로세싱..</p>
+      </li>
+    </ul>
+  </li>
+  <li><strong>I/O-bound Process</strong> : CPU-Burst가 짧고, I/O-Burst가 자주 있는 Process
+    <ul>
+      <li>
+        <p>왼쪽 그래프에서 오른쪽 동그라미</p>
+
+        <p>ex) 유저의 입력이 계속있는 게임</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--cpu-scheduler">- CPU Scheduler</h2>
+
+<ul>
+  <li>Short-term Scheduler <strong>→ 빠르게 자주 바뀌는 .. !</strong>
+    <ul>
+      <li>memory에서 실행할 준비가 되어있는 process를 고르고, 그들 중 하나에게 CPU를 할당!</li>
+    </ul>
+  </li>
+  <li>
+    <p>Process가 다음과 같은 경우 CPU Scheduling가 실행 될 수 있음</p>
+
+    <center>
+  <img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_2.png" />
+  </center>
+
+    <ol>
+      <li>
+        <p>Admitted 된 상태</p>
+      </li>
+      <li>
+        <p>Running state → Waiting state 로 전환된 경우</p>
+      </li>
+    </ol>
+
+    <ul>
+      <li>ex) I/O Request</li>
+    </ul>
+
+    <ol>
+      <li>Running state → Ready state 로 전환된 경우</li>
+    </ol>
+
+    <ul>
+      <li>ex) Interrupt 발생</li>
+    </ul>
+
+    <ol>
+      <li>Waiting state → Ready state 로 전환된 경우</li>
+    </ol>
+
+    <ul>
+      <li>ex) I/O 작업 완료</li>
+    </ul>
+
+    <ol>
+      <li>Terminates</li>
+    </ol>
+  </li>
+  <li>1,4 는 non-preemtive, 나머지는 preemitive</li>
+  <li>1와 4번의 경우, 실행 중이던 것이 멈추거나, 종료된 상황이므로 선택의 여지가 없이 Ready Queue에서 새로운 Process를 골라야함</li>
+  <li>다른 경우, 어떻게 스케줄링을 할지 선택권이 있을 수 있다</li>
+</ul>
+
+<h2 id="--preemtive-선점형-vs-non-preempitve-비선점형">- Preemtive (선점형) vs Non-preempitve (비선점형)</h2>
+
+<ul>
+  <li>Preemitive
+    <ul>
+      <li>CPU가 Process에 할당되어도, 다른 Process가 CPU를 강제로 빼았을 수 있음 → 우선순위에 따라 CPU가 할당 되는 경우</li>
+      <li>ex) Time-slicing</li>
+    </ul>
+  </li>
+  <li>Non-preempitve
+    <ul>
+      <li>CPU가 Process에 할당 되면, Block 되거나 terminate될 때 까지 실행됨 → 중간에 빼았을 수 없음</li>
+      <li>위에서 1번과 4번의 경우</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--dispatcher">- Dispatcher</h2>
+
+<ul>
+  <li>Dispatcher module은 Short-term Scheduler (이하 STS)가 선택한 Process에 CPU 제어권을 넘겨줌! <strong>→ CPU 할당 !</strong></li>
+  <li>CPU Scheduler 내부에 포함되어 있는 것으로 STS가 선택한 Process에 실질적으로 CPU 를 할당하는 역할</li>
+  <li><strong>Dispatch Latency</strong> : Dispatcher가 한 process를 stop하고 다른 하나를 running 시키는데 걸리는 시작</li>
+  <li>CPU 제어권 넘기는 과정에는 다음 것들 포함
+    <ol>
+      <li>Switching context (Process의 Reg 전환)</li>
+      <li>Switching to User mode</li>
+      <li>Program을 재시작하기 위해 User program이 적절한 location을 찾을 수 있도록하고, jump함</li>
+    </ol>
+
+    <p><strong>→ 즉 다시 Running 하기 위해 할당해주는 과정</strong></p>
+
+    <center>
+  <img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_3.png" />
+  </center>
+    <center>
+  <img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_2.png" />
+  </center>
+  </li>
+</ul>
+
+<h1 id="scheduling-criteria">Scheduling Criteria</h1>
+
+<h2 id="--scheduling-criteria-스케줄링-기준">- Scheduling Criteria (스케줄링 기준)</h2>
+
+<ul>
+  <li>최대화 할수록 최적화됨
+    <ul>
+      <li><strong>CPU utilization</strong> : 가능한 CPU를 바쁘게 일 시켜야함</li>
+      <li><strong>Throughput</strong> : 시간 단위당 실행 완료하는 process 수</li>
+    </ul>
+  </li>
+  <li>최소화 할수록 최적화됨
+    <ul>
+      <li><strong>Turnaround time</strong> : 특정 작업을 실행 시키는데 걸리는 시간
+        <ul>
+          <li>Completion time - Submission Time</li>
+        </ul>
+      </li>
+      <li><strong>Waiting time</strong> : Ready Queue에서 실행되기를 기다리는 시간
+        <ul>
+          <li>Fairness : 각 Process에 대해 동일한 시간을 배정하거나, 우선순위에 따라 적절한 시간을 배정해주어야함</li>
+        </ul>
+      </li>
+      <li><strong>Response time</strong> : output이 아닌 request가 요청된 순간부터 첫번째 response가 생성될 때 까지 걸린 시간
+        <ul>
+          <li>특히 interactice system environment에서 유용 ex) 폰,,</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="scheduling-algorithms">Scheduling Algorithms</h1>
+
+<h3 id="--scheduling-algorithms">- Scheduling Algorithms</h3>
+
+<ul>
+  <li>Ready Queue에 있는 Process 중 어떤 Process에게 CPU를 할당할 것인지 결정</li>
+  <li>최대한 Performance criteria를 최적화하는 방향으로 결정함</li>
+  <li>종종 일부보다는 평균값을 최적화하는 방향을 선택하기도 함</li>
+  <li>Interactive System에서는 Response Time을 최소화는 것이 가장 중요한 기준인 경우도 있음</li>
+</ul>
+
+<h2 id="--first-come-first-served-fcfs-선착순-scheduling">- First-Come, First-Served (FCFS, 선착순) Scheduling</h2>
+
+<ul>
+  <li>말 그대로 먼저 도착한 Process 순서대로 CPU를 배정함</li>
+  <li>
+    <p>ex) 다음과 같은  P1, P2, P3가 있을 때</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Process</th>
+          <th>Burst Time (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>P1</td>
+          <td>24</td>
+        </tr>
+        <tr>
+          <td>P2</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>P3</td>
+          <td>3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ol>
+      <li>P1, P2, P3 순서대로 도착했을 때, FCFS Scheduling에 의해 정해진 Gantt Chart는</li>
+    </ol>
+
+    <p>| P1 | P2 | P3 |
+  | — | — | — |
+  | 0 ———————————————24 | 24 —————— 27 | 27—————— 30 |</p>
+    <ul>
+      <li><strong>Waiting Time :</strong> P1 = 0;  P2 = 24;  P3 = 27;</li>
+      <li><strong>Average Waiting Time :</strong> (0 + 24 + 27) / 3 = 17</li>
+    </ul>
+
+    <ol>
+      <li>P2, P3, P1 순서대로 도착했을 때, FCFS Scheduling에 의해 정해진 Gantt Chart는</li>
+    </ol>
+
+    <p>| P2 | P3 | P1 |
+  | — | — | — |
+  | 0 —————— 3 | 3—————— 6 | 5 ———————————————30 |</p>
+    <ul>
+      <li><strong>Waiting Time :</strong> P1 = 6;  P2 = 0;  P3 = 3;</li>
+      <li><strong>Average Waiting Time :</strong> (6 + 0 + 3) / 3 = 3</li>
+    </ul>
+
+    <p><strong>→ 1의 경우에 비해 굉장히 최적화됨!!!</strong></p>
+  </li>
+  <li>Ready Queue로 FIFO 사용</li>
+  <li>Average Waiting Time은 일반적으로 최소가 아니며, variance가 큼 <strong>→ 순서에 따라 많은 영향을 받아서</strong></li>
+  <li>단점
+    <ul>
+      <li><strong>Convoy effect</strong> : CPU bound process (CPU 사용 시간이 굉장히 긴 Process) 로 인해 다른 모든 사람이 Ready 상태임에도 불구하고 한참 기다려야함 ㅜㅜ</li>
+      <li>Non-preemptive Schediling algorithms.. 이면 timesharing system에서 큰 골칫거리,,</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--shortest-jop-first-sjf-scheduling">- Shortest-Jop-First (SJF) Scheduling</h2>
+
+<ul>
+  <li>다음 CPU Burst의 길이와 각 Process를 연결하여 이 길이가 가장 짧은 Process 순서대로 CPU를 할당하여 scheduling
+    <ul>
+      <li>길이가 동일하다면 FCFS (선착순)</li>
+    </ul>
+  </li>
+  <li>Average Waiting Time이 최소화 되기에 SJF 방식이 최적이긴하나, 다음 CPU Request 시간을 알기 어렵다는 큰 문제점이 있음 ㅜㅜ
+    <ul>
+      <li>Why 어려움? → I/O Request 가 나와야 I/O Burst로 전환되어 CPU Burst 길이를 측정 할 수 있어서 ㅜㅜ</li>
+    </ul>
+  </li>
+  <li>
+    <p>ex) 다음과 같은  P1, P2, P3가 있을 때</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Process</th>
+          <th>Burst Time (ms)</th>
+          <th>Shortest Order</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>P1</td>
+          <td>6</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>P2</td>
+          <td>8</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>P3</td>
+          <td>7</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>P4</td>
+          <td>3</td>
+          <td>1</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>SJF Scheduling에 의해 정해진 Gantt Chart는</p>
+
+    <p>| — | — | — | — |</p>
+
+    <ul>
+      <li><strong>Waiting Time :</strong> P1 = 3;  P2 = 16;  P3 = 9; P4  = 0</li>
+      <li><strong>Average Waiting Time :</strong> (3 + 16 + 9 + 0) / 4 = 7</li>
+      <li><strong>FCFS 사용 했을 경우 Average Waiting Time :</strong> (0 + 6 + 14 + 21) / 4 = 10.25</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="sjf-scheduling의-2가지-방식">SJF Scheduling의 2가지 방식</h3>
+
+<p>| Process | Arrival Time (ms) | Burst Time (ms) |
+| — | — | — |
+| P1 | 0 | 8 |
+| P2 | 1 | 4 |
+| P3 | 2 | 9 |
+| P4 | 3 | 5 |</p>
+<ol>
+  <li>
+    <p>Nonpreemptive SJF : 일단 CPU가 Process에게 주어지면, CPU burst가 끝날 때까지 CPU를 선점하고 있음</p>
+
+    <p>| P1 | P2 | P4 | P3 |
+ | — | — | — | — |
+ | 0———————— 8 | 8 ———— 12 | 12 ————— 17 | 17 —————————26 |</p>
+    <ul>
+      <li><strong>Average Waiting Time :</strong> (0 + (8-1) + (17-1) + (12-3) / 4 = 7.75</li>
+    </ul>
+  </li>
+  <li>
+    <p>Preemiptive SJF : 새로 도착한 Process의 CPU burst길이가 지금 실행 중인 procee의 남은 CPU burst시간보다 짧다면 선점 (뻇음)</p>
+
+    <p>→ <strong>Shortest-remaining-time-first scheduling</strong>이라고도 알려져 있음</p>
+
+    <p>| P1 | P2 | P4 | P1 | P3 |
+ | — | — | — | — | — |
+ | 0 —1 | 1 ———— 5 | 5 ————— 10 | 10 ———————18 | 18 ————————- 27 |</p>
+    <ul>
+      <li><strong>Average Waiting Time :</strong> ((10-1)+(1-1)+(17-2)+(5-3)) / 4 = 6.5</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="--next-cpu-burst-길이-결정">- Next CPU Burst 길이 결정</h2>
+
+<ul>
+  <li>실제 길이를 알 수 없기에 추측만 가능함 ㅜㅜ</li>
+  <li>이전 CPU Burst 길이들의 exponential average를 이용하여 추측
+    <ol>
+      <li>$t_n$  = Actual Lenght of $n^{th}$ CPU Burst</li>
+      <li>$\tau _{n+1}$  = Predicted Value for the next CPU Burst</li>
+      <li>$\alpha, 0 \leq \alpha \leq1$</li>
+      <li>Define :  $\tau _{n+1} = at_n\space + \space (1-\alpha )\tau_n$</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--priority-scheduling">- Priority Scheduling</h2>
+
+<ul>
+  <li>각 process에게 정수 priority number가 주어짐</li>
+  <li>CPU는 우선순위가 가장 높은 process에게 할당되고, 만약 우선순위가 동일한 경우에는 FCFS 순서를 사용함</li>
+  <li>SJF는 다음 CPU Burst 시간을 기반으로 한 우선순위 스케줄링이라면, 이거는 일반적으로 지정된 고정된 값을 우선순위로 이용</li>
+  <li>우선순위는 internally(내부적), externally(외부적) 으로 정의될 수 있음
+    <ul>
+      <li><strong>Internally</strong> : 측정가능한 quantity나 qulity를 사용! ex) 시간 제한이나 시간 사용량, 리소스 사용량, CPU burst에 대한 I</li>
+      <li><strong>external</strong> : 컴퓨터 시스켐 외의 기준에 의해 설정 ex) 컴퓨터 사용에 지불하는 금액</li>
+    </ul>
+  </li>
+  <li>2가지 방식
+    <ul>
+      <li>현재 실행 중인 프로레스보다 우선위가 높은 새로운 프로레스가 ready queue에 도착한 경우
+        <ol>
+          <li><strong>Preemptive</strong> : CPU를 선점하고 새로운 프로세스 실행</li>
+          <li><strong>Non-preempitve</strong> : 그런거 없음 지금 CPU 사용하고 있는 process 그대로 유지</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li><strong>문제점 : Stavation</strong> → 우선 순위가 낮은 process의 경우 계속 밀리니 결국 절대 실행 못 할 수도 있음 ㅜㅜ</li>
+  <li>
+    <p><strong>해결법 : Aging</strong> → 시간이 지날수록 점진적으로 기존의 process의 우선수위를 높여서 오래된 process가 실행되도록</p>
+
+    <p>ex) 우선순위 범위를 0-127로 두고 15분 마다 대기 중인 프로세스의 우선순위를 1씩 높임!</p>
+
+    <p>→ 그렇게 되면 우선순위 127이었던 애는 32분 이상 지나면 0이 되어서 처리하게 됨</p>
+  </li>
+</ul>
+
+<h2 id="round-robin-rr">Round Robin (RR)</h2>
+
+<ul>
+  <li>Time-sharing system 을 위해 특별히 설계된 방식으로 Preemptive 방식 임</li>
+  <li>각 process는 10-100 밀리초인 작은 CPU 단위 시간 (Time Quantum)의 일정 시간을 얻음</li>
+  <li>그리고 이 Time Quantum이 지나면 다음 process가 선점되어서 ready Queue의 마지막에 추가됨
+    <ul>
+      <li>FCFS랑 비슷하지만 Process 간 switch를 위한 선점을 추가함</li>
+    </ul>
+  </li>
+  <li>Ready Queue는 circular queue이고 FIFO를 사용해서 구현함</li>
+  <li>고려해야할 2개의 경우
+    <ol>
+      <li>Process가 1 Time Quantum보다 작거나 같은 CPU Burst를 가지는 경우 <strong>→ 남는 time quantum 동안 어떻게? 그냥 바로 scheduling</strong></li>
+      <li>Process가 1 Time Quantum보다 큰 CPU Burst를 가지는 경우 <strong>→ time quantum 끝날 때 마다 계속 처리를 어떻게?</strong></li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="ex-example-time-quantum--4"><strong>ex) example, Time Quantum = 4</strong></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Process</th>
+      <th>Burst Time (ms)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>P1</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <td>P2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>P3</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th>P1</th>
+      <th>P2</th>
+      <th>P3</th>
+      <th>P1</th>
+      <th>P1</th>
+      <th>P1</th>
+      <th>P1</th>
+      <th>P1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0—— 4</td>
+      <td>4 —- 7</td>
+      <td>7— 10</td>
+      <td>10 ——14</td>
+      <td>14——18</td>
+      <td>18——22</td>
+      <td>22——26</td>
+      <td>26——30</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong>Average waiting time</strong> : ((10-4)+4+7)/3 = 5.66</li>
+  <li>RR의 경우 굉장히 긴 시간을 기다려야하는 경우도 있음</li>
+  <li>
+    <p>일반적으로 평균 turnarund 시간이 SJF보다 길지만 응답속도은 더 좋음 → interactive 한</p>
+  </li>
+  <li>Ready Queue 에 n개의 process가 있고 time quantum이 q인 경우, 각 process는 한번에 최대 q 시간 단위의 chunk로 CPU시간의 1/n 을 얻음</li>
+  <li>(n-1)q 이상 다음 quantum을 기다리는 process는 없음 → 각자가 최대로 q 만큼 기다려야 (n-1)q 만큼 기다린거니까</li>
+  <li>성능은 time quantum 사이즈 q에 따라 달려있음
+    <ul>
+      <li>q 가 매우 큰 경우 → FCFS 랑 동일해짐.. 사실 q 보다 burst 시간이 긴게 없을테니까</li>
+      <li>q 가 매우 큰 경우 → 각 n 개의 process는 실제보다 1/n 속도의 실행되는 process가 될거임. . 그리고 context switch가 굉장히 자주 일어나서 overhead가 커짐 ㅜㅜ</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_4.png" />
+
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_5.png" />
+</center>
+
+<ul>
+  <li><strong>평균 Turnaround 시간은 q가 증가한다고 해서 무조건 나아지는게 아님</strong></li>
+</ul>
+<center>
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_6.png" />
+</center>
+
+<h2 id="multilevel-queue">Multilevel Queue</h2>
+
+<ul>
+  <li>Ready Queue를 2개로 분할한 다음에 어떤 process냐에 따라 어떤 queue에 넣을지 결정 → 즉 프로세스간 여러 레벨로 분류하는
+    <ol>
+      <li><strong>foreground (interactive) queue</strong> → 상호작용이 많고 burst 시간이 빠른</li>
+      <li><strong>background (batch) queue</strong> → batch 처럼 긴 시간동안 동작하고 상대적으로 덜 중요한</li>
+    </ol>
+  </li>
+  <li>각 process는 하나의 ready queue에 영구적으로 할당됨</li>
+  <li>각 queue는 각자의 scheduling 알고리즘을 가짐
+    <ul>
+      <li><strong>foreground (interactive) : RR</strong> → 아무래도 빠르게 동작되어야하니까 …</li>
+      <li><strong>background (batch) : FCFS</strong></li>
+    </ul>
+  </li>
+  <li>ready queue 사이에도 scheduling이 이루어져해야함
+    <ul>
+      <li>Fixed priority scheduling
+        <ul>
+          <li>즉 무조건 foreground에서 모두 사용한 다음에 background로 넘어감 <strong>→ Stavation 문제 발생할 수도</strong></li>
+        </ul>
+      </li>
+      <li>Time slice : 각 queue는 프로세스 사이에서 schedule을 잡을 수 있는 일정량의 CPU 시간을 얻음! 이 시간 지나면 얻어야해
+        <ul>
+          <li>foreground queue는 processRR 에서 80%, background in FCFS 에서 20%</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>각 ready queue는 우선순위가 낮은 queue보다 절대적인 우선 순위를 가짐</p>
+
+    <center>
+  <img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_7.png" />
+  </center>
+
+    <ul>
+      <li>interactive 프로세스를 실행하려면 system process queue이 비어있어야함</li>
+      <li>system process가 도착하면 interactive process가 선점됨</li>
+      <li>즉 앞에 있는 queue가 다 실행되어야 다음 queue에 들어있는 프로세스들이 실행된다는 것</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="multilevel-feedback-queue">Multilevel Feedback Queue</h2>
+
+<ul>
+  <li>process가 ready queue간에 <strong>이동할 수 있는 경우</strong> !</li>
+  <li>다른 policy와 quantum size를 가진 Multiple Queue 간에서 process는 migrate 할 수 있음</li>
+  <li>CPU burst times에 따라 process를 분리할 수 있음
+    <ul>
+      <li>process가 CPU 시간을 너무 많이 사용하는 경우 → 낮은 우선순위를 가진 queue로 이동</li>
+      <li>
+        <p>만약 process가 너무 오래 wait 하고 있는 경우 → 높은 우선순위를 가진 queue로 이동</p>
+
+        <p>: starvation 을 방지하기 위한 aging 방법</p>
+      </li>
+      <li>I/O 중심인 process랑 foreground(interactive)한 process 은 높은 우선순위에 배치함</li>
+      <li>processeor 중심의 process는 낮은 우선순위에 배치함</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="example-in-multilevel-feedback-queue">Example in Multilevel Feedback Queue</h3>
+
+<ul>
+  <li>3 개의 Queue
+    <ol>
+      <li>Q0 : Time Quantum 이 8 ms 인 RR</li>
+      <li>Q1 : Time Quantum 이 16 ms 인 RR</li>
+      <li>Q2 : FCFS</li>
+    </ol>
+  </li>
+  <li>Scheduling
+    <ol>
+      <li>새로운 job이 Q0 에 들어가고, CPU를 얻으면 8 ms 동안 가지고 있음</li>
+      <li>8 ms 동안 완료되지 않으면 jop은 Q1 으로 이동함</li>
+      <li>Q1 에서 job 은 16 ms 동안 추가적으로 CPU 가짐 ! 그리고 이 시간동안 완료되지 않으면 다시 Q2로 이동</li>
+      <li>Q2 에서 job 은 FCFS 방식으로 작동! 대신 Q1, Q2 가 이때 비어있을 때만</li>
+    </ol>
+  </li>
+</ul>
+
+<center>
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_8.png" />
+</center>
+
+<ul>
+  <li>Multilvel-feedback-Queue Sceduler은 다음 parameter에 대해 정의됨
+    <ol>
+      <li>
+        <h1 id="of-queues">of Queues</h1>
+      </li>
+      <li>각 Queue에 대한 scheduling algorithms</li>
+      <li>process 를 더 높은 우선순위의 queue로 upgrade 하는 것을 결정하는 method</li>
+      <li>process 를 더 낮은 우선순위의 queue로 demote 하는 것을 결정하는 method</li>
+      <li>process가 service를 원할 때 process 가 들어갈 ready queue를 결정하는 method</li>
+      <li>process가 service를 받는 시기를 결정하는 method → PPT 에는 없음!</li>
+    </ol>
+  </li>
+</ul>
+
+<h1 id="multiple-processor-scheduling">Multiple-Processor Scheduling</h1>
+
+<h2 id="--multiple-processor-schduling">- Multiple-Processor Schduling</h2>
+
+<ul>
+  <li>multiple CPUs (Multiple-Processor) 가 가능한 경우 CPU Scheduling은 더 복잡해짐 ㅜㅜ → Processor 마다 독자적인 Queue랑 독자적인 Scheduling 방식을 가지고 있으니까 !
+    <ol>
+      <li><strong>Asymmetric Multiprocessing (AMP)</strong></li>
+    </ol>
+    <ul>
+      <li>단 하나의 process (master)만 system data structure에 접근함 그리고 얘가 다른 모든 processor들의 scheduling을 지정함</li>
+      <li>다른 process (slave)들은 user code만 실행
+        <ol>
+          <li><strong>Symmetric Multiprocessing (SMP)</strong></li>
+        </ol>
+      </li>
+      <li>각 processor는 자체적으로, 즉 스스로 scheduling함</li>
+      <li>각 Processor는 공통의 ready Queue에 있는 process 들 중에 실행할 process를 선택함! 아니면 Procesor가 각자의 private queue를 가지는 경우도?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--symmetric-multiprocessing-smp">- Symmetric Multiprocessing (SMP)</h2>
+
+<ul>
+  <li>Common Ready Queue (Global)
+    <ul>
+      <li>Process가 idle이 되면 (유휴 상태가 되면), CPU schduler는 즉시 common queue에서 해당 process를 추출함</li>
+    </ul>
+  </li>
+  <li>A private Queue for Each Processor
+    <ul>
+      <li>모든 process 간의 <strong>load balancing</strong>이 필요함</li>
+      <li>process간 migration으로 종료되면
+        <ul>
+          <li>push migratioin</li>
+          <li>pull migration (work stealing)</li>
+          <li>Linux: Push-load-balancing every 200 ms, pull-load-balancing whenever local task queue is empty</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--processor-affinity-프로세서-선호도">- Processor Affinity (프로세서 선호도)</h2>
+
+<ul>
+  <li>Cache Affinity
+    <ul>
+      <li>cache에는 최근에 CPU에 의해 접근한 data의 copy본이 포함되어 있음 그래서 이를 선호</li>
+      <li>process가 최근에 할당된 CPU말고 다른 CPU에 할당된 경우
+        <ul>
+          <li>새로운 접근에 의해 이전 캐시들은 무효화됨 → 관련 없는 캐시니까</li>
+          <li>새 CPU에서 시작하니까 cache miss가 엄청나게 많이 발생</li>
+          <li>많은 bus traffic과 굉장히 느린 main memory 접근..</li>
+        </ul>
+      </li>
+      <li><strong>그러니까! 최대한 다른 CPU로의 migration은 피해야함!! 되도록이면 무조건 기존의 CPU에 할당되도록!!! → 그래서 processor에 대한 선호도를</strong></li>
+    </ul>
+  </li>
+  <li>Process는 현재 있는 Processor에 대한 선호도가 있음
+    <ul>
+      <li><strong>Hard Affinity</strong> : 다른 CPU로의 migration 금지 (forbidden)</li>
+      <li><strong>Soft Affinity</strong> : Mitgration 가능하긴 한데 undesirable (바람직하지 않다)</li>
+    </ul>
+  </li>
+  <li>
+    <p>NUMA (Non-Uniform Memory Accesss) Affinity : CPU Scheduler와 memory 배치 알고리즘이 함께 작동해서 프로세스에 대한 메모리 페이지가 상주하는 특정 processor(soket)에 process를 할당 할 수 있음</p>
+
+    <center>
+  <img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch5/Untitled_9.png" />
+  </center>
+  </li>
+</ul>
+
+<h2 id="work-conserving-or-not">Work-Conserving or Not</h2>
+
+<ol>
+  <li>Work-conserving
+    <ul>
+      <li>누군가 CPU 를 원할 때 리소스를 idel 상태로 두지 마라!</li>
+      <li>실행 가능한 process가 없을 때만 CPU가 idel 상태가 되도록</li>
+    </ul>
+  </li>
+  <li>Non work-conserving
+    <ul>
+      <li>실행 가능한 process가 있어도 CPU가 idel 상태 일 수 있음</li>
+      <li>안정성은 높을지도?</li>
+    </ul>
+  </li>
+</ol>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-04-03">April 3, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch4" class="pagination--pager" title="[OS] Ch4. Thread
+">Prev</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch4" rel="permalink">[OS] Ch4. Thread
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-29T00:00:00+09:00">March 29, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch3" rel="permalink">[OS] Ch3. Processes
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-27T00:00:00+09:00">March 27, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch2" rel="permalink">[OS] Ch2. Operating-System Structure
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-15T00:00:00+09:00">March 15, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch1" rel="permalink">[OS] Ch1. Introduction
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-08T00:00:00+09:00">March 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 zi_orv. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'github-account/repo-name');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+
+  </body>
+</html>
