@@ -1,0 +1,1435 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch4. Thread | RUTuna</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="RUTuna">
+  
+  <meta property="article:author" content="RUTuna">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch4. Thread">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch4">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-03-29T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-03-29T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch4">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "RUTuna",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://github-account.github.io/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github-account.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github-account.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://github-account.github.io/assets/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="https://github-account.github.io/assets/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/profile.png" alt="RUTuna" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">RUTuna</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://github.com/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 11</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (4)</a></li>
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title1</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/categories1/">Categories1 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/categories2/">Categories2 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories3/">Categories3 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories4/">Categories4 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title2</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories5/">Categories5 (1)</a></li>
+              
+            
+              
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories6/">Categories6 (1)</a></li>
+              
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Title3</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                <li><a href="/categories/categories7/">Categories7 (1)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch4. Thread">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-03-29T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-03-29T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch4. Thread
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-29T00:00:00+09:00">March 29, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#overview">Overview</a><ul><li><a href="#--threads">- Threads</a></li><li><a href="#--왜-threads-방식을-사용했을까">- 왜 Threads 방식을 사용했을까?</a></li><li><a href="#--multithreaded-server">- Multithreaded server</a></li><li><a href="#--multicore-programming">- Multicore Programming</a></li></ul></li><li><a href="#multithreading-models">Multithreading Models</a><ul><li><a href="#--multithreading-models">- Multithreading models</a></li><li><a href="#--kernel-threads">- Kernel Threads</a></li><li><a href="#--user-threads">- User Threads</a></li><li><a href="#--다양한-multi-threading-models">- 다양한 Multi-threading Models</a></li><li><a href="#--many-to-one-model-user-level-thread">- Many-to-One Model (user-level thread)</a></li><li><a href="#--one-to-one-model-kernel-level-thread">- One-to-One Model (kernel-level thread)</a></li><li><a href="#--many-to-many-model">- Many-to-Many Model</a></li><li><a href="#--two-level-model">- Two-level Model</a></li><li><a href="#--user-level-thread-vs-kernel-level-threads--정리">- User-Level Thread vs Kernel-level Threads  정리</a></li></ul></li><li><a href="#thread-libraries">Thread Libraries</a><ul><li><a href="#--thread-libraries">- Thread Libraries</a></li><li><a href="#--pthreads-posix-thread">- Pthreads (POSIX Thread)</a></li></ul></li><li><a href="#threading-issues">Threading Issues</a><ul><li><a href="#--fork--exec-system-call">- fork() &amp; exec() system call</a></li><li><a href="#--signal-handling">- Signal Handling</a></li><li><a href="#--thread-cancellation">- Thread Cancellation</a></li><li><a href="#--thread-pool">- Thread Pool</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="overview">Overview</h1>
+
+<h2 id="--threads">- Threads</h2>
+
+<ul>
+  <li>Instructions Sequence를 실행하는 CPU utilization의 기본 단위 <strong>→ 실행 단위 !</strong>
+    <ul>
+      <li>OS scheduler가 독립적으로 관리하는 <strong>가장 작은 sequence</strong></li>
+      <li>자체 Thread ID, Program Counter(PC), Register set, Stack 를 가지고 있음</li>
+    </ul>
+  </li>
+  <li>Process는 하나 이상의 Thread를 가질 수 있고, 하나 이상의 task를 동시에 실행할 수 있음
+    <ul>
+      <li><strong>process의 다른 thread과 reaource (code, data section, heap…) 를 공유</strong>하기에 lightweight</li>
+      <li>프로세스와 비슷한 lifecycle을 가짐 <strong>→ ready, waiting, running</strong></li>
+    </ul>
+  </li>
+  <li>Single processor에서 multithreading은 일반적으로 <strong>multiplexing</strong>에 의함
+    <ul>
+      <li>single processor 라서 multiplexing 하려면 한 processor 내에서 thread간 전환이 굉장히 빠르고 자주 발생 해야함.. → context switch 로 인한 overhead</li>
+    </ul>
+  </li>
+  <li>Multiprocess (including multi-cores)에서 thread는 <strong>실제로 동시로 실행</strong> 될 수 있으며, 각 core는 특정 thread를 실행</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/220e2051-38ad-40f3-83bd-5f58cd3276e7" />
+
+<img width="300" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/dd34088d-fb75-4dd2-8a38-1f73d5625a9b" />
+</center>
+
+<h2 id="--왜-threads-방식을-사용했을까">- 왜 Threads 방식을 사용했을까?</h2>
+
+<ul>
+  <li>경우에 따라서 하나의 application이 동시에 여러 task를 실행해야하는 경우가 있음. 근데 이때 모든 task마다 새로운 process를 생성하기에는 시간이랑 리소스가 너무 많이 소모됨 ㅜㅜ</li>
+  <li>그래서 하나의 process에 task를 실행할 수 있는 thread를 여러개 두는 방식을 사용!</li>
+  <li>장점
+    <ul>
+      <li>빠름!</li>
+      <li>생성, 전환에 드는 ovehead가 적음</li>
+      <li>동일한 주소 공간을 공유할 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--multithreaded-server">- Multithreaded server</h2>
+
+<ul>
+  <li>
+    <p>하나의 process에서 여러 비슷한 task를 수행하는 경우의 예시 ex) 웹서버</p>
+
+    <center>
+  <img width="600" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/0a0cea5a-ce42-4d57-85ec-f1215dda83cb" />
+  </center>
+  </li>
+  <li>웹 서버는 클라이언트 요청을 받는데, 이 클라이언트가 동시에 굉장히 많을 수 있음</li>
+  <li>
+    <p>기존의 단일 threas process로 실행된다면, 한번에 하나의 클라이언트에게만 받은 요청에 대한 서비스를 제공 할 수 있어서 다른 클라리언트들은 굉장히 기다려야했음 ㅜㅜ</p>
+
+    <p><strong>→ 이걸 요청을 처리하는 별도의 thread를 만들어 해결! 즉, 요청 처리하는 thread 따로 있도 다른 사용자 상호작용이나 그런 작업하는 thread 따로 있는</strong></p>
+  </li>
+  <li>client가 server에 요청을 보내면, 새로운 thread를 만들어 요청에 대한 서비스를 하도록하고, server는 계속 클라이언트들에게 요청을 받음</li>
+  <li>장점
+    <ul>
+      <li><strong>Responsiveness :</strong>
+        <ul>
+          <li>일부 part가 block되거나 긴 작업을 수행하는 동안에도 application은 계속 실행될 수 있음 <strong>→ 사용자에 대한 응답성 향상</strong></li>
+          <li>그니까 버튼을 눌렀는데 시간이 겁나 오래 걸리는 동작일 경우.. 이 시간에도 다른 요청을 받을 수 있게 됨</li>
+        </ul>
+      </li>
+      <li><strong>Resource Sharing :</strong>
+        <ul>
+          <li>Process는 원래 공유 메모리나 메세지 전달과 같은 기술을 통해서만 리소스를 공유할 수 있음</li>
+          <li>근데 Thread는 기본적으로 자신이 속한 process의 memory와 resource를 공유함</li>
+          <li>그렇기에 application이 동일한 주소 공간 내에서 여러 실행 중인 thread를 가질 수 있음</li>
+        </ul>
+      </li>
+      <li><strong>Economy :</strong>
+        <ul>
+          <li>process 생성을 위해 매 process 마다 memory와 resource 할당하는 데는 비용이 많이 듬.. ㅜㅜ</li>
+          <li>근데 thread는 그냥 자기가 속한 process의 memory와  resourc를 공유하므로 따로 할당안해줘두 됨 ! 그래서 차라리 thread만들고 전환하는게 더 경제적</li>
+        </ul>
+      </li>
+      <li><strong>Scalability :</strong>
+        <ul>
+          <li>다중 CPU system에서 multithreading사용하면 병렬 처리가 더 증가됨</li>
+          <li>즉, multithreading의 장점은 서로 다른 processing core에서 병렬적으로 thread가 실행 중인 multiprocess 구조에서 더 커짐</li>
+          <li>단일 thread process는 짜피 한 process니까?</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--multicore-programming">- Multicore Programming</h2>
+
+<ul>
+  <li>Multicore or Multiprocessro system은 다음과 같은 이유로 프로그래머에게 압박감을 줌 ㅠㅠ
+    <ul>
+      <li>Dividing activities, Balance, Data splitting, Data dependency, Testing and debugging</li>
+    </ul>
+  </li>
+  <li><strong>Concurrency(동시성)</strong>는 하나 이상의 작업 진행을 할 수 있음을 의미</li>
+  <li><strong>Parallelism(병렬성)</strong>은 System이 하나 이상의 작업을 동시에 수행 할 수 있음을 의미</li>
+  <li>
+    <p>즉, Concurrency는 동시에 실행되는 것 처럼 보이게 하는 것으로 single-core, multi-core 둘 다 가능하며, Parallelism은 실제로 동시에 수행되는 것으로 multi-core에서만 가능한 개념</p>
+
+    <center>
+  <img width="600" alt="Untitled 3" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/0c023775-53c6-432e-9c54-114eeea86ee4" />
+  </center>
+
+    <ul>
+      <li>Concurrency은 동시에 실행되는 것 처럼 Thread를 왔다갔다 거리며 실행하지만, Parallelism은 여러 core로 실제로 동시에 실행시킴. (1,2) (3,4) 이렇게</li>
+    </ul>
+  </li>
+  <li>Type of Parallelism
+    <ul>
+      <li><strong>Data prarallelism</strong> - 동일한 데이터의 subset을 여러 core에 분산, 각 thread는 동일한 operation 을  각각 수행</li>
+      <li><strong>Task parallelism</strong> - core 에 thread를 분산, 각 thread는 고유한 operation 수행</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="multithreading-models">Multithreading Models</h1>
+
+<h2 id="--multithreading-models">- Multithreading models</h2>
+
+<ul>
+  <li><strong>Kernel Threads</strong> : Kernel에서 지원 받음
+    <ul>
+      <li>ex) Windows, Solaris, Linux, Mac OS X 등을 포함한 거의 모든 일반적인 OS</li>
+    </ul>
+  </li>
+  <li><strong>User Threads</strong> : user-level therad library에 의해 수행되는 management
+    <ul>
+      <li>3가지 중요한 thread library
+        <ol>
+          <li>POSIX Pthreads</li>
+          <li>Win32 threads</li>
+          <li>Java threads</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--kernel-threads">- Kernel Threads</h2>
+
+<ul>
+  <li>Kernel (OS) 가 직접 관리하는 thread로, Kernel은 System call에 의한 생성되고 파괴되는 thread를 모두 알고 있음</li>
+  <li>그렇기에 thread가 차단되면, 전체 thread 를 차단하지 않고 다른 thread를 예약할 수 있음</li>
+  <li>Thread 기반으로 Fine-grain 수행
+    <ul>
+      <li>Fine-grain : 하나의 작업을 작은 단위로 나눈 뒤, 다수의 호출을 통해 작업 결과를 생성하는 방식</li>
+      <li>Kernel은 thread를 관리하기 위해 process scheduling algorithms을 사용함</li>
+    </ul>
+  </li>
+  <li>kernel mode 권한 관련에 의해 thread 전환이 무거움</li>
+</ul>
+
+<h2 id="--user-threads">- User Threads</h2>
+
+<ul>
+  <li>Kernel은 user-level thread의 존재를 알지 못하고(인식하지 못함), thread가 포함된 process만 알고 있음 <strong>→ 즉 process 단위로 인식</strong></li>
+  <li>Thread management는 user-level therad library에 의해 수행됨
+    <ul>
+      <li>개발자는 thread 라이브러리를 사용해서 thread를 관리 (생성, 삭제, 예약 전환 등..) 함</li>
+    </ul>
+  </li>
+  <li>Thread가 차단되면, processd의 다른 모든 thread를 포함한 전체 process가 종료됨
+    <ul>
+      <li>Thread block → process block → process 내 다른 thread도 block</li>
+    </ul>
+  </li>
+  <li>Kernel은 thread가 아니라 process를 scheduling 함 <strong>→ thread는 user-level에서 관리하니까</strong></li>
+  <li>kernel mode 권한이 필요하지 않아서 thread 전환이 가벼움</li>
+</ul>
+
+<h2 id="--다양한-multi-threading-models">- 다양한 Multi-threading Models</h2>
+
+<ul>
+  <li>궁극적으로 user thread와 kernel thread 사이에 관계가 무조건 존재해야함</li>
+  <li>그 관계의 종류
+    <ul>
+      <li>Many-to-One</li>
+      <li>One-to-One</li>
+      <li>Many-to-Many</li>
+    </ul>
+
+    <p><strong>→ user가 하나고, 여러개의 kernel 가 있을 순 없으니 . .</strong></p>
+  </li>
+</ul>
+
+<h2 id="--many-to-one-model-user-level-thread">- Many-to-One Model (user-level thread)</h2>
+
+<ul>
+  <li>여러개의 user-thread가 단일 kernel-thread에 매핑됨 <strong>→ kernel 이 process 단위로 관리</strong></li>
+  <li>지금 이 모델 사용하는 경우는 거의 없음!</li>
+  <li>장점
+    <ul>
+      <li>Thread management가 user space에서 이루어짐 <strong>→즉, scheduling 이 user-threas library 에서 이뤄져서 효율적임!</strong></li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li>Thread가 block되면, 전체 process도 block 된다는 문제점 ㅜㅜ <strong>→ kernel 이 process 단위로 인식하다 보니까</strong></li>
+      <li>process단위로 kernel 이 관리하다보디 process 단위로 할당해서 Thread의 병렬 실행이 없음 ㅜㅜ 그래서 multiple CPU를 이용 할 수 없다 !</li>
+    </ul>
+  </li>
+</ul>
+
+<p>ex) Solaris Green Threads, GNU Portable Threads</p>
+
+<center>
+<img width="368" alt="Untitled 4" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/b402b943-c9ec-4baf-a1b2-5119c5cc8663" />
+</center>
+
+<h2 id="--one-to-one-model-kernel-level-thread">- One-to-One Model (kernel-level thread)</h2>
+
+<ul>
+  <li>각 user-threaed가 kernel-thread에 매핑됨 <strong>→ kernel 이 process 내 thread 단위로 관리</strong></li>
+  <li>장점
+    <ul>
+      <li>Thread를 block해도 다른 thread가 block 되지 않음</li>
+      <li>parallelism이 증가해 multiprocessor 성능이 향상됨</li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li>User-thread를 생성하려면, kernel-thread도 생성해야함 <strong>→ 그렇기에 overhead가 증가하고 thread 수에 제한이 생김</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<p>ex) Windows NT/XP/2000, Linux, Solaris 9랑 그 이후 모델들</p>
+
+<center>
+<img width="472" alt="Untitled 5" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/af022b2b-32b1-453e-b8c6-54ea714ba049" />
+</center>
+
+<h2 id="--many-to-many-model">- Many-to-Many Model</h2>
+
+<ul>
+  <li>여러 user-thread가 여러 kernel-thread에 매핑 할 수 있도록 허용</li>
+  <li>OS가 충분한 수의 kernel-thread를 생성할 수 있도록 허용</li>
+  <li>장점
+    <ul>
+      <li>parallelism이 증가해 multiprocessor 성능이 향상됨</li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li>일반적으로 구현하기에 복잡함 ㅜㅜ</li>
+    </ul>
+  </li>
+</ul>
+
+<p>ex) Solaris prior to version 9, Windows NT/2000 with the Thread Fiver package</p>
+
+<center>
+<img width="358" alt="Untitled 6" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/fdb53c51-c209-4fd9-af34-7ad191d41979" />
+</center>
+
+<h2 id="--two-level-model">- Two-level Model</h2>
+
+<ul>
+  <li>Many-to-Many랑 비슷하지만, 얘는 user-thread와 kernel-thread간의 bound를 허용한다는 점이 다름
+    <ul>
+      <li>Bounded threads : User thread 가 지정된 단일 kernel thread (전용.. 인 느낌)에 영구적으로 매핑</li>
+      <li>Unbounded threads : User thread 가 set내의 kernel thread 간 움직일 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<p>ex) IRIX, HP-UX, Tru63 UNIX, Solaris 8와 그 earlier</p>
+
+<center>
+<img width="392" alt="Untitled 7" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/9ba3a0ee-f42f-424c-a751-188a95b304c6" />
+</center>
+
+<h2 id="--user-level-thread-vs-kernel-level-threads--정리">- User-Level Thread vs Kernel-level Threads  정리</h2>
+
+<h3 id="user-level">User-Level</h3>
+
+<ul>
+  <li>Application(User) 에 의해 관리</li>
+  <li>Kernel은 Thread를 모름! 인식하지 못함</li>
+  <li>Context switching이 쌈 <strong>→ kernel mode 권한이 필요 없으니</strong></li>
+  <li>원하는 만큼 많이 생성할 수 있음</li>
+  <li>주의 깊게 사용해야함 . . <strong>→ 서로 보호되어 있지 않아서</strong></li>
+</ul>
+
+<h3 id="kernel-level">Kernel-Level</h3>
+
+<ul>
+  <li>Kernel에 의해 관리</li>
+  <li>Kernel resources를 사용함</li>
+  <li>Context switching이 비쌈</li>
+  <li>생성하는데 한계가 있음 → Kernel Resource를 사용하다보니</li>
+  <li>사용하기 비교적 간편함 ㅎㅅㅎ</li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="thread-libraries">Thread Libraries</h1>
+
+<h2 id="--thread-libraries">- Thread Libraries</h2>
+
+<ul>
+  <li>Thread library는 thread를 생성하과 관리하기 위한 API를 개발자에게 제공함</li>
+  <li>구현의 2가지 기본 방법
+    <ol>
+      <li>Kernel의 도움 없이 User space에 완전히 있는 Library
+        <ul>
+          <li>Library에 있는 함수를 호출하면, system call이 아니라 User space에 있는 local function이 호출</li>
+        </ul>
+      </li>
+      <li>Kernel (OS)의 도움을 받는 Kernel-level library
+        <ul>
+          <li>Library에 있는 함수를 호출하면, kernel로의 system call</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>3가지 main library
+    <ol>
+      <li>Pthreads</li>
+      <li>Win32</li>
+      <li>Java</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--pthreads-posix-thread">- Pthreads (POSIX Thread)</h2>
+
+<ul>
+  <li>User-level 또는 Kernel-level 로 제공될 수 있음</li>
+  <li>Thread 생성 및 syncronization에 필요한 POSIX 표준 (IEEE 1003. 1c) API</li>
+  <li>API는 thread library의 동작을 지정하고, 구현은 library 개발에 달려있음 → 이게 무슨 말이고 . .</li>
+  <li>UNIX OS(Solaris, Linux, Mac OS X)에서 공통적임</li>
+  <li>기본 Pthread APU
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pthread_create()</code> : 새로운 thread 생성
+        <ul>
+          <li>thread 변수, thread 속성, start routinc 함수와 선택적 argument 허용</li>
+        </ul>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">pthread_join()</code> : thread의 termination을 기다림
+        <ul>
+          <li>메인 thread가 종료되기 전에 thread가 작업을 수행할 수 있는지 확인하는 데 사용</li>
+        </ul>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">pthread_exit()</code> : 호출한 thread를 termination</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="n">sum</span><span class="p">;</span>                                <span class="cm">/* this data is shared by the thread(s) */</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">runner</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">);</span>              <span class="cm">/* threads call this function */</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+		<span class="n">pthread</span> <span class="n">t</span> <span class="n">tid</span><span class="p">;</span>                      <span class="cm">/* the thread identifier */</span>
+		<span class="n">pthread</span> <span class="n">attr</span> <span class="n">t</span> <span class="n">attr</span><span class="p">;</span>                <span class="cm">/* set of thread attributes */</span>
+
+		<span class="cm">/* set the default attributes of the thread */</span> 
+		<span class="n">pthread</span> <span class="n">attr</span> <span class="n">init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+	
+		<span class="cm">/* create the thread */</span>
+		<span class="n">pthread</span> <span class="n">create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span> <span class="cm">/* runner에 의해 child thread 생성하고 실행됨 */</span>
+	
+		<span class="cm">/* wait for the thread to exit */</span> 
+		<span class="n">pthread</span> <span class="n">join</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span><span class="nb">NULL</span><span class="p">);</span>
+	
+		<span class="n">printf</span><span class="p">(</span><span class="s">"sum = %d∖n"</span><span class="p">,</span><span class="n">sum</span><span class="p">);</span> <span class="cm">/* child에서 수행한 값이 나옴! 만약 param이 2였다면 sum은 1+2 = 3 */</span>
+<span class="p">}</span>
+
+<span class="cm">/* The thread will execute in this function */</span> 
+<span class="kt">void</span> <span class="o">*</span><span class="n">runner</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">)</span>
+<span class="p">{</span>
+		<span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>         <span class="cm">/* thread 내에서 정의한 local var이기에 각 thread의 local stack에 저장됨 */</span>
+		<span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>                            <span class="cm">/* gloval var이기에 data section에 저장죔 */</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">upper</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+			<span class="n">sum</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+		
+		<span class="n">pthread</span> <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h1 id="threading-issues">Threading Issues</h1>
+
+<h2 id="--fork--exec-system-call">- <code class="language-plaintext highlighter-rouge">fork()</code> &amp; <code class="language-plaintext highlighter-rouge">exec()</code> system call</h2>
+
+<ul>
+  <li>multithreaded program에선 <code class="language-plaintext highlighter-rouge">fork()</code>와 <code class="language-plaintext highlighter-rouge">exec()</code> system call의 의미가 달라질 수 있음 → 원래  <code class="language-plaintext highlighter-rouge">fork()</code> 는 process 생성하는 놈</li>
+  <li>multithreaded program에서 한 program의 thread가 <code class="language-plaintext highlighter-rouge">fork()</code>를 호출한 경우
+    <ol>
+      <li>새로운 process는 부모의 모든 thread를 복제해야하는가</li>
+      <li>새로운 process는 <code class="language-plaintext highlighter-rouge">fork()</code>를 호출한 thread만 복제해야하는가
+        <ul>
+          <li>일부 UNIX system은 위의 두가지 버전의 <code class="language-plaintext highlighter-rouge">fork()</code>를 모두 구현하기도 함</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">exec()</code>를 호출한 경우
+    <ul>
+      <li>모든 thread를 포함한 전체 process가 대체됨</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">fork()</code>를 부르자마자 다시 <code class="language-plaintext highlighter-rouge">exec()</code>을 부른다면 <code class="language-plaintext highlighter-rouge">exec()</code>에서 지정한 프로그램이 곧 모든 것을 다시 대체할 것이기 때문에 모든 스레드를 복제해서 만들어주는 것은 불필요!</li>
+  <li><code class="language-plaintext highlighter-rouge">fork()</code> 후 <code class="language-plaintext highlighter-rouge">exec()</code>를 하지 않는다면 새 프로세스는 모든 스레드들을 복제 해야 함</li>
+</ul>
+
+<h2 id="--signal-handling">- Signal Handling</h2>
+
+<ul>
+  <li>signal은 UNIX system에서 특정 event가 발생했다고 process에게 알리기 위해 사용함
+    <ul>
+      <li>ex) CTRL+C에 의해 process가 종료된 경우</li>
+    </ul>
+  </li>
+  <li>signal를 process하기 위해 signal handeler 사용
+    <ol>
+      <li>특정 event에 의해 signal 생성</li>
+      <li>process로 signal 전달</li>
+      <li>signal handled (처리)</li>
+    </ol>
+  </li>
+</ul>
+
+<center>
+<img width="300" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/449cf54c-6f8c-4908-80e4-884f9637c967" />
+</center>
+
+<ul>
+  <li>multithread program에서 signal 전달하기 위한 option (signal 생성 종류에 따라 결정됨)
+    <ul>
+      <li>signal이 적용되는 thread에 전달</li>
+      <li>process의 모든 thread에 전달</li>
+      <li>process의 특정 thread에 전달</li>
+      <li>process에 대한 모든 signal을 받을 특정 thread 지정</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--thread-cancellation">- Thread Cancellation</h2>
+
+<ul>
+  <li>Thread가 완료되기 전에 terminating
+    <ul>
+      <li>ex) 웹 페이지가 렌더링 되는 동안 중지 버튼 누르는 경우</li>
+    </ul>
+  </li>
+  <li>2가지 일반적인 approaches
+    <ol>
+      <li><strong>Asynchronous cancellation</strong> : 타겟 thread를 즉시 종료</li>
+      <li>
+        <p><strong>Deferred cancellation</strong> : 타겟 thread가 자신이 취소되는지 취소 여부를 주기적으로 확인하면서 순서대로 종료할 수 있는 기회 제공</p>
+
+        <p>→ 더 통제되고 안전함! 자신이 취소되어도 안전하다고 판단하고 취소 여부 확인하면 되니까</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--thread-pool">- Thread Pool</h2>
+
+<ul>
+  <li>요청마다 새로운 thread를 생성하는 거는 새로운 process를 생성하는 방식보다는 overhead가 적긴하지만 그래도 thread에도 약간의 overhead가 존재
+    <ul>
+      <li>thread생성하는데 걸리는 시간이라던가 . .</li>
+    </ul>
+  </li>
+  <li>무제한 thread는 system resource (CPU, Memory) 를 고갈할 수 있음 ㅜㅜ</li>
+  <li>이러한 문제를 해결하기 위해 thread pool 사용 !
+    <ol>
+      <li>process를 시작할 떄 미리 일정한 수의 thread를 만들어 task를 기다리는 곳인 pool에 넣어둠</li>
+      <li>대기하고 있다가 server가 요청을 받으면 새 thread를 생성하는 것 대신 pool에서 깨워서 할당</li>
+    </ol>
+  </li>
+  <li>장점
+    <ul>
+      <li>일반적으로 기존 thread로 요청을 처리하는 방식보다 빠름!</li>
+      <li>일정한 한 순간에 존재하는 thread 수를 제한하여 리소스 고갈 방지</li>
+    </ul>
+  </li>
+  <li>Pool의 thread 수는 CPU 수, Memory, 예상하는 동시 요청 수 등을 기준으로 설정할 수 있음</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-03-29">March 29, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch3" class="pagination--pager" title="[OS] Ch3. Processes
+">Prev</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch3" rel="permalink">[OS] Ch3. Processes
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-27T00:00:00+09:00">March 27, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch2" rel="permalink">[OS] Ch2. Operating-System Structure
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-15T00:00:00+09:00">March 15, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch1" rel="permalink">[OS] Ch1. Introduction
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-08T00:00:00+09:00">March 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories7/post-name-here-7/" rel="permalink">[포스팅 예시] 이곳에 제목을 입력하세요
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2022-09-23T00:00:00+09:00">September 23, 2022</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">본문의 주요 내용을 여기에 입력하세요
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 RUTuna. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'github-account/repo-name');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+
+  </body>
+</html>
