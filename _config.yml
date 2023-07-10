@@ -33,9 +33,9 @@ masthead_title            : # overrides the website title displayed in the masth
 # breadcrumbs             : false # true, false (default)
 words_per_minute          : 200
 comments:
-  provider                : "utterances" # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "custom"
+  provider                : "disqus" # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "custom"
   disqus:
-    shortname             : # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
+    shortname             : rutuna
   discourse:
     server                : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
   facebook:
@@ -109,7 +109,7 @@ author:
   avatar                  : "https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/profile.png" # 블로그 프로필 사진
   bio                     : # "hi all!"
   location                : # "Seoul, Korea"
-  email                   : "p000207@naver.com"
+  email                   : # "p000207@naver.com"
   links: # 사이트 링크
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"

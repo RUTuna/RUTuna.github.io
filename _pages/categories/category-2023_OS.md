@@ -1,5 +1,5 @@
 ---
-title: "2023년 운영체제"
+title: "2023 spring - 운영체제"
 layout: category
 permalink: /categories/study/2023_OS/
 author_profile: true

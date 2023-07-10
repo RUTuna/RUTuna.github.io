@@ -25,25 +25,31 @@ categories:
     children:
       - title: "[2023]Operating System"
         url: /categories/study/2023_OS/
-  - title: "Title1"
-    children:
-      - title: "Categories1"
-        url: /categories/categories1/
-      - title: "Categories2"
-        url: /categories/categories2/
-      - title: "Categories3"
-        url: /categories/categories3/
-      - title: "Categories4"
-        url: /categories/categories4/
+      - title: "[2022]Computer Vision"
+        url: /categories/study/2022_CV/
+      - title: "[2022]Computer Graphics"
+        url: /categories/study/2022_CG/
+      - title: "[2022]Deep Learning"
+        url: /categories/study/2022_DL/
+      - title: "[2022]Algorithms"
+        url: /categories/study/2022_AL/
+      - title: "[2022]System Programming"
+        url: /categories/study/2022_SP/
+      - title: "[2021]Data Structure"
+        url: /categories/study/2021_DS/
 
-  - title: "Title2"
+  - title: "Project"
     children:
-      - title: "Categories5"
-        url: /categories/categories5/
-      - title: "Categories6"
-        url: /categories/categories6/
+      - title: "Pintos 회고록"
+      - title: "Space Cube"
 
-  - title: "Title3"
+  - title: "Develop"
     children:
-      - title: "Categories7"
-        url: /categories/categories7/
+      - title: "Bug/Issue"
+      - title: "Github Blog"
+        url: /categories/develop/Github_Blog/
+
+  - title: "Other"
+    children:
+      - title: "Photography"
+
