@@ -1,0 +1,1789 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch6. Process Synchronization | zi_orv</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="zi_orv">
+  
+  <meta property="article:author" content="zi_orv">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch6. Process Synchronization">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch6">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-04-12T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-04-12T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch6">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "zi_orv",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="-8bYhrDyOZjr61EL8z8964D200AyyTFpWGyPjxkesfo" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="https://rutuna.github.io/assets/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://rutuna.github.io/assets/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://rutuna.github.io/assets/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://rutuna.github.io/assets/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://rutuna.github.io/assets/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://rutuna.github.io/assets/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://rutuna.github.io/assets/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://rutuna.github.io/assets/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://rutuna.github.io/assets/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://rutuna.github.io/assets/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://rutuna.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://rutuna.github.io/assets/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://rutuna.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://rutuna.github.io/assets/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://rutuna.github.io/assets/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/profile.png" alt="zi_orv" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">zi_orv</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="mailto:p000207@naver.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 8</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (6)</a></li>
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Project</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Develop</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/develop/Github_Blog/">Github Blog (2)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Other</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch6. Process Synchronization">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-04-12T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-04-12T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch6. Process Synchronization
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-12T00:00:00+09:00">April 12, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#background">Background</a><ul><li><a href="#--cooperating-processes--ch3-에서-함">- Cooperating Processes → ch3 에서 함</a></li><li><a href="#--synchronization-problem">- Synchronization Problem</a></li><li><a href="#--producer-consumer-problem--ch3-에서-한">- Producer-Consumer Problem → Ch3 에서 한..</a></li><li><a href="#race-condition">Race Condition</a></li></ul></li><li><a href="#the-critical-section-problem">The Critical-Section Problem</a><ul><li><a href="#--critical-section-임계-구역">- Critical Section (임계 구역)</a></li><li><a href="#--solution-to-critical-section-data">- Solution to Critical-Section Data</a></li></ul></li><li><a href="#petersons-solution">Peterson’s Solution</a><ul><li><a href="#--petersons-solution">- Peterson’s Solution</a></li><li><a href="#--petersons-solutuin의-correctness--증명하기">- Peterson’s Solutuin의 correctness  증명하기</a></li><li><a href="#--petsons-solution-단점-개인적으로-정리한-내용">- Petson’s solution 단점 (개인적으로 정리한 내용)</a></li></ul></li><li><a href="#synchronization-hardware-using-lock">Synchronization Hardware (using Lock)</a><ul><li><a href="#--synchronization-hardware">- Synchronization hardware</a></li><li><a href="#--testandset-instruction">- TestAndSet Instruction</a></li><li><a href="#--swap-instruction-cas">- Swap Instruction (CAS)</a></li></ul></li><li><a href="#semaphores">Semaphores</a><ul><li><a href="#--semaphores-with-busy-waiting">- Semaphores (with busy waiting)</a></li><li><a href="#--semaphore-as-general-synchronization-tool">- Semaphore as General Synchronization Tool</a></li><li><a href="#--counting-semaphore">- Counting Semaphore</a></li><li><a href="#--synchronization-problem에서-semaphore-사용하기">- Synchronization Problem에서 semaphore 사용하기</a></li><li><a href="#--semaphore-implementation">- Semaphore Implementation</a></li><li><a href="#--semaphore-without-busy-waiting">- Semaphore without Busy waiting</a></li><li><a href="#--semaphroe-단점">- Semaphroe 단점</a></li><li><a href="#--deadlock--starvation-교착상태와-기아">- Deadlock &amp; Starvation (교착상태와 기아)</a></li><li><a href="#--prioirty-inversion">- Prioirty Inversion</a></li></ul></li><li><a href="#clasic-problems-of-synchronization">Clasic Problems of Synchronization</a><ul><li><a href="#--classical-problems-of-synchronization">- Classical Problems of Synchronization</a></li><li><a href="#--bounded-buffer-problem">- Bounded-Buffer Problem</a></li><li><a href="#--readers-writers-problem">- Readers-Writers Problem</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="background">Background</h1>
+
+<h2 id="--cooperating-processes--ch3-에서-함">- Cooperating Processes → ch3 에서 함</h2>
+
+<ul>
+  <li><strong>Independent process</strong>는 다른 process의 실행에 영향을 주거나, 받을 수 <strong>없음</strong></li>
+  <li><strong>Cooperating process</strong>는 다른 프로세스의 실헹에 영향을 주고, 받을 수 <strong>있음</strong></li>
+</ul>
+
+<h2 id="--synchronization-problem">- Synchronization Problem</h2>
+
+<ul>
+  <li>여러 process에서 공유 데이터에 동시에 접근하면 데이터가 일치하지 않는 문제가 발생할 수 있음</li>
+  <li>
+    <p>그렇기에 <strong>Race Condition</strong>을 잘 설정해서, 여러 process가 동일한 data에 접근하고자 할 때 접근하고 실행하는 순서를 정해 질서있게 실행이 보장되도록 해야함</p>
+
+    <p>→ 그 방법이 바로 <strong>Process Synchronizaio</strong>n 과 <strong>Coordination</strong></p>
+  </li>
+</ul>
+
+<p>ex) <code class="language-plaintext highlighter-rouge">P1 : x++;</code>   <code class="language-plaintext highlighter-rouge">P2: x--;</code> 연산이 있다고 하고 x는 공유 메모리 인 경우</p>
+
+<ul>
+  <li>연산 과정은 1. read x →  2. compute new value of x → 3. write to x 순서로!</li>
+  <li>초기에 <code class="language-plaintext highlighter-rouge">x=0</code> 이었다면 두 프로세스가 실행 되고 난 다음에 x 값은?</li>
+  <li>기대하는 값은 0이지만 <strong>사실 -1, 0, +1 다 나오는 경우가 있음</strong> ㅜㅜ <strong>→ 무조건 0만 나오게 하려면? 1,2,3이 나눠지지 않고 한번에 실행되게 해야함</strong></li>
+</ul>
+
+<h2 id="--producer-consumer-problem--ch3-에서-한">- Producer-Consumer Problem → Ch3 에서 한..</h2>
+
+<ul>
+  <li>count 변수 사용한 버전</li>
+  <li>하지만 이것도 여전히 producer과 consumer가 공유 메모리인 count에 접근하고 조작하기 때문에 여전히 sync 문제가 발생함</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Producer:</span>
+<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+	<span class="cm">/*  produce an item and put in nextProduced **/</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="n">BUFFER_SIZE</span><span class="p">);</span> <span class="c1">// do nothing</span>
+	
+	<span class="n">buffer</span> <span class="p">[</span><span class="n">in</span><span class="p">]</span> <span class="o">=</span> <span class="n">nextProduced</span><span class="p">;</span>
+	<span class="n">in</span> <span class="o">=</span> <span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">BUFFER_SIZE</span><span class="p">;</span>
+	<span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span><span class="o">*</span>
+
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">*/</span><span class="o">/</span> <span class="n">Consumer</span><span class="o">:</span>
+<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">;</span> <span class="c1">// do nothing </span>
+	
+	<span class="n">nextConsumed</span> <span class="o">=</span>  <span class="n">buffer</span><span class="p">[</span><span class="n">out</span><span class="p">];</span> 
+	<span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">BUFFER_SIZE</span><span class="p">;</span> 
+	<span class="n">count</span><span class="o">--</span><span class="p">;</span> 
+	<span class="cm">/**  consume the item in nextConsumed */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="race-condition">Race Condition</h2>
+
+<ul>
+  <li><strong>Race Condition</strong>: 2개 이상의 process가 공유 자원을 병행적으로 읽거나 쓰는 상황</li>
+  <li>count를 증감/감소하는 instrunction 이 있다고 가정하면 그 과정은</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* count ++ */</span>
+<span class="mf">1.</span> <span class="n">reg1</span> <span class="o">=</span> <span class="n">count</span>       <span class="c1">// read, load</span>
+<span class="mf">2.</span> <span class="n">reg1</span> <span class="o">=</span> <span class="n">reg1</span> <span class="o">+</span> <span class="mi">1</span>   <span class="c1">// compute</span>
+<span class="mf">3.</span> <span class="n">count</span> <span class="o">=</span> <span class="n">reg1</span>      <span class="c1">// write, store</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* count -- */</span>
+<span class="mf">1.</span> <span class="n">reg1</span> <span class="o">=</span> <span class="n">count</span>       <span class="c1">// read, load</span>
+<span class="mf">1.</span> <span class="n">reg1</span> <span class="o">=</span> <span class="n">reg1</span> <span class="o">-</span> <span class="mi">1</span>   <span class="c1">// compute</span>
+<span class="mf">2.</span> <span class="n">count</span> <span class="o">=</span> <span class="n">reg1</span>      <span class="c1">// write, store</span>
+</code></pre></div></div>
+
+<h3 id="syncronization이-없는-경우-count--5-상태로-시작-ㅇㅇ">Syncronization이 없는 경우 (count = 5 상태로 시작 ㅇㅇ)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Inst</th>
+      <th>Producer</th>
+      <th>Consumer</th>
+      <th>count</th>
+      <th>Producer’s r1</th>
+      <th>Consumer’s r1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>t1</td>
+      <td>r1 ← count</td>
+      <td> </td>
+      <td>5 (init)</td>
+      <td>5</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>t2</td>
+      <td>r1 ← r1 + 1</td>
+      <td> </td>
+      <td>5</td>
+      <td>6</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>t3</td>
+      <td> </td>
+      <td>r1 ← count</td>
+      <td>5</td>
+      <td>6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>t4</td>
+      <td> </td>
+      <td>r1 ← r1 -1</td>
+      <td>5</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>t5</td>
+      <td>count ← r1</td>
+      <td> </td>
+      <td>6</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>t6</td>
+      <td> </td>
+      <td>count ← r1</td>
+      <td>4</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>reg는 local이라 상관 노노</li>
+  <li>마지막이 5여야하는데 4네 . . ㅜㅜ</li>
+  <li>t2/t3, t4/t5, t5/t6 사이에 context switch 발생</li>
+</ul>
+
+<blockquote>
+  <p><strong>이런 문제가 발생한 이유?</strong></p>
+
+  <ul>
+    <li>hole block으로 실행되어야하는데 broken되어 나눠 실행되었기 때문</li>
+    <li>각자가 독립적이지 않도록, 종속적이게 한번에 실행되어야함</li>
+  </ul>
+</blockquote>
+
+<p>(위랑 똑같은거 다시 써보면 ㅇㅇ..)</p>
+
+<p>S0: producer execute <code class="language-plaintext highlighter-rouge">reg1 = count</code> {reg1 = 5}</p>
+
+<p>S1: producer execute <code class="language-plaintext highlighter-rouge">reg1 = reg1 + 1</code>   {reg1 = 6}</p>
+
+<p>/* Context Switch */</p>
+
+<p>S2: consumer execute <code class="language-plaintext highlighter-rouge">reg2 = count</code>   {reg2 = 5} <strong>→ 사실 reg1 이어도 local이라 동일</strong></p>
+
+<p>S3: consumer execute <code class="language-plaintext highlighter-rouge">reg2 = reg2 - 1</code>   {reg2 = 4}</p>
+
+<p>/* Context Switch */</p>
+
+<p>S4: producer execute <code class="language-plaintext highlighter-rouge">count = reg1</code> {count = 6 }</p>
+
+<p>/* Context Switch */</p>
+
+<p>S5: consumer execute <code class="language-plaintext highlighter-rouge">count = reg2</code>   {count = 4} <strong>→ 5여야 하는데 ㅜㅜ</strong></p>
+
+<h1 id="the-critical-section-problem">The Critical-Section Problem</h1>
+
+<h2 id="--critical-section-임계-구역">- Critical Section (임계 구역)</h2>
+
+<ul>
+  <li>공유 자원 접근 순서에 따라 실행 결과가 달라지는(공통 변수를 변경하거나 table을 update하는)  process의 코드 영역 (segment of code) <strong>→ 즉 여기서 race condition이 발생</strong>
+    <ul>
+      <li>위의 예시에서는 counter가 critical section에 속함</li>
+      <li>하나의 process가 critical section에서 실행 중이면 다른 어떤 process도 이 critical section에 접근 허용을 하면 안됨 (한번에 하나씩)</li>
+      <li><strong>critical section problem</strong>은 process가 cooperate할 수 있는 protocol을 설계하는 것 !</li>
+    </ul>
+  </li>
+  <li>기본적인 구조</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">do</span> <span class="p">{</span>
+	<span class="n">Enter</span> <span class="n">critical</span> <span class="n">section</span> <span class="n">C</span>
+			<span class="n">critical</span> <span class="n">section</span> <span class="n">C</span><span class="o">:</span> <span class="n">operation</span> <span class="n">on</span> <span class="n">shared</span> <span class="n">data</span> 
+	<span class="n">Exit</span> <span class="n">critical</span> <span class="n">section</span> <span class="n">C</span>
+			<span class="n">remainder</span> <span class="n">section</span> 
+<span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="--solution-to-critical-section-data">- Solution to Critical-Section Data</h2>
+
+<ul>
+  <li>다음 3가지 조건을 만족해야 critical section 문제를 해결할 수 있음
+    <ol>
+      <li><strong>Mutual Exclusion (상호배제)</strong> : Process  $P_i$ 가 Critical Section $C$ 에서 실행 중인 경우, 다른 process들은 ciritical section에서 실행될 수 없음</li>
+    </ol>
+
+    <p>→  $C$ 에선 race condition이 없음! 그냥 무조건 한번에 하나만 실행</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p><strong>Progress (진행 융통성)</strong> : 현재 critical section에서 실행 중인 process가 없고 critical section에 진입하려는 process가 있는 경우, critical section에 들어갈 process를 고르는 선택을 무한정 연기할 수 없음</p>
+
+    <p>→ 즉, process가 자신의 차례이지만 critical section 을 안 쓰고 있다고 해서 다른 process가 자원을 쓰고싶은데 계속 기다려라고 할 수 없음. 지금 안 쓰고 있다면 최대한 활용</p>
+  </li>
+  <li>
+    <p><strong>Bounded Waiting (한정 대기)</strong> : process가 critical section에 진입을 요청한 이후부터 요청이 승인되기 전까지 다른 process들이 critical section에 진입하는 횟수가 제한되어야함</p>
+
+    <p>→ 즉 mutual exclusion 때문에 기다리는 process가 무한정 대기하고 있으면 안됨</p>
+
+    <p><strong>→  $C$ 진입에 대한 fairness를 위한 기능</strong></p>
+  </li>
+</ol>
+
+<h1 id="petersons-solution">Peterson’s Solution</h1>
+
+<h2 id="--petersons-solution">- Peterson’s Solution</h2>
+
+<ul>
+  <li><strong>SW-only solution</strong> 으로 HW 의 도움을 받지 않음</li>
+  <li>
+    <p>발표 했을 당시 원래 두개의 process (p0, p1)에서만 적용 가능 했던 방법</p>
+
+    <p><strong>→ 지금은 일반화되어 여러개애서도 가능하다고 함 → 그치만 교수님께선 일단 2개보다 많은 경우 지원 안된다고 말씀하시긴 함</strong></p>
+  </li>
+  <li>LOAD와 STORE이 atomically하게 실행된다고 가정 <strong>→ 즉 interrupted 되지 않음</strong></li>
+  <li>두 process는 2개의 변수를 공유함
+    <ol>
+      <li><code class="language-plaintext highlighter-rouge">int turn;</code>    // 누가 critical section에 들어갈 차래인지 나타냄</li>
+      <li><code class="language-plaintext highlighter-rouge">Boolean flag[2];</code>     // process가 critical section에 들어갈 준비가 되어있는지 나타냄, p[i] == TRUE이면 Pi 준비된거</li>
+    </ol>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Algorithm for Pi (j = 1-i) -&gt; Pi의 context에서 실행되는</span>
+<span class="c1">// symmetric이라 Pj 에 대해서도 동일함</span>
+<span class="k">do</span> <span class="p">{</span>
+		<span class="n">flag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span> <span class="c1">// critical section에 들어가고 싶으니 준비되었다고 알림</span>
+		<span class="n">turn</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span> <span class="c1">// 들어가고 싶다고 선언 후에 Pj한테 차례를 돌려 다른 애들 중에 critical section에 들어가고 싶은 애가 있는지 확인</span>
+		<span class="k">while</span><span class="p">(</span><span class="n">flag</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">turn</span> <span class="o">==</span> <span class="n">j</span><span class="p">);</span> <span class="c1">// Pj가 쓸 동안 기다리기...</span>
+
+		<span class="cm">/* critical section */</span> <span class="c1">// 이제 내 차례 !</span>
+
+		<span class="n">flag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="c1">// critical section 다 썼으면 다 썼다고 알림</span>
+		
+		<span class="cm">/* remainder section */</span> <span class="c1">// 이제 남은 영역 </span>
+<span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="--petersons-solutuin의-correctness--증명하기">- Peterson’s Solutuin의 correctness  증명하기</h2>
+
+<ul>
+  <li>
+    <p><strong>correctness</strong> : 알고리즘이 요구사항을 얼마나 만족하는가, 모든 input에 대해 올바른 output을 내는가</p>
+  </li>
+  <li>
+    <p>correctness를 증명하기 위해 Critical-Section Solution 의 3가지 조건에 대해서 볼거에요</p>
+    <ol>
+      <li><strong>Property 1 : Mutual Exclusion</strong></li>
+    </ol>
+    <ul>
+      <li>$P_i$ 는 <code class="language-plaintext highlighter-rouge">flag[i] = TRUE || turn == i</code> 일 때만 critical section 에 들어갈 수 있음</li>
+      <li>$P_i$ 랑 $P_j$ 둘 다 critical section에서 실행된다고 가정하자!</li>
+      <li>그럼  <code class="language-plaintext highlighter-rouge">flag[i] = flag[j] = TRUE</code> 이어야하고, 이때 <code class="language-plaintext highlighter-rouge">turn</code> 은 <code class="language-plaintext highlighter-rouge">i</code> 일수도, <code class="language-plaintext highlighter-rouge">j</code> 일수도 있음</li>
+      <li>만약 <code class="language-plaintext highlighter-rouge">turn == j</code> 라고 하면, $P_i$ 는 계속 <code class="language-plaintext highlighter-rouge">while</code> 문에 갇혀있고, 이는 $P_j$가 critical section에서 실행을 마치고 <code class="language-plaintext highlighter-rouge">flag[j] == FALSE</code> 가 될 때까지 갇혀있음</li>
+      <li>실행을 마치고 <code class="language-plaintext highlighter-rouge">flag[j] == FALSE</code> 가 되어 <code class="language-plaintext highlighter-rouge">while</code> 문에서 나와 criticival section에 들어간다고 하면, 이는 처음 가정인 <code class="language-plaintext highlighter-rouge">flag[i] = flag[j] = TRUE</code> 를 만족하지 못 하고 $P_j$가 critical section에 나오게 되므로  <strong>Mutual Exclusion 만족 !!</strong>
+        <ol>
+          <li><strong>Property 2 &amp; 3 : Progress &amp; Bounded Waiting</strong></li>
+        </ol>
+      </li>
+      <li>$P_i$ 는 critical section 에 들어가고 싶을 때 (<code class="language-plaintext highlighter-rouge">flag[i] == TURE</code>)</li>
+      <li>$P_i$ 가 <code class="language-plaintext highlighter-rouge">while</code> 문에 갇히게 될지 판단! 갇힌다면 (<code class="language-plaintext highlighter-rouge">flag[j] = TRUE &amp;&amp; turn == j</code>) critical section에 들어가지 못 함
+        <ol>
+          <li>$P_j$ 는 들어갈 생각이 없음</li>
+        </ol>
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">flag[j] == FALSE</code> 라서,  $P_i$ 는 갇히지 않고 critical section 에 들어갈 수 있음
+      2. $P_j$ 도 critical section 에 들어가고 싶음</li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">flag[j] == TRUE</code> 니까 $P_j$ 도 while 문에 갇히는디 판단하는 상황일거임</p>
+
+            <p>1) <code class="language-plaintext highlighter-rouge">turn == i</code> → $P_i$  가 critical section에 들어감</p>
+
+            <p>2) <code class="language-plaintext highlighter-rouge">turn == j</code> → $P_j$ 가 critical section 에 들어감</p>
+          </li>
+          <li>$P_j$ 가 critical section 에서 나오게 된다면 <code class="language-plaintext highlighter-rouge">flag[j] == FALSE</code> 가 됨</li>
+          <li>이 상황에서 바로 $P_j$ 가 다시 들어가고 싶다고 요청해도 <code class="language-plaintext highlighter-rouge">TURE</code> 로 바꾼 다음에 <code class="language-plaintext highlighter-rouge">turn</code> 을 <code class="language-plaintext highlighter-rouge">i</code> 에게 넘겨주니 $P_i$ 가 critical section에 들어감</li>
+        </ul>
+      </li>
+      <li>사용 후에 flag 를 <code class="language-plaintext highlighter-rouge">FLASE</code>로 바꿔주어 다른 process가 critical section 에 진입할 수 있게 해주므로 <strong>Progress 만족</strong></li>
+      <li>진입 후에 다시 들어가고 싶다고 요청할 때 다른 process에게 turn 을 넘겨주므로 <strong>Bounded Waiting 만족</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--petsons-solution-단점-개인적으로-정리한-내용">- Petson’s solution 단점 (개인적으로 정리한 내용)</h2>
+
+<ul>
+  <li>busy waiting 이라 resurce 많이 소모</li>
+  <li>SW 방식이라 속도가 느림 ㅜ ㅜ</li>
+  <li>process 2개일 때만 사용 가능 → 현대에는 적용하기 힘들다</li>
+</ul>
+
+<h1 id="synchronization-hardware-using-lock">Synchronization Hardware (using Lock)</h1>
+
+<h2 id="--synchronization-hardware">- Synchronization hardware</h2>
+
+<ul>
+  <li><strong>HW 를 사용</strong>하여 rece conditoin을 방지하는 방법</li>
+  <li>
+    <p>일반적으로 HW를 사용한 critical-section solution에는 <strong>lock</strong>이라는 도구를 사용함</p>
+
+    <p><strong>→ critical section 을 lock 으로 보호하여 Race condition을 방지</strong></p>
+  </li>
+</ul>
+
+<center>
+<img width="300" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch6.png" />
+</center>
+
+<ul>
+  <li>많은 system 들을 critical section code를 보호하기 위한 HW 를 제공하고 있고, 최신 HW들은 그 방식으로 특별한 <strong>atomic hardware instrunction</strong> 을 제공함
+    <ul>
+      <li><strong>Atomic hardware instrunction == Uninterruptiable operation</strong></li>
+      <li>즉, 인터럽트 발생을 허용하지 않고 한번에 다 실행되는 !</li>
+      <li>system이 성공적으로 바뀌거나 아무것도 변경되지 않거나</li>
+    </ul>
+  </li>
+  <li>이렇게 해서 명령의 순서가 순서대로 잘 실행되는 것을 보장할 수 있고, 다른 inst 가 실행되지 못하므로 critical section에 예상하지 못한 변경이 발생하지 않음</li>
+  <li>Atomic hardware instrunction 종류
+    <ol>
+      <li><strong>Test memory word and set value (TestAndSet)</strong> → read/write 에 대해</li>
+      <li><strong>Swap Contents of Two Memory Words (Swap)</strong> → 두 memory 읽고 swap
+        <ul>
+          <li>만약 TestAndSet 이랑 Swap 이 다른 CPU 에서 동시에 실행된다면 임의의 순서로 순차적으로 실행됨 !</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>bouned wait 조건을 만족 못 한다는 문제가 있음</li>
+</ul>
+
+<h2 id="--testandset-instruction">- TestAndSet Instruction</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Definition of TestAndSet</span>
+<span class="kt">bool</span> <span class="nf">TestAndSet</span> <span class="p">(</span><span class="n">boolean</span> <span class="o">*</span><span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">bool</span> <span class="n">rv</span> <span class="o">=</span> <span class="o">*</span><span class="n">target</span><span class="p">;</span> 
+		<span class="o">*</span><span class="n">target</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span> 
+		<span class="k">return</span> <span class="n">rv</span><span class="p">;</span>          <span class="c1">// return the old value</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Executed Atomically</li>
+  <li>target 값 바꾼 다음에 원래 기존의 값(old value) 을 return</li>
+  <li><code class="language-plaintext highlighter-rouge">If target == FALSE</code> : <code class="language-plaintext highlighter-rouge">target</code> 은 <code class="language-plaintext highlighter-rouge">TURE</code> 가 되고, <code class="language-plaintext highlighter-rouge">FALSE</code> return</li>
+  <li><code class="language-plaintext highlighter-rouge">If target == TURE</code> : <code class="language-plaintext highlighter-rouge">target</code> 은 <code class="language-plaintext highlighter-rouge">TURE</code> 유지하고, <code class="language-plaintext highlighter-rouge">TURE</code> return</li>
+</ul>
+
+<h3 id="solutution-using-testandset">[Solutution using TestAndSet]</h3>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Solution using TestAndSet</span>
+<span class="k">do</span> <span class="p">{</span>
+		<span class="k">while</span> <span class="p">(</span><span class="n">TestAndSet</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">));</span>   <span class="c1">// LOCK 상태에선 아무것도 안하고 계속 TURE로 바꾸며 LOCK 유지 </span>
+
+		<span class="cm">/* critical section */</span>       <span class="c1">// 다른 process에 의해 LOCK 풀리면 critical section 진입</span>
+																 <span class="c1">// 이때 while 문에서 검사하기 위해 TestAndSet(&amp;lock) 실행되면 다시 LOCK 라고 뜨니까 한 process만 들어올 수 있음</span>
+		<span class="n">lock</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">;</span>                <span class="c1">// 다 사용하고 나면 UNLOCK으로 변경</span>
+
+		<span class="cm">/* remainder section */</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><code class="language-plaintext highlighter-rouge">lock == FALSE</code> : UNLOCK</td>
+          <td><code class="language-plaintext highlighter-rouge">lock == TURE</code> : LOCK</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>boolean 변수인 lock 을 공유하고, 처음에 false (UNLOCK) 으로 초기화</li>
+  <li>lock 을 획득한 process만 critical section에 진입하기에 <strong>Mutual Exclusion 만족</strong>, 다 사용하고 나면 다시 FALSE 로 바꾸기에 <strong>Progress 만족</strong></li>
+  <li>But <strong>Bounded wait 는 불만족</strong> . . 요청 순서와 무관하게 지정되기에</li>
+</ul>
+
+<h2 id="--swap-instruction-cas">- Swap Instruction (CAS)</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Definition of Swap</span>
+<span class="kt">int</span> <span class="nf">compare_and_swap</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">expected</span><span class="p">,</span> <span class="kt">int</span> <span class="n">new_value</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="o">*</span><span class="n">value</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">value</span> <span class="o">==</span> <span class="n">expected</span><span class="p">)</span>    <span class="c1">// value 가 기대한 값과 같을 때만</span>
+				<span class="o">*</span><span class="n">value</span> <span class="o">=</span> <span class="n">new_value</span><span class="p">;</span>    <span class="c1">// new_value 로 변경</span>
+		<span class="k">return</span> <span class="n">temp</span><span class="p">;</span>               <span class="c1">// return the old value</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Exectued Atomically</li>
+  <li><code class="language-plaintext highlighter-rouge">(*value == ecpected)</code> 일 때만 <code class="language-plaintext highlighter-rouge">value</code> 는 <code class="language-plaintext highlighter-rouge">new_value</code>로 변경!</li>
+  <li>항상 value 의 원본값을 return</li>
+</ul>
+
+<h3 id="solution-using-swap">[Solution Using Swap]</h3>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">do</span> <span class="p">{</span>
+		<span class="k">while</span> <span class="p">(</span><span class="n">compare_and_swap</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">;</span> <span class="c1">// &amp;lock가 0 이 아닐 때, 즉 LOCK 일 때는 아무것도 안함! </span>
+
+		<span class="cm">/* critical section */</span>                       <span class="c1">// 다른 process에 의해 lock이 0이 되면 다시 1로 바꾸고 while 탈출! </span>
+																								 <span class="c1">// 그리고 critical section 진입</span>
+		<span class="n">lock</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>                                    <span class="c1">// 다 쓰고 나면 UNLOCK 으로 변경</span>
+
+		<span class="cm">/* remainder section */</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><code class="language-plaintext highlighter-rouge">lock == 0</code> : UNLOCK</td>
+          <td><code class="language-plaintext highlighter-rouge">lock == 1</code> : LOCK</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>boolean value 인 lock 을 공유하고, 처음엔 0 (UNLOCK) 으로 초기화</li>
+  <li>처음 process 가 실행되면 초기값이 0이므로 compare_and_swap() 에서 lock 값을 1로 바꾸고 Critical section 에 진입</li>
+  <li>마찬가지로 lock 을 획득한 process만 critical section에 진입하기에 <strong>Mutual Exclusion 만족</strong>, 다 사용하고 나면 다시 FALSE 로 바꾸기에 <strong>Progress 만족</strong></li>
+  <li>But <strong>Bounded wait 는 불만족</strong> . . 요청 순서와 무관하게 지정되기에</li>
+</ul>
+
+<h1 id="semaphores">Semaphores</h1>
+
+<h2 id="--semaphores-with-busy-waiting">- Semaphores (with busy waiting)</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span> 
+		<span class="kt">int</span> <span class="n">value</span><span class="p">;</span>             <span class="c1">// 사용 가능한 resource 수</span>
+		<span class="k">struct</span> <span class="nc">process</span> <span class="o">*</span><span class="n">list</span><span class="p">;</span>  <span class="c1">// ready queue</span>
+<span class="p">}</span> <span class="n">semaphore</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>synchronization tool 중 하나로 Dijkstra 가 고안한 방법</li>
+  <li>Busy waiting 문제를 해결함 → 나중에 해결한 방법 나옴</li>
+  <li><code class="language-plaintext highlighter-rouge">Semaphore S</code> 라는 integer 변수인 Class를 사용함
+    <ul>
+      <li>
+        <table>
+          <tbody>
+            <tr>
+              <td>0 : LOCK</td>
+              <td>1 : UNLOCK</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Semaphore Definition</span>
+<span class="cm">/* P(S) */</span>
+<span class="n">wait</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="p">{</span> 
+		<span class="c1">// 아래 두 statement 는 atomic 하게 실행되어야함</span>
+		<span class="k">while</span> <span class="n">S</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">;</span> <span class="c1">// 여기선 근데 매번 검사하기에 busy waiting 이긴 해</span>
+		<span class="n">S</span><span class="o">--</span><span class="p">;</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* V(S) */</span>
+<span class="n">signal</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">S</span><span class="o">++</span><span class="p">;</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">S</code> 를 변경하는 2개의 standard Atomic Operation 을 가지고 있음
+    <ol>
+      <li><strong><code class="language-plaintext highlighter-rouge">wait()</code></strong> : 원래 <code class="language-plaintext highlighter-rouge">P()</code> 라고 부름! 검사한다는 의미</li>
+      <li><strong><code class="language-plaintext highlighter-rouge">signal()</code></strong> : 원래 <code class="language-plaintext highlighter-rouge">V()</code> 라고 부름! 증가한다는 의미</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--semaphore-as-general-synchronization-tool">- Semaphore as General Synchronization Tool</h2>
+
+<ol>
+  <li><strong>Counting semaphore</strong>
+    <ul>
+      <li>S 값이 무제한!</li>
+      <li>resource가 여러개므로 critical section에 여러개의 process가 진입할 수 있음</li>
+    </ul>
+  </li>
+  <li><strong>Binary semaphore</strong>
+    <ul>
+      <li>S 값이 0 과 1 만 가능 ! <strong>→ 즉 하나의 resource 를 두고 경쟁</strong></li>
+      <li>구현이 더 간단</li>
+      <li><strong>Mutex</strong> lock 이라고 부르기도함</li>
+      <li>S 가 1으로 초기화되면 →  <code class="language-plaintext highlighter-rouge">wait()</code> 먼저 실행되어야함</li>
+      <li>S 가 0으로 초기화되면 →  <code class="language-plaintext highlighter-rouge">signal()</code> 먼저 실행되어야함</li>
+    </ul>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">// Mutual Exclusion using Binary Semaphore</span>
+ <span class="n">Semaphore</span> <span class="n">mutex</span><span class="p">;</span>    <span class="c1">//  initialized to 1 </span>
+ <span class="k">do</span> <span class="p">{</span>
+ 		<span class="n">wait</span> <span class="p">(</span><span class="n">mutex</span><span class="p">);</span>
+ 		<span class="c1">// Critical Section </span>
+    
+ 		<span class="n">signal</span> <span class="p">(</span><span class="n">mutex</span><span class="p">);</span>
+ 		<span class="c1">// remainder section</span>
+ <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="--counting-semaphore">- Counting Semaphore</h2>
+
+<ul>
+  <li>유한한 수의 resource에 접근하는 것을 컨트롤 할 때 사용</li>
+  <li>S 는 가능한 resource 의 개수로 초기화</li>
+  <li>Resource 사용 할 때 : <code class="language-plaintext highlighter-rouge">wait(S)</code> operation 사용 <strong>→ count 감소.. 0 되면 사용 가능한 resource 없다는 소리</strong></li>
+  <li>Resource release 할 때 : <code class="language-plaintext highlighter-rouge">signal(S)</code> operation 사용 <strong>→ count 증가</strong></li>
+  <li>ex) 도서관에 비유하면
+    <ul>
+      <li>프론트는 semaphore 를 의미하고, 스터디룸(좌석)은 resource, 그리고 스터디룸 이용하는 학생들은 process</li>
+      <li>학생들은 프론트에서 스터디룸 있는지 확인하고 예약해서 스터디룸 사용함</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--synchronization-problem에서-semaphore-사용하기">- Synchronization Problem에서 semaphore 사용하기</h2>
+
+<ul>
+  <li>동시에 실행되는 두개의 process가 있다 하자</li>
+  <li>이때 P1은 statement S1, P2는 statement S2 를 가지고 있음</li>
+  <li>S2가 S1 이 실행 완료된 이후에만 실행해야한다면 아래처럼 사용하면 됩니당</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// in P1</span>
+<span class="n">S1</span> <span class="n">statement</span><span class="p">;</span>
+<span class="n">signal</span><span class="p">(</span><span class="n">sync</span><span class="p">);</span>      <span class="c1">// sync 사용 완료했어여</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// in P2</span>
+<span class="n">wait</span><span class="p">(</span><span class="n">sync</span><span class="p">);</span>     <span class="c1">// sync 기다리는 중..</span>
+<span class="n">S2</span> <span class="n">statement</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="--semaphore-implementation">- Semaphore Implementation</h2>
+
+<ul>
+  <li>위에서 보인 Semaphore 는 Busy waiting 방식이라 (spinlock) 비효율적  <strong>→ wait() 에서 계속 조건 확인하니까</strong>
+    <ul>
+      <li><strong>spinlock</strong> : lock 상태일 동안 계속 반복문 돌면서(spin) 기다린다는</li>
+      <li>busy waitting 은 CPU cycle 을 낭비하는 방식이라 비효율적임..</li>
+      <li>뭐 대부분의 multiprocessor 구조에선 괜찮기도 하고 critical section 이 짧거나 거의 안 쓰면 상관 없지만 그래도..</li>
+    </ul>
+  </li>
+  <li>그래서 우리는 <code class="language-plaintext highlighter-rouge">wait()</code> 와 <code class="language-plaintext highlighter-rouge">signal()</code>을 수정해서 <strong>block - awake</strong> 방식으로 바꿀거임! 그리고 이를 위해서 semaphore 구조에 있는 list 를 <strong>waitingQueue</strong>로 사용할거에요
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">block()</code> : invoke를 기다리는 process를 waiting queue에 배치하여 wait state로 바꿔버림! 이렇게 해서 busy wait 대신 그냥 process 자체를 스스로 block 해보림</li>
+      <li><code class="language-plaintext highlighter-rouge">wakeup()</code> : waiting queue 에서 하나를 제거하고 이를 ready queue 에 재배치 하여 ready state로 바꿔버림</li>
+    </ul>
+  </li>
+  <li>두 process가 동시에 동일한 semaphore에서 wait() 와 signal() 을 호출해서는 안됨 ! <strong>→ semaphore 구현도 critical problem 으로 귀결..</strong>
+    <ul>
+      <li>이 문제는 단일/멀티 processor 에 따라 나눠서 해결
+        <ol>
+          <li><strong>Uniprocessor</strong> : <strong>Disable Interrupt</strong></li>
+        </ol>
+        <ul>
+          <li>wait 와 signal 연산 중에는 Interrupt 를 비활성화시켜 다른 processor의 명령어 실행이 끼어들지 않도록!</li>
+          <li>Interrupt가 다시 활성화되고 schedul 되기 전까진 현재 실행 중인 하나의 prcocess만 실행됨
+      2. <strong>Multiprocessor</strong> :</li>
+          <li>여기선 Interrupts 를 금지 시킬 수 없음 ! 모든 process에 금지시키기엔 성능 저하 문제가.. 그래서 다른 process의 명령어가 임의로 끼어들 수 있음 ㅜㅜ</li>
+          <li><strong>그래서 SMP 에서는 lock 기술이 필요함  ㅜㅜ</strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--semaphore-without-busy-waiting">- Semaphore without Busy waiting</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// New Definition</span>
+<span class="n">wait</span><span class="p">(</span><span class="n">semaphore</span> <span class="o">*</span><span class="n">S</span><span class="p">)</span> <span class="p">{</span>
+		<span class="cm">/* Start Atomic */</span>
+		<span class="n">S</span><span class="o">-&gt;</span><span class="n">value</span><span class="o">--</span><span class="p">;</span> 
+		<span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">add</span> <span class="k">this</span> <span class="n">process</span> <span class="n">to</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">list</span><span class="p">;</span> 
+				<span class="n">block</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="cm">/* End Atomic */</span>
+<span class="p">}</span> 
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">signal</span><span class="p">(</span><span class="n">semaphore</span> <span class="o">*</span><span class="n">S</span><span class="p">)</span> <span class="p">{</span>
+		<span class="cm">/* Start Atomic */</span>
+		<span class="n">S</span><span class="o">-&gt;</span><span class="n">value</span><span class="o">++</span><span class="p">;</span> 
+		<span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">remove</span> <span class="n">a</span> <span class="n">process</span> <span class="n">P</span> <span class="n">from</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">list</span><span class="p">;</span> 
+				<span class="n">wakeup</span><span class="p">(</span><span class="n">P</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="cm">/* End Atomic */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Start,, 부터 End 까지는 Atomically 하게 실행 됨 !</li>
+  <li>이 버전에서는 semaphore 값이 음수가 될 수 있음! 그리고 이때 절대값은 semaphore 에서 기다리고 있는 process 수가 됩니다요</li>
+</ul>
+
+<h2 id="--semaphroe-단점">- Semaphroe 단점</h2>
+
+<ol>
+  <li><strong>Deadlock &amp; Starvation</strong></li>
+  <li><strong>Priority Inversion</strong></li>
+</ol>
+
+<h2 id="--deadlock--starvation-교착상태와-기아">- Deadlock &amp; Starvation (교착상태와 기아)</h2>
+
+<ul>
+  <li>
+    <p><strong>Deadlock</strong> : 둘 이상의 process가 기다리는 중인데, 이는 둘 중 하나에 의해 발생하는 event를 기다리는.. <strong>→ 즉 서로에 의해 충족할 수 있는 event를 무한히 기다리는</strong></p>
+
+    <p>ex) 1로 초기화된 2개의 semaphores S, Q 가 있을 때</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>t</th>
+          <th>P0</th>
+          <th>P1</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>t0</td>
+          <td>wait(S)</td>
+          <td> </td>
+          <td>s—; return</td>
+        </tr>
+        <tr>
+          <td>t1</td>
+          <td> </td>
+          <td>wait(Q)</td>
+          <td>q—; return</td>
+        </tr>
+        <tr>
+          <td>t2</td>
+          <td> </td>
+          <td>wait(S)</td>
+          <td>P1 block!</td>
+        </tr>
+        <tr>
+          <td>t3</td>
+          <td>wait(Q)</td>
+          <td> </td>
+          <td>P0 block!</td>
+        </tr>
+        <tr>
+          <td>…</td>
+          <td>————————</td>
+          <td>——BLOCK——</td>
+          <td>————————</td>
+        </tr>
+        <tr>
+          <td>tn</td>
+          <td>signal(S)</td>
+          <td>signal(Q)</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>tn+1</td>
+          <td>signal(Q)</td>
+          <td>signal(S)</td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul>
+      <li>이렇게 서로 상대방 것을 기다리다 영원히 갇혀버리는,,,</li>
+      <li>Deadlock 발생 조건 <strong>→ 수업시간 때 안함 그냥 나중에 나올 거 미리..</strong>
+        <ul>
+          <li>다음 4가지 조건을 모두 만족하면 Deadlock 발생!</li>
+          <li>즉, 발생안하고 싶으면 4가지 중 하나라도 불만족시키게 하면
+            <ol>
+              <li>Mutual Exclusion</li>
+              <li>No Preemption</li>
+              <li>Hold and Wait</li>
+              <li>Circular Wair</li>
+            </ol>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Starvation</strong> : 무기한 Blcok,,, process가 semaphore의 queue에서 벗어나지 못 하고 갇혀있는</p>
+  </li>
+</ul>
+
+<h2 id="--prioirty-inversion">- Prioirty Inversion</h2>
+
+<ul>
+  <li>말 그대로 우선순위는 더 높은데 뒤에 실행되어서 우선순위가 역전되는 현상</li>
+  <li>ex) Process들 L(ow), M(iddle), H(igh) 가 있고 이들의 우선 순위는 L &lt; M &lt; H 라고 하자
+    <ol>
+      <li>L 이 resource R (ex: lock) 를 얻고 실행함</li>
+      <li>M이 실행되면 우선순위가 높으므로 L 에게서 CPU 선점하고 실행됨</li>
+      <li>H가 실행되면 우선순위가 높으므로 M 에게서 CPU 선점하고 실행됨</li>
+      <li>그러다 H 가 L 이 가지고 있는 resource인 R 을 필요로하게 되어서 요청함</li>
+      <li>근데 지금 R은 L 이 가지고 있으니 H 는 Block 됨</li>
+      <li>그럼 다시 CPU 는 M 에게로 돌아가게 되고 . . H 는 R 이 unblock 되기만을 기다림</li>
+      <li>그러려면 M 이 종료되고 L 이 다시 실행되고 signal() 을 실행해야하는거니까 H 는 M을 기다리는 우선순위 역전이 발생한다</li>
+    </ol>
+  </li>
+  <li>Solution
+    <ol>
+      <li>Priority Inheritance (우선순위 계승)
+        <ul>
+          <li>L 이 R 에서 작업하는 종안 H 의 우선순위를 계승받음</li>
+          <li>R 에서의 L 의 작업이 끝나면 원래 우선순위대로 돌아오고 H 가 그 다음으로 실행됨</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h1 id="clasic-problems-of-synchronization">Clasic Problems of Synchronization</h1>
+
+<h2 id="--classical-problems-of-synchronization">- Classical Problems of Synchronization</h2>
+
+<ul>
+  <li>Bounded-Buffer Problem</li>
+  <li>Readers and Writers Problem</li>
+  <li>Dining-Philosophers Problem</li>
+</ul>
+
+<h2 id="--bounded-buffer-problem">- Bounded-Buffer Problem</h2>
+
+<ul>
+  <li>producer-consumer 문제를 동기화에 적용한??????</li>
+  <li>N buffer가 있고, 각각은 하나의 item 을 가질 수 있음</li>
+  <li>다음 3가지 semaphore 를 만들어서 관리하여 해결 ! → 이 방법 말고도 있을 수 있음
+    <ol>
+      <li><strong>Semaphore Mutex 를  1 로 초기화</strong> → buffer pool 로 부터 보호! 즉, mutual exclusion 조건 만족시키기 위해</li>
+      <li><strong>Semaphore Full 를 0 로 초기화</strong> → filled item 의 수를 count 하는 역할</li>
+      <li><strong>Semaphore Empty 를 N 로 초기화</strong> → free item 의 수를 count 하는 역할</li>
+    </ol>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// The structure of the producer process</span>
+<span class="k">do</span>  <span class="p">{</span>
+		<span class="c1">// Produce가 nextp에 item 생성 </span>
+
+		<span class="n">wait</span><span class="p">(</span><span class="n">empty</span><span class="p">);</span> <span class="c1">// Buffer 에 넣을거니 free item 감소시키기</span>
+		<span class="n">wait</span><span class="p">(</span><span class="n">mutex</span><span class="p">);</span> <span class="c1">// mutual exclusion 위해 </span>
+		<span class="cm">/* Critical Session */</span>
+
+		<span class="c1">// Buffer에 생성한 item 추가</span>
+
+		<span class="n">signal</span><span class="p">(</span><span class="n">mutex</span><span class="p">);</span> <span class="c1">// mutual exclusion 위해</span>
+		<span class="cm">/* Remain Session */</span>
+		<span class="n">signal</span><span class="p">(</span><span class="n">full</span><span class="p">);</span>  <span class="c1">// Buffer 에 넣었으니 filled item 증가시키기</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// The structure of the consumer process</span>
+<span class="k">do</span> <span class="p">{</span>
+		<span class="n">wait</span> <span class="p">(</span><span class="n">full</span><span class="p">);</span>  <span class="c1">// Buffer 에서 뺄꺼니 filled item 감소시키기</span>
+		<span class="n">wait</span> <span class="p">(</span><span class="n">mutex</span><span class="p">);</span> <span class="c1">// mutual exclusion 위해 </span>
+		<span class="cm">/* Critical Session */</span>
+
+		<span class="c1">// buffer에서 nextc 부터 item 제거</span>
+
+		<span class="n">signal</span> <span class="p">(</span><span class="n">mutex</span><span class="p">);</span>  <span class="c1">// mutual exclusion 위해</span>
+		<span class="cm">/* Remain Session */</span>
+		<span class="n">signal</span> <span class="p">(</span><span class="n">empty</span><span class="p">);</span> <span class="c1">// Buffer 에서 뺐으니 free item 증가시키기</span>
+
+		<span class="c1">// Consumer가 nextc에 있는 item 사용</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="--readers-writers-problem">- Readers-Writers Problem</h2>
+
+<ul>
+  <li>Data set이 여러 concurrent process (Reader과 Writer) 들에 의해 공유 되고 있음!
+    <ul>
+      <li><strong>Reader</strong> : <strong>Only Data Read!</strong> 그 외 업데이트나 다른 어떤 것도 할 수 없음</li>
+      <li><strong>Writer</strong> : Read / Write 둘 다 가능 ~</li>
+      <li>보통 (<strong># Reader) » (# Writer)</strong> 임! 물론 application 종류에 따라 나뉘지만</li>
+    </ul>
+  </li>
+  <li>이런 상황에서 여러 reader 들이 동시에 접근하는 것은 전혀 문제가 없지만, 오직 Writer 의 경우 동시에 딱 하나의 Writer 만 접근 할 수 있음
+    <ul>
+      <li>즉 한 writer가 critical section에 있을 때 다른 writer 들이 접근하지 못 하도록 막아야하는 것이 문제!</li>
+    </ul>
+  </li>
+</ul>
+
+<center><img width="1193" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/8496d2ff-5915-4c67-9e47-175862e51e85" /><center>
+
+- 2가지의 버전이 존재
+    1. **First Readers-Writer Problem** : 어떤 Reader도 다른 Reader가 끝날 때까지 가디라지 않는다! Writer가 기다리고 있으니까 (reader의 priority 가 더 높음)
+        
+        **→ Writer 가 starve 에 빠질 수 있음**
+        
+    2. **Second Readers-Writer Problem** : Writer가 접근하기 위해 대기 중이라면, 다른 어떤 새로운 reader도 read 를 시작할 수 없음 (writer의 priority 가 더 높음)
+        
+        **→ Reader 가 starve 에 빠질 수 있음**
+        
+    - 우리는 첫번째 버전에 대해서 볼 거에욤
+    
+- **Problem** : multiple reader 또는 single writer 가 공유 데이터(Shared Data)에 같은 시간에 접근 할 수 있도록 허용 → 첫번째 버전으로 함 보시죵
+- Shared Data 에는 뭐가 포함?
+    1. **Data Set**
+    2. **Integer readcount** : 0 으로 초기화되고 현재 얼마나 많은 process 들이 obj 를 read 하고 있는지를 의미
+    3. **Semaphore mutex** : 1로 초기화 되고 readcount 를 보호하는 역할
+    4. **Semaphore wrt** : 
+        
+        1로 초기화 되고, writer를 위한 semaphore → writer 가 data set을 수정하기 위해 critical session 에 진입하는 것에 대해
+        
+        첫번째와 마지막 reader도 사용  → writer 가 접근 못하게 막고 풀이 위해
+        
+
+```cpp
+// Writer Process
+do {
+		wait(wrt); // 다른 writer 막기
+
+		/* Critical Session,
+			 writing is performed */
+
+		signal(wrt);
+} while (TRUE);
+```
+
+```cpp
+// Reader Process
+do {
+		/* reader 잠시 막아두기 
+			 read count 변경해야하니까!
+			 그리고 첫번째면 다른 작업 할건데 그 사이에 안 들어오게 */
+		wait(mutex); 
+
+		readcount++;  // read 하고 있는 (critical session 에 있는) process 수 증가
+
+		if(readcount == 1) // 첫번째 reader 면 writer 가 접근 못 하게 막기
+				wait(wrt); 
+		signal(mutex); // 이제 다른 reader 들어올 수 있게 허용
+
+		/* reading is performed */
+
+		/* reader 잠시 막아두기 
+			 read count 변경해야하니까! */
+		wait (mutex);
+
+		readcount--; // read 하고 있는 (critical session 에 있는) process 수 감소
+
+		if (readcount == 0) // 마지막 reader 면 writer 가 접근 풀어주기
+				signal (wrt);
+
+		signal (mutex) ;
+} while (TRUE);
+```
+
+## - Digning-Philosophers Problem
+
+- 대규모 concirrency-control 문제의 기본적 예제
+
+### [Digning-Philosophers Problem]
+
+- 철학자 5명이 원형 테이블에서 식사를 하고 있다
+- 테이블 중앙에는 음식이 있고, 5개의 젓가락(한쌍 아니고 한개) 이 철학자 사이에 있다
+- 철학자는 생각을 할 때는 밥을 먹지 않는다.
+- 그러다 철학자가 배가 고파 밥을 먹으려고 할 때, 자신의 왼쪽 또는 오른쪽 젓가락을 잡으려 시도하고 두개의 젓가락을 모두 잡아야 먹을 수 있다
+- 밥을 먹고 나서 철학자는 젓가락을 내려놓고다시 생각에 빠진다
+
+<center>
+<img width="504" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/f2022afd-f411-46a0-b7f0-c920c2ed5924" />
+</center>
+
+```cpp
+do {
+		wait(chopstick[i]); 
+		wait(chopStick[(i+1) % 5]);
+		//  eat ( ˘༥˘ )		
+		signal(chopstick[i]); 
+		signal(chopstick[(i+1) % 5]);
+		//  think
+} while (TRUE);
+```
+
+- Shared Data
+    1. 음식 (Data Set)
+    2. chopStick(Semaphore로 표현) 배열 (chopStick[5], 다 1로 초기화)
+- Deadlock 발생 하는 경우
+    1. 모든 철학자가 다 자신의 왼쪽 (또는 다 오른쪽) 젓가락을 잡으려고 하면
+
+### [Deadlock 해결한 solution]
+
+1. 최대 4명만 테이블에 앉게하기
+2. 양쪽 젓가락을 다 잡는 것이 가능한 상태에만 젓가락 잡게 하기
+3. 홀수번째 철학자는 왼쪽 잡고 오른쪽, 짝수번째 철학자는 오른쪽 잡고 왼쪽 잡게 하기
+4. … 더 생각해보기!
+- 근데 이를 만족하는 해결법도 한 철학자를 starve 상태로 만들 수 있다는 것을 알아두쉐여!!
+</center></center>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-04-12">April 12, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch5" class="pagination--pager" title="[OS] Ch5. CPU Scheduling
+">Prev</a>
+    
+    
+      <a href="/categories/develop/Github_Blog/comment" class="pagination--pager" title="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/develop/Github_Blog/comment" rel="permalink">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch5" rel="permalink">[OS] Ch5. CPU Scheduling
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-03T00:00:00+09:00">April 3, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch4" rel="permalink">[OS] Ch4. Thread
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-29T00:00:00+09:00">March 29, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch3" rel="permalink">[OS] Ch3. Processes
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-03-27T00:00:00+09:00">March 27, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 zi_orv. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/categories/study/2023_OS/ch6";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/categories/study/2023_OS/ch6"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rutuna.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
