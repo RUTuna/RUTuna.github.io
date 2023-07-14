@@ -1,0 +1,1692 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch8. Deadlock | zi_orv</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="zi_orv">
+  
+  <meta property="article:author" content="zi_orv">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch8. Deadlock">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch8">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-05-01T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-05-01T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch8">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "zi_orv",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="-8bYhrDyOZjr61EL8z8964D200AyyTFpWGyPjxkesfo" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="https://rutuna.github.io/assets/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://rutuna.github.io/assets/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://rutuna.github.io/assets/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://rutuna.github.io/assets/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://rutuna.github.io/assets/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://rutuna.github.io/assets/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://rutuna.github.io/assets/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://rutuna.github.io/assets/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://rutuna.github.io/assets/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://rutuna.github.io/assets/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://rutuna.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://rutuna.github.io/assets/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://rutuna.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://rutuna.github.io/assets/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://rutuna.github.io/assets/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/profile.png" alt="zi_orv" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">zi_orv</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="mailto:p000207@naver.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 10</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (8)</a></li>
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Project</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Develop</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/develop/Github_Blog/">Github Blog (2)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Other</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch8. Deadlock">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-05-01T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-05-01T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch8. Deadlock
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-01T00:00:00+09:00">May 1, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#the-deadlock-problem">The Deadlock Problem</a><ul><li><a href="#--bridge-crossing-example">- Bridge Crossing Example</a></li><li><a href="#--the-deadlock-problem">- The Deadlock Problem</a></li></ul></li><li><a href="#system-model">System Model</a></li><li><a href="#deadlock-characterization-">Deadlock Characterization ***</a><ul><li><a href="#--resource-allocation-graph">- Resource-Allocation Graph</a></li></ul></li><li><a href="#methods-for-handling-deadlocks">Methods for Handling Deadlocks</a></li><li><a href="#deadlock-prevention">Deadlock Prevention</a></li><li><a href="#deadlock-avoidance">Deadlock Avoidance</a><ul><li><a href="#--deadlock-avoidance">- Deadlock Avoidance</a></li><li><a href="#--safe-state">- Safe State</a></li><li><a href="#--avoidance-algorithms">- Avoidance Algorithms</a></li><li><a href="#-resource-allocation-graph-algorithms-">[ Resource-Allocation Graph Algorithms ]</a></li><li><a href="#-bankers-algorithms-">[ Banker’s Algorithms ]</a></li><li><a href="#--example--이거-무조건-시험-나올-듯-무조건-완벽하게-이해하기">- Example ** 이거 무조건 시험 나올 듯 무조건 완벽하게 이해하기</a></li></ul></li><li><a href="#deadlock-detection">Deadlock Detection</a><ul><li><a href="#--deadlock-detection">- Deadlock Detection</a></li><li><a href="#--detection-algorithm-usage">- Detection-Algorithm Usage</a></li><li><a href="#--signle-instace-of-each-resource-type">- Signle Instace of Each Resource Type</a></li><li><a href="#--several-instace-of-resource-type">- Several Instace of Resource Type</a></li><li><a href="#--example--이거-무조건-시험-나올-듯22-무조건-완벽하게-이해하기">- Example ** 이거 무조건 시험 나올 듯22 무조건 완벽하게 이해하기</a></li></ul></li><li><a href="#recovery-from-deadlock">Recovery from Deadlock</a><ul><li><a href="#--by-process-and-thread-termination">- By Process and Thread Termination</a></li><li><a href="#--by-resource-preemption">- By Resource Preemption</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="the-deadlock-problem">The Deadlock Problem</h1>
+
+<h2 id="--bridge-crossing-example">- Bridge Crossing Example</h2>
+
+<center>
+<img width="300" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch8.png" />
+</center>
+
+<ul>
+  <li>Traffic 은 일방통행으로만 전달</li>
+  <li>bridge의 각 section → resource</li>
+  <li>Deadlock 발생 시, 하나의 차가 후진하는 방법으로 해결 가능 → res preempt와 roll back</li>
+  <li>Deadlock 발생 시, 여러 대의 차가 backed up 되어야할 수도 있음</li>
+  <li>starvation 발생할 수도 있음</li>
+</ul>
+
+<h2 id="--the-deadlock-problem">- The Deadlock Problem</h2>
+
+<ul>
+  <li>각각 res를 보유하고 있고, 다른 process가 소유하고 있는 res를 얻기 위해 기다리고 있는 block된 process 들의 set</li>
+  <li>
+    <p>ex 1)</p>
+
+    <p>System에 2개의 Disk 가 있고, P1, P2가 각각 하나의 disk 를 가지고 있으며 다른 disk 가 필요한 상황</p>
+  </li>
+  <li>
+    <p>ex 2)</p>
+
+    <p>1로 초기화 된 semaphores A와 B 가 있을 때</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>P0</th>
+          <th>P1</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>wait(A);</td>
+          <td>wait(B);</td>
+        </tr>
+        <tr>
+          <td>wait(B);</td>
+          <td>wait(A);</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h1 id="system-model">System Model</h1>
+
+<ul>
+  <li>Resouce type : $R_1$, $R_2$, … $R_m$ (CPU cucle, memory space, I/O device, files…)</li>
+  <li>Each Resouce type $R_i$ 는 동일한 $W_i$ instace 를 가짐</li>
+  <li>Each process는 <strong>Request, Use, Releas</strong> 을 통해 resource utilizes
+    <ol>
+      <li>Request : resource 사용 요청 ! 요청이 바로 승인되지 않는 경우 process는 wait 해야함</li>
+      <li>Use : I/O device 사용 하는 것과 같이 resouce 사용</li>
+      <li>Release : Resouce를 다 사용하여 다른 process들이 사용할 수 있게 해제</li>
+    </ol>
+  </li>
+</ul>
+
+<h1 id="deadlock-characterization-">Deadlock Characterization ***</h1>
+
+<ul>
+  <li>다음 4가지 조건이 동시에 성립하는 경우 deadlock 이 발생 할 수 있음
+    <ol>
+      <li><strong>Mutual exclusion</strong></li>
+    </ol>
+
+    <p>: 한 번에 하나의 process만 동일한 Resouce를 사용 가능! 다른 process 가 사용하고 있을 경우 기다려야 함</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p><strong>Hold and Wait</strong></p>
+
+    <p>: process가 다른 process가 가지고 있는 추가 res를 얻기 위해 기다릴 때 하나 이상의 res를 가지고 있어야 함</p>
+  </li>
+  <li>
+    <p><strong>No preemption</strong></p>
+
+    <p>: process가 res를 가지고 있으면, process가 task 를 끝내고 자발적으로 해지하기 전까지 강제로 해당 res를 process 에게서 해지할 수 없음</p>
+  </li>
+  <li>
+    <p><strong>Circular Wait</strong></p>
+
+    <p>: 순환적으로 기다리는 process $R_1$, $R_2$, … $R_m$ 존재 ($P_i$ 는 $P_{i+1}$ 이 사용 중인 res를 기다리고, $P_n$은 $P_0$이 사용 중인 res를 기다리는 순환 구조)</p>
+  </li>
+</ol>
+
+<h2 id="--resource-allocation-graph">- Resource-Allocation Graph</h2>
+
+<ul>
+  <li>vertex set <strong>V</strong>, edge set <strong>E</strong> 가 있을 때</li>
+  <li><strong>V Type</strong>
+    <ul>
+      <li><strong>P = { $P_1$, $P_2$, … $P_n$ }</strong> : system 의 모든 process set → 책에선 $T$</li>
+      <li><strong>R = { $R_1$, $R_2$, … $R_m$ }</strong> : system 의 모든 resouce set</li>
+    </ul>
+  </li>
+  <li><strong>E Type</strong>
+    <ul>
+      <li><strong>Request edge</strong> : $P_i$  → $R_j$ 인 directed edge</li>
+      <li><strong>Assignment edge</strong> : $R_j$ → $P_i$ 인 directed edge</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="basic-facts">Basic Facts</h3>
+
+<ul>
+  <li>Cycle 이 ..
+    <ul>
+      <li>없다? → Deadlock 없음!!</li>
+      <li>있다? →  2가지 경우의 수
+        <ol>
+          <li>Res type 당 하나의 instace 만 있다면 Deadlock</li>
+          <li>
+            <p>Res type 당 여러개의 instace 있다면 Deadlock <strong>가능성</strong></p>
+
+            <p>(진짜 존재하는지는 ㅁㄹ 가능성이 있으니 확인해보아야하는거!)</p>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="300" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/02bb594e-7e19-4ce3-9ecc-ec2de8eb1096" />
+</center>
+
+<h3 id="case-1-resource-allocation-graph">Case 1. Resource-allocation graph.</h3>
+
+<ul>
+  <li>The sets <em>T, R,</em> and <em>E</em>:
+    <ul>
+      <li>*<code class="language-plaintext highlighter-rouge">T* = {*T*1, *T*2, *T*3}</code></li>
+      <li>*<code class="language-plaintext highlighter-rouge">R* = {*R*1, *R*2, *R*3, *R*4}</code></li>
+      <li>*<code class="language-plaintext highlighter-rouge">E* = {*T*1 → *R*1, *T*2 → *R*3, *R*1 → *T*2, *R*2 → *T*2, *R*2 → *T*1, *R*3 → *T*3}</code></li>
+    </ul>
+  </li>
+  <li>Resourceinstances:
+    <ul>
+      <li>One instance of resource type *<code class="language-plaintext highlighter-rouge">R*1</code></li>
+      <li>Two instances of resource type *<code class="language-plaintext highlighter-rouge">R*2</code></li>
+      <li>One instance of resource type *<code class="language-plaintext highlighter-rouge">R*3</code></li>
+      <li>Three instances of resource type *<code class="language-plaintext highlighter-rouge">R*4</code></li>
+    </ul>
+  </li>
+  <li>Threadstates:
+    <ul>
+      <li>Thread *<code class="language-plaintext highlighter-rouge">T*1</code> is holding an instance of resource type *<code class="language-plaintext highlighter-rouge">R*2</code> and is waiting for an instance of resource type *<code class="language-plaintext highlighter-rouge">R*1</code>.</li>
+      <li>Thread *<code class="language-plaintext highlighter-rouge">T*2</code> is holding an instance of *<code class="language-plaintext highlighter-rouge">R*1</code> and an instance of *<code class="language-plaintext highlighter-rouge">R*2</code> and is waiting for an instance of *<code class="language-plaintext highlighter-rouge">R*3</code>.</li>
+      <li>Thread *<code class="language-plaintext highlighter-rouge">T*3</code> is holding an instance of *<code class="language-plaintext highlighter-rouge">R*3</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/51ddfe47-9004-47b8-8579-ce679c3508b8" />
+</center>
+
+<h3 id="case-2-resource-allocation-graph-with-a-deadlock">Case 2. Resource-allocation graph with a deadlock</h3>
+
+<ul>
+  <li>*<code class="language-plaintext highlighter-rouge">E* = {… , *T3* → *R2* }</code> 추가 !</li>
+  <li>Cycle 존재
+    <ol>
+      <li>*<code class="language-plaintext highlighter-rouge">T*1 → *R*1 → *T*2 → *R*3 → *T*3 → *R*2 → *T*1</code></li>
+      <li>*<code class="language-plaintext highlighter-rouge">T*2 → *R*3 → *T*3 → *R*2 → *T*2</code></li>
+    </ol>
+
+    <p>→ deadlock 가능성</p>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 3" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/96e7f7b1-893e-4af2-a409-d00f7c25433d" />
+</center>
+
+<h3 id="case-3-resource-allocation-graph-with-a-cycle-but-no-deadlock">Case 3. Resource-allocation graph with a cycle but no deadlock</h3>
+
+<ul>
+  <li>이 경우 <code class="language-plaintext highlighter-rouge">T4</code>가 <code class="language-plaintext highlighter-rouge">R2</code> instace를 해지할 수 있기에 <code class="language-plaintext highlighter-rouge">T4</code>가 해지한 것을 <code class="language-plaintext highlighter-rouge">T3</code>가 가지면 되니까 cycle 깰 수 있음 ! <strong>→ NO DEADLOCK</strong></li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 4" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/82b6926c-fba0-4772-b072-ae16d7fd555b" />
+</center>
+
+<h1 id="methods-for-handling-deadlocks">Methods for Handling Deadlocks</h1>
+
+<ul>
+  <li>3가지 방법으로 Deadlock problem 을 다룰 수 잇음
+    <ol>
+      <li>Deadlock Precention &amp; Deadlock Avidance : system 이 deadlock state에 <strong>절대 빠지지 않도록</strong> 함</li>
+      <li>Deadlock Detection &amp; Deadlock Recovery : system이 deadlock state에 들어간 후 <strong>복구하도록 허용</strong></li>
+      <li>문제를 무시하고 system 에서 deadlock 이 발생하지 않는다고 가정</li>
+    </ol>
+    <ul>
+      <li>리눅스와 윈도우를 포함한 대부분의 system 에서 이 방식 사용 중</li>
+      <li>그런 다음 kenel 과 application developer 에게 1, 2 와 같은 방식 사용해 처리하도록 맡김</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="deadlock-prevention">Deadlock Prevention</h1>
+
+<ul>
+  <li>4가지 조건 중 적어도 하나가 만족되지 않음을 확인 !</li>
+</ul>
+
+<h3 id="1-mutual-exclusion">1. Mutual Exclusion</h3>
+
+<ul>
+  <li>Mutual Exclusion 은 유지 될 수 밖에 없음 ㅜㅜ 공유할 수 없는 res 에는 유지해야만 함 !!! 그래서 이걸 불만족 시킴으로 deadlock 을 방지할 순 없어여</li>
+  <li>Example of sharable resources: read-only files</li>
+  <li>Example of non-sharable resources: printer</li>
+</ul>
+
+<h3 id="2-hold-and-wait">2. Hold and Wait</h3>
+
+<ul>
+  <li>이를 불만족 시키려면 process가 res를 요청 할 때 다른 res를 보유하지 않도록 보장해야 함 → 2가지 protocol 존재
+    <ol>
+      <li>각 process가 실행을 시작하기 전, 모든 res를 요청하고 할당받기를 요구 → res 요청의 동적 특성으로 인해 비실용적 . .</li>
+      <li>res가 없을 때만 res 를 요청 할 수 있도록 ! 즉 요청하려면 현재 가지고 있는 거 다 해제해야함</li>
+    </ol>
+  </li>
+  <li>But, 두가지 모두 2개의 큰 단점 존재
+    <ol>
+      <li>
+        <p>Low res utilization</p>
+
+        <p>: res가 할당되었으나 장기간 사용되지 않을 수 있기 때문에 res 활용도가 낮을 수 있다. 예를 들어, process 전체 실행에 대해 mutex 잠금을 할당받을 수 있지만 짧은 기간 동안만 필요합니다.</p>
+      </li>
+      <li>
+        <p>starcation possible</p>
+
+        <p>: 여러 인기 있는 res가 필요한 process는 필요한 res 중 하나 이상이 항상 다른 process에 할당되기 때문에 무한정 기다려야 할 수 있습니다</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p>ex) DVD drive의 data를 disk의 file로 복사하고, file을 정렬 한 다음 printer로 결과를 인쇄하는 process</p>
+
+<ol>
+  <li>process는 처음에 DVD drive, Disk file, printer에 요청을 보내야함! → 마지막에 printer가 필요하더라도 전체 실행되는 동안 printer를 유지하고 있어야함</li>
+  <li>process는 처음에 DVD drive, Disk file 만 요청 보냄 → DVD drive에서 Disk file 로 복사 한 다음 이 둘 해지! 그리고 Disk file과 Printer 다시 요청보내기</li>
+</ol>
+
+<h3 id="3-no-premmption">3. No Premmption</h3>
+
+<ul>
+  <li>2가지 protocol 존재
+    <ol>
+      <li>process가 일부 res를 가지고 있고 다른 process가 사용 중인 res를 추가적으로 요청해서 대기해야하는 경우</li>
+    </ol>
+
+    <p>→ 가지고 있던 res를 premmption 해 process가 대기 중인 res list에 추가시킴! 그리고 이전 res와 요청한 res 를 다시 가져올 수 있을 때 prcess 다시 시작</p>
+
+    <p>ex) 스레드 A가 자원 X와 Y를 가지고 있고, 자원 Z를 요청하는 상황이라고 가정해봅시다. 그러나 자원 Z가 현재 다른 스레드에게 할당되어 있어서 A는 기다려야 합니다. 이때, 데드락을 방지하기 위해서는 A가 X와 Y를 선점하여 다른 스레드가 이를 사용할 수 있도록 해야 합니다. 그리고 선점된 X와 Y는 A가 대기하는 자원 목록에 추가됩니다. 이후, 자원 Z가 A에게 할당되고, A는 X와 Y를 함께 사용하며 다시 시작됩니다. 이렇게 함으로써, 스레드 A가 자원을 대기하면서 데드락이 발생하는 상황을 방지할 수 있습니다.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>process가 res를 요청하면, 요청한 res가 사용가능한지부터 먼저 확인하여 사용 가능하면 할당 ! 아니면 사용 중인 prcess 찾아 그 process로 부터 premmption 하여 요청한 process 에게 할당
+    <ul>
+      <li>CPU 레지스터나 데이터베이스 트랜잭션과 같이 상태를 쉽게 저장하고 복원할 수 있는 자원에 대해서 자주 적용</li>
+      <li>하지만 뮤텍스 잠금(mutex lock)과 세마포어(semaphore)와 같은 자원에 대해서는 일반적으로 적용할 수 없음 → 이러한 자원들이 데드락이 가장 일어나기 쉬운 자원들이기 때문</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="4-circular-wait">4. Circular Wait</h3>
+
+<ul>
+  <li>circular wait를 불만족시키는 것이 위의 3가지보다 실용적인 방법!</li>
+  <li>모든 res type에 순서를 부여하고, process가 res의 순서가 증가하는 순서대로 res를 요청하는 방법</li>
+  <li>
+    <p><strong>one-to-one function</strong> <strong>F : R → N</strong> (즉, res → number) 정의</p>
+
+    <p>ex) <code class="language-plaintext highlighter-rouge">F(tape drive) = 1;  F(disk drive) = 5;  F(printer) = 12;</code></p>
+  </li>
+  <li>
+    <p>process가 가지고 있는 res를 $R_i$ 라 할 때, $F(R_i) &lt; F(R_j)$ 일 때만 res  $R_j$ 를 요청할 수 있음 !</p>
+
+    <p>ex) tape drive와 disk drive 가 둘 다 필요한 경우 tape drive 에 대해 먼저 요청을 하고 할당 받은 후에 disk drive를 요청 할 수 있음</p>
+  </li>
+  <li>그렇기에 application developer 는 순서대로 프로그램을 작성해야한담 !</li>
+</ul>
+
+<aside>
+💡 **→ 이러면 circular wait 없어진다는 거 증명?**
+
+이 사실을 증명하기 위해 원형 대기 조건이 존재한다고 가정하고 모순에 의해 증명할 수 있습니다. 원형 대기에 관여하는 스레드 집합을 {T0, T1, ..., Tn}이라고 가정하고, 여기서 Ti는 스레드 Ti+1이 보유한 리소스 Ri를 기다리고 있습니다. (인덱스에 대해 모듈러 산술을 사용하여 Tn은 T0이 보유한 리소스 Rn을 기다리고 있다고 가정합니다.) 그러면 스레드 Ti+1은 리소스 Ri를 보유하면서 리소스 Ri+1을 요청하기 때문에 모든 i에 대해 F(Ri) &lt; F(Ri+1)이어야 합니다. 그러나 이 조건은 F(R0) &lt; F(R1) &lt; ... &lt; F(Rn) &lt; F(R0)을 의미합니다. 추이성에 의해 F(R0) &lt; F(R0)이 되어 모순이 발생합니다. 따라서 원형 대기는 발생할 수 없습니다.
+
+</aside>
+
+<h1 id="deadlock-avoidance">Deadlock Avoidance</h1>
+
+<h2 id="--deadlock-avoidance">- Deadlock Avoidance</h2>
+
+<ul>
+  <li>Deadlock Prevent 방법을 사용하면 uitilization 이 감소하는 등의 단점이 있음!</li>
+  <li>다른 방법으로는 res 요청 방법에 대한 추가 정보를 system이 알고 있어야함 → 누가 어떤 자원을 요청할 것이고 어떤 순서로 요청 할 것인지?
+    <ul>
+      <li>그러면 system 은 각 요청에 대해 deadlock 을 방지하기 위해 할당을 지정할 수 있음</li>
+      <li>가장 간단한 방법은 각 process가 필요로 하는 각 type의 최대 res 수를 선언할 것을 요구하는 것 !</li>
+    </ul>
+  </li>
+  <li>Deadlock Avoidance 는 결국 res 할당 상태를 동적으로 검사하면서 circular wait 상태가 절대 발생하지 않도록 하는 것임</li>
+</ul>
+
+<h2 id="--safe-state">- Safe State</h2>
+
+<ul>
+  <li>process가 available res를 요청 할 때 system은 system이 safe state에 유지하고 있는지 즉각적으로 확인해야함</li>
+  <li>모든 process에 대한 <strong>safe sequence</strong>가 존재하는 경우 system 이 <strong>safe state</strong>에 있다고 함
+    <ul>
+      <li>
+        <p><strong>seq <code class="language-plaintext highlighter-rouge">&lt;P_1, P_2 , … , P_n&gt;</code> 가 safe sequence (현재 할당 상태에 대해)</strong></p>
+
+        <p><strong>:</strong> 각 <code class="language-plaintext highlighter-rouge">P_i</code>에 대해 <code class="language-plaintext highlighter-rouge">P_i</code> 가 아직 요청할 수 있는 res 요청이 <code class="language-plaintext highlighter-rouge">{현재 사용 가능한 res} + {P_j (j &lt; i) 가 가지고 있는 res}</code> 로 모두 충족시킬 수 있는 경우</p>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">P_i</code> 가 필요로 하는 res 가 즉시 사용 가능 한 것이 아니면 <code class="language-plaintext highlighter-rouge">P_i</code> 는 모든 <code class="language-plaintext highlighter-rouge">P_j</code>가 작업을 완료 할 때 까지 기다릴 수 있음</li>
+      <li><code class="language-plaintext highlighter-rouge">P_j</code> 가 완료되면 <code class="language-plaintext highlighter-rouge">P_i</code>는 원하던 모든 res를 획득하고 작업 완료한 담에 res를 반환하고 종료할 수 있음</li>
+      <li><code class="language-plaintext highlighter-rouge">P_i</code> 가 종료되면 <code class="language-plaintext highlighter-rouge">P_{i+1}</code> 은 원하던 res를 획득 할 수 있음 ! → 이런 식으로 반복</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="basic-facts-1">Basic Facts</h3>
+
+<ul>
+  <li>system 이 safe state에 있다 → NO DEADLOCK</li>
+  <li>system 이 unsafe state에 있다 → DEADLOCK 가능성</li>
+  <li>Avoidance → system이 unsafe state로 절대 들어가지 않음</li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 5" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/41b8c8d3-f452-45f3-a8f6-b1ca29687b1f" />
+</center>
+
+<h2 id="--avoidance-algorithms">- Avoidance Algorithms</h2>
+
+<ul>
+  <li><strong>Deadlock-Avoidance Algorithms 은 Resource 할당 상태를 동적으로 검사하여 순환 대기 조건이 존재할 수 없도록 하는 것 !</strong></li>
+  <li>2가지 type 에 따라 나뉘어욤
+    <ul>
+      <li><strong>Resource Type 당 Single instance</strong> : Resource-Allocation Graph 사용 → simple case</li>
+      <li><strong>Resource Type 당 Multiple instances</strong> :  Banker’s Algorithms  사용 → 이게 더 일반적이겠쥬</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="-resource-allocation-graph-algorithms-">[ Resource-Allocation Graph Algorithms ]</h2>
+
+<h3 id="기본-정의">기본 정의</h3>
+
+<ul>
+  <li><strong>Claim Edge</strong> (추가 !) : process 가 resource R_j를 요청할 수 있음을 나타내고 점선으로 표기 $<strong>P_i$ → $R_j$</strong></li>
+  <li>process 가 resource 요청할 때, <strong>Claim edge → Request edge</strong> 로 변환</li>
+  <li>resource 가 할당 될 때, <strong>Request edge → Assignment edge</strong> 로 변환</li>
+  <li>process에 의해 resource 가 해제 될 때, <strong>Assignment edge → Claim edge</strong> 로 변환</li>
+  <li>
+    <p>resource는 무조건 system에서 사전(priori) 에 claime 되어야함</p>
+
+    <p>→ 즉, P_i 가 실행되기 전 P_i 에 대한 claim edge 가 모두 graph 에 표기되어 있어야함</p>
+  </li>
+  <li>$P_i$ 가 $R_j$ 요청 할 때 cliam edge 를 request edge로 전환되더라고, cycle 이 없는 경우에만 request가 승인됨 !
+    <ul>
+      <li>Cycle 없음 : 즉각적인 resource 할당은 system 이 safe state 에 유지하도록 해줌</li>
+      <li>Cycle 있음 : 즉각적인 resource 할당은 systme 이 unsafe state 로 만들게 됨 .. → 그러므로 process는 기다려야한당</li>
+    </ul>
+  </li>
+  <li>cycle-detection algorithm 으로 cycle 있는지 확인할 때 시간 복잡도는 $n^2$</li>
+</ul>
+
+<center>
+<img width="400" alt="Untitled 6" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/ed0e25e6-402c-4792-8cfa-35142c2dce0c" />
+<br />Resource-allocation graph for deadlock avoidance <br />
+</center>
+
+<center>
+<img width="400" alt="Untitled 7" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/babe49de-fb7b-4542-a304-2fb887dae1a0" />
+<br />Unsafe state in a resource-allocation graph.<br />
+</center>
+
+<h2 id="-bankers-algorithms-">[ Banker’s Algorithms ]</h2>
+
+<h3 id="data-structure-for">Data Structure for</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">**n = {# of process}**</code>, <code class="language-plaintext highlighter-rouge">**m = {# of resource type}**</code></li>
+  <li><strong>Available</strong> - m x 1 Vector
+    <ul>
+      <li>각 resoure type 에 대해 사용 가능한 resource 수를 나타냄</li>
+      <li><code class="language-plaintext highlighter-rouge">Available[j] == k</code> 이면,  Reource type R_j에 대해 사용 가능한 k intance 존재</li>
+    </ul>
+  </li>
+  <li><strong>Max</strong> - n x m Matrix
+    <ul>
+      <li>각 process가 요청할 수 있는 최대 resource 수를 나타냄</li>
+      <li><code class="language-plaintext highlighter-rouge">Max[i][j] == k</code> 이면, process P_i 는 reource type R_j 를 최대 k intances 만큼 요청할 수 있음</li>
+    </ul>
+  </li>
+  <li><strong>Allocation</strong> - n x m Matrix
+    <ul>
+      <li>현재 각 process에 할당 된 resource 수를 나타냄</li>
+      <li><code class="language-plaintext highlighter-rouge">Allocation[i][j] == k</code> 이면, process P_i 는 reource type R_j 를 k intances 만큼 할당 받았음</li>
+      <li><code class="language-plaintext highlighter-rouge">Allocation_i</code> 는 process P_i 에 할당된 resource</li>
+    </ul>
+  </li>
+  <li><strong>Need</strong> - n x m Matrix
+    <ul>
+      <li>각 process가 작업을 완료하기 위해 필요한 남은 resource 수</li>
+      <li><code class="language-plaintext highlighter-rouge">Need[i][j] == k</code> 이면, process P_i 는 작업을 완료하기 위해 reource type R_j 를 k intances 만큼 더 필요함</li>
+      <li><code class="language-plaintext highlighter-rouge">Need[i][j] == Max[i][j] - Allocation[i][j]</code></li>
+      <li><code class="language-plaintext highlighter-rouge">Need_i</code> 는 process P_i 가 작업을 완료하기 위해 요청해야할 추가 resource</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="safety-algorithms">Safety Algorithms</h3>
+
+<ul>
+  <li>system이 safe state인지 아닌지 판단하는 알고리즘으로 시간 복잡도는 $O(mn^2)$
+    <ol>
+      <li>초기화</li>
+    </ol>
+
+    <p>Work 와 Finish 가 각각 길이가 m, n 인 vetor 라고 정의하고 다음과 같이 초기화</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Work = Available</code> → 현재 시스템에서 사용 가능한 자원(resource)의 수를 나타내는 벡터</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Finish[i] = fasle // for i = 0, 1, … , n-1</code>  → 각 process에 대해 safe path 를 찾았는지 여부 (path 가 있어 실행되고 종료되었는지)</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>남은 need를 claim 할 수 있는 process 찾기</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Finish[i] = false &amp;&amp; Need_i ≤ Work</code> 인 index <code class="language-plaintext highlighter-rouge">i</code> 찾기! 만약에 만족하는 i가 없다면 4단계로 ㄱㄱ</p>
+  </li>
+  <li>
+    <p>실행 가능한 process P_i 실행 후 (resource 할당) 에 할당된 resource 들 모두 반환</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Work = Work + Allocation_i</code>; <code class="language-plaintext highlighter-rouge">Finish[i] = ture</code>; 로 한 다음에 2단계로 ㄱㄱ</p>
+  </li>
+  <li>
+    <p>모든 i 에 대해서 <code class="language-plaintext highlighter-rouge">Finish[i] == ture</code> 라면(모든 process가 실행 완료될 수 있는), system 은 safe state 임</p>
+  </li>
+</ol>
+
+<h3 id="resource-request-algorithm-for-p_i"><strong>Resource-Request Algorithm (for P_i)</strong></h3>
+
+<ul>
+  <li>요청을 안전하게 승인할 수 있는지 확인하여
+    <ul>
+      <li>안전하면 P_i에게 resource를 할당</li>
+      <li>아니면 P_i 의 요청을 보류하고 resource-allocation state 가 이전으로 복원</li>
+    </ul>
+  </li>
+  <li><strong>Request_i</strong>  : process P_i 에 대한 request vector (길이 m)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Request_i[j] == k</code> 이면 P_i 는 resource type R_j 의 k instances 를 원하는 것
+        <ol>
+          <li><strong><code class="language-plaintext highlighter-rouge">Request_i ≤ Need_i</code></strong> 이면 유효한 요청 수 이니 2단계로! 아니라면 process가 최대 요청을 초과한 것이기에 error condition 이 발생함</li>
+          <li><strong><code class="language-plaintext highlighter-rouge">Request_i ≤ Available</code></strong> 이면 할당 가능하니 3단계로! 아니라면 P_i 는 resource를 사용할 수 없기에 wait 해야함</li>
+          <li>system이 resource 를 P_i 에게 할당한 것 처럼 보이게 하기 위해 상태를 다음과 같이 변경</li>
+        </ol>
+      </li>
+    </ul>
+
+    <p><code class="language-plaintext highlighter-rouge">Available = Available – Requesti;</code></p>
+
+    <p><code class="language-plaintext highlighter-rouge">Allocationi = Allocationi + Requesti;</code></p>
+
+    <p><code class="language-plaintext highlighter-rouge">Needi = Needi – Requesti;</code></p>
+  </li>
+</ul>
+
+<h2 id="--example--이거-무조건-시험-나올-듯-무조건-완벽하게-이해하기">- Example <strong>** 이거 무조건 시험 나올 듯 무조건 완벽하게 이해하기</strong></h2>
+
+<blockquote>
+  <p><strong>5 Processes</strong> : P_0 - P_4; 
+<strong>3 Resource types</strong> : A (10 instances), B (5 instances), C (7 instances)</p>
+
+</blockquote>
+
+<center>
+<img width="600" alt="Untitled 8" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/9401ca5f-4054-44c8-96ec-db88c86f2a0a" />
+<br />T0 에서의 상태, Need = Max - Allocation 으로 하면 위와 같이 나옴<br />
+</center>
+
+<h3 id="exmaple-1-safety-algorithms">[Exmaple 1] Safety Algorithms</h3>
+
+<center>
+<img width="600" alt="Untitled 9" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/ffafd0bd-b718-4297-b0e4-7a2cf88508f7" />
+</center>
+
+<ul>
+  <li>Seq &lt; P1, P3, P4,P2, P0&gt; 는 safe state 인지 확인하기!
+    <ol>
+      <li>초기화
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">Work = Vailable = [3 3 2]</code></li>
+          <li><code class="language-plaintext highlighter-rouge">Finish = [false, false, false, false, false]</code></li>
+        </ul>
+      </li>
+      <li>남은 Need를 claim 할 수 있는 process 찾기
+        <ul>
+          <li>P0 → <code class="language-plaintext highlighter-rouge">Finish[0] == fasle</code> 지만  [7 4 3] &gt; [3 3 2] 이기에 할당 못 함</li>
+          <li>P1 → <code class="language-plaintext highlighter-rouge">Finish[1] == fasle</code> 이고 [1 2 2] ≤ [3 3 2] 이기에 할당 가능</li>
+          <li>물론 다른 것도 가능 할 수 있음 (P2, P3, P4 다 가능 그래서 safe state 여러개 가능하다는 거) → 일단 i가 증가하는 순으로 구하는게 구현하기 쉬우니 . .</li>
+        </ul>
+      </li>
+      <li>실행 가능한 process P_i 실행 후 (resource 할당) 에 할당된 resource 들 모두 반환
+        <ul>
+          <li>P1 실행 후 반환 → <code class="language-plaintext highlighter-rouge">Work = Work + Allocation[1] = [5 3 2]</code></li>
+          <li><code class="language-plaintext highlighter-rouge">Finish[1] = True</code> 로 변경</li>
+        </ul>
+      </li>
+      <li>반복 ! 해보면 safe state 임</li>
+    </ol>
+  </li>
+  <li>&lt; P1, P3, P4, P0, P2&gt; 랑 &lt; P1, P3, P4, P2, P0&gt; 도 safe state</li>
+</ul>
+
+<h3 id="exmaple-2-resource-request-algorithm-for-p_2">[Exmaple 2] <strong>Resource-Request Algorithm (for P_2)</strong></h3>
+
+<ul>
+  <li>P2 이 [1 0 2] 요청했을 경우 (Request_2 = [1 0 2]) 요청이 받아들여질 수 있는지 확인하여 할당하기
+    <ol>
+      <li>Request_2 = [1 0 2] ≤ Need_2 = [6 0 0] 이니 유효하지 않은 요청 !</li>
+      <li>Fail…</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="exmaple-3-resource-request-algorithm-for-p_1">[Exmaple 3] <strong>Resource-Request Algorithm (for P_1)</strong></h3>
+
+<ul>
+  <li>P1 이 [1 0 2] 요청했을 경우 (Request_1 = [1 0 2]) 요청이 받아들여질 수 있는지 확인하여 할당하기
+    <ol>
+      <li>Request_1 = [1 0 2] ≤ Need_1 = [6 0 0] 이니 유효하지 않은 요청 !</li>
+      <li>Fail…</li>
+      <li>Request_1 = [1 0 2] ≤ Available = [3 3 2] 이기에 즉시 할당 가능 !</li>
+      <li>
+        <p>system이 resource 를 P1 에게 할당한 것 처럼 보이게 하기 위해 상태를 다음과 같이 변경</p>
+
+        <p><code class="language-plaintext highlighter-rouge">Available = Available – Request_1 = [2 3 0]</code></p>
+
+        <p><code class="language-plaintext highlighter-rouge">Allocation_1 = Allocation_1 + Request_1 = [3 0 2]</code></p>
+
+        <p><code class="language-plaintext highlighter-rouge">Need_1 = Need_1 – Request_1 = [0 2 0]</code></p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="요청 시 상태" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/57dbd6fc-e985-4047-8cf8-9a7f89b1d8ba" />
+<br />요청 시 상태<br />
+</center>
+
+<center>
+<img width="300" alt="완료 후 상태" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/085b3a22-47d9-47d7-9a4e-053dcf2bcc43" />
+<br />완료 후 상태<br />
+</center>
+
+<h3 id="exmaple-3-resource-request-algorithm-for-p_0">[Exmaple 3] <strong>Resource-Request Algorithm (for P_0)</strong></h3>
+
+<ul>
+  <li>P0 이 [0 2 0] 요청했을 경우 (Request_0 = [0 2 0]) 요청이 받아들여질 수 있는지 확인하여 할당하기
+    <ol>
+      <li>Request_0 = [0 2 0] ≤ Need_0 = [7 2 3] 이니 유효한 요청 수</li>
+      <li>Request_0 = [0 2 0] ≤ Available = [2 3 0] 이기에 즉시 할당 가능 !</li>
+      <li>
+        <p>system이 resource 를 P0 에게 할당한 것 처럼 보이게 하기 위해 상태를 다음과 같이 변경</p>
+
+        <p><code class="language-plaintext highlighter-rouge">Available = Available – Request_0 = [2 3 0]</code></p>
+
+        <p><code class="language-plaintext highlighter-rouge">Allocation_0 = Allocation_0 + Request_0 = [3 0 2]</code></p>
+
+        <p><code class="language-plaintext highlighter-rouge">Need_0 = Need_0 – Request_0 = [0 2 0]</code></p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>근데 P0 의 요청을 허용 했을 경우  Need_i ≤ Available 인 P_i 를 찾을 수 없움 ㅠㅠㅠ</p>
+
+    <p><strong>→ Unsafe state</strong></p>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 11" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/085b3a22-47d9-47d7-9a4e-053dcf2bcc43" />
+<br />요청 시 상태<br />
+</center>
+
+<center>
+<img width="300" alt="Untitled 12" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/04b7e257-142c-4daa-b7a1-718e9cf209bd" />
+<br />완료 후 상태<br />
+</center>
+
+<h1 id="deadlock-detection">Deadlock Detection</h1>
+
+<ul>
+  <li>System 이 Deadlock-precention 이나 Deadlock-avoidance 알고리즘을 사용하지 않는다면 Deadlock state 에 들어 갈 수 있음 → 들어가도록 허용하는</li>
+  <li>이런 경우 system 은 <strong>1) deadlock state가 발생했는지 확인하는 알고리즘 (Deadlock detection)</strong> 과 <strong>2) Deadlock state에서 복구할 수 있도록 하는 알고리즘(</strong>Recovery from Deadlock)을 제공</li>
+</ul>
+
+<h2 id="--deadlock-detection">- Deadlock Detection</h2>
+
+<ul>
+  <li>Detection Algorithms
+    <ol>
+      <li>각 Resource Type 이 single instace 를 가지는 경우 → <strong>Wait-for Graph</strong> 사용</li>
+      <li>Resource Type 이 multiple instaces 를 가지는 경우 → Detection Alogirithms</li>
+    </ol>
+  </li>
+  <li>Recover scheme</li>
+</ul>
+
+<h2 id="--detection-algorithm-usage">- Detection-Algorithm Usage</h2>
+
+<ul>
+  <li>
+    <p>expensive 한 algorithm 임 ㅜㅜ 그렇기에 너무 자주 사용하면 안되고 필요할 때만 사용해야함!</p>
+
+    <p>→ 즉시 할당할 수 없는 모든 request 에 대해  사용한다면 overhead 가 굉장히 커질 것 ㅜㅜ</p>
+  </li>
+  <li>또한 임의로 사용한다면 graph 에서 많은 cycle 이 생길 수 있어서 어떤 deadlock process에 의해 deadlock state 가 발생했는지 파악할 수 없게 됨</li>
+  <li>그럼 언제 Detection-Algorithm 을 사용해야할까 ?! → 다음 두가지 요소에 따라 판단
+    <ol>
+      <li>Deadlock state 가 자주 발생할 가능성이 있는가?</li>
+      <li>Deadlock state 가 발생할 때 영향을 받는 스레드의 수는 얼마나 되는가?</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--signle-instace-of-each-resource-type">- Signle Instace of Each Resource Type</h2>
+
+<ul>
+  <li>Resource-allocation graph 를 변형한 <strong>Wait-for graph</strong> 사용!
+    <ul>
+      <li>Resource Node 와 Collapse Edge 를 제거</li>
+      <li>$P_i$ 가 $P_j$ 를 wait 하고 있는 경우 $P_i → P_j$ edge 로 표현</li>
+    </ul>
+  </li>
+  <li>마찬가지로 cycle 이 존재하면 deadlock 이 존재한다는 것임</li>
+  <li>그렇기에 주기적으로 graph에 cycle 이 있는지 확인하는 algorithms 을 실행시키며 탐지함</li>
+  <li>n 개의 node를 가지고 있는 graph에 cycle 이 있는지 확인하는 algorithms의 시간복잡도는 O(n^2) → DFS 사용</li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 13" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/adba99b3-c96a-4233-b736-03dfcfe79203" />
+<br /> 왼) Resource - Allocation Graph           오) Wait - For Graph<br />
+</center>
+
+<h2 id="--several-instace-of-resource-type">- Several Instace of Resource Type</h2>
+
+<ul>
+  <li>Wait-for 그래프는 serveral instance 상황에서는 사용할 수 없음 ㅜㅜ → baker’s 알고리즘과 비슷한 Detection 알고리즘 사용 할 것임</li>
+</ul>
+
+<h3 id="-detection-algorithms-">[ Detection Algorithms ]</h3>
+
+<ul>
+  <li>banker’s 알고리즘과 비슷하지만, Max와 ?? 가 필요없음</li>
+</ul>
+
+<h3 id="data-structure-for-1">Data Structure for</h3>
+
+<ul>
+  <li>Available  - m x 1 Vector
+    <ul>
+      <li>각 resoure type 에 대해 사용 가능한 resource 수를 나타냄</li>
+    </ul>
+  </li>
+  <li>Allocation  <em>**</em>- n x m Matrix
+    <ul>
+      <li>현재 각 process에 할당 된 resource 수를 나타냄</li>
+    </ul>
+  </li>
+  <li>Request - n x m Matrix
+    <ul>
+      <li>현재 각 process의 요청을 나타냄</li>
+      <li><code class="language-plaintext highlighter-rouge">if Request[i][j] == k</code> : 스레드 Ti는 자원 유형 Rj의 추가 k개 인스턴스를 요청</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="algorithms">Algorithms</h3>
+
+<ul>
+  <li>$O(mn^2)$
+    <ol>
+      <li>초기화</li>
+    </ol>
+    <ul>
+      <li>Work 와 Finish 가 각각 길이가 m, n 인 vetor 라고 정의하고 다음과 같이 초기화</li>
+      <li><code class="language-plaintext highlighter-rouge">Work = Available</code> → 현재 시스템에서 사용 가능한 자원(resource)의 수를 나타내는 벡터</li>
+      <li><code class="language-plaintext highlighter-rouge">Finish[i] = (Allocation_i == 0 ? ture : false) // for i = 0, 1, … , n-1</code> → 힐당 된게 없으면 확인 안 헤도 ㄱㅊ하니까 true 즉 detection 검사 완료 여부
+        <ol>
+          <li>Index <code class="language-plaintext highlighter-rouge">i</code> 찾기!</li>
+        </ol>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">Finish[i] == false &amp;&amp; **Request_i** ≤ Work</code> 인 index <code class="language-plaintext highlighter-rouge">i</code> 찾기! 만약에 만족하는 i가 없다면 4단계로 ㄱㄱ</li>
+      <li>
+        <table>
+          <tbody>
+            <tr>
+              <td><code class="language-plaintext highlighter-rouge">Finish[i] == false</code> → O(n)</td>
+              <td><code class="language-plaintext highlighter-rouge">**Request_i** ≤ Work</code> → O(m)       → O(mn)</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+      <li>Banker’s 와 달리 Need 가 아니라 Request 임
+        <ol>
+          <li></li>
+        </ol>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">Work = Work + Allocation_i</code>; <code class="language-plaintext highlighter-rouge">Finish[i] = ture</code>; 로 한 다음에 2단계로 ㄱㄱ</li>
+      <li><code class="language-plaintext highlighter-rouge">**Request_i** ≤ Work</code> 이니까 P_i 가 Deadloack 에 관여하지 않고있음을 알고 있어 낙관적인 가정 (optimistically assume) 으로 P_i 가 task 를 완료하기 위해 더 필요한 res 가 없을 것이라 가정함 ! 즉 모든 resource 를 반환할 것이기에 반환한다 생각하고 저렇게 해도 됨
+        <ol>
+          <li>Deadlock state 판단</li>
+        </ol>
+      </li>
+      <li>어떤 1 ≤ i ≤ n 에 대해 Finish[ i ] == false 이면 system 은 Deadlock state</li>
+      <li>Finish[ i ] == false 이라면 P_i 는 deadlocked</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--example--이거-무조건-시험-나올-듯22-무조건-완벽하게-이해하기">- Example <strong>** 이거 무조건 시험 나올 듯22 무조건 완벽하게 이해하기</strong></h2>
+
+<blockquote>
+  <p><strong>5 Processes</strong> : P_0 - P_4; 
+<strong>3 Resource types</strong> : A (7 instances), B (2 instances), C (6 instances)</p>
+
+</blockquote>
+
+<h3 id="example-1">[Example 1]</h3>
+
+<center>
+<img width="400" alt="Untitled 14" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/33183816-b498-4d25-a377-3d82fa0ebc82" />
+</center>
+
+<ul>
+  <li>&lt;T0, T2, T3, T1, T4&gt; 의 경우 모든 i 에 대해 <strong>Finish</strong>[i] == true 이므로 deadlock state 가 아님!</li>
+</ul>
+
+<h3 id="example-2-p_2-가-type-c-instance-를-하나-더-요청할-경우">[Example 2. P_2 가 Type C instance 를 하나 더 요청할 경우]</h3>
+
+<center>
+<img width="400" alt="Untitled 15" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/88dee203-95f3-492a-9d69-19448e6fb6ad" />
+</center>
+
+<ul>
+  <li>deadlock state 임 ㅜㅜ</li>
+  <li>P0 밀곤 디 false임</li>
+</ul>
+
+<h1 id="recovery-from-deadlock">Recovery from Deadlock</h1>
+
+<h2 id="--by-process-and-thread-termination">- By <strong>Process and Thread Termination</strong></h2>
+
+<ul>
+  <li>Deadlock 상태(circular wait)를 제거하기 위해서 process나 thread 를 terminate 하는 2가지 방법
+    <ol>
+      <li>모든 Deadlocked process들 Abort → Cycle 확실히 제거할 수는 있으나 cost 가 많이 듬 ㅜㅜ</li>
+      <li>
+        <p>Deadlock cycle 이 사라질 때 까지 한번에 하나의 process 씩 Abort → overhead 많이 발생 ! process 종료하고 deadlock detection 해야하니까</p>
+
+        <p>→ 이 방법 사용한다면 어떤 순서로 Abort 할 것인지를 정해야함</p>
+      </li>
+    </ol>
+  </li>
+  <li>Process Abort 하는 순서 → Terminate 하는데 드는 cost 가 최소가 되는 걸로 Abort 해야함 ! Mutex 가지고 있다던가 R/W 중이었다던가 그러면 에바
+    <ul>
+      <li>Priority of Process</li>
+      <li>Process가 지금까지 compute 한 시간이 얼마나 길고, 남은 시간이 얼마나 긴지</li>
+      <li>Process가 사용한 Resource (얼마나 많이 사용했고, 어떤 type 을 사용했는지) → ex) resource 선점하기 쉬운지 여부</li>
+      <li>Process가 완료하기 위해 필요한 Resource</li>
+      <li>Terminated 되어야하는 Process 수</li>
+      <li>Process 가 Interactive (대화형) 한지 Batch (한번에) 인지</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--by-resource-preemption">- By Resource Preemption</h2>
+
+<ul>
+  <li>Deadlock 상태(circular wait)를 제거하기 위해서 일부 Resource 를 procesess 로 부터 preempt 하여 다른 process 에 할당하는 방법</li>
+  <li>그러기 위해선 다음 3가지 문제를 다뤄야함
+    <ol>
+      <li>Selecting a victim(희생자) : 어떤 resource와 어떤 process를 선점할 것인가?</li>
+    </ol>
+    <ul>
+      <li>termination 방식과 마찬가지로 cost 를 최소화하는 방향으로 선택해야함</li>
+      <li>cost 에는 deadlocked process가 가지고 있는 resource 수나 process 지금까지 사용한 시간 등과 같은 parameter 가 포함 될 수 있음
+        <ol>
+          <li>Rollback : process에게서 자원을 preemption 하면 해당 process 는 어떻게 처리해야 하는가?</li>
+        </ol>
+      </li>
+      <li>Resource가 부족하므로 정상적으로 완료할 수 없음. 그러므로 어떤 safe state로 rollback 한 후에 다시 시작해야함</li>
+      <li>safe state 를 결정하는 것이 어려우므로 전체를 rollback 하는 것이 젤 효율적임 ← 사실 deadlock 발생시키는 거만 rollback 해도 되지만 그러면 추가 정보를 저장해야함
+        <ol>
+          <li>Starvation : starvation이 발생하지 않도록 어떻게 보장할 수 있는가?</li>
+        </ol>
+      </li>
+      <li>항상 같은 process가 victim 으로 선택될 수 있음 → victim 으로 선정되는 횟수에 제한을 두어야함</li>
+      <li>일반적인 해결방법을 cost에 rollback 횟수도 포함하는 것 → 그러면 victim 으로 많이 선정될 수록 cost 가 올라가니까 선택될 확률이 낮아짐</li>
+    </ul>
+  </li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-05-01">May 1, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch6" class="pagination--pager" title="[OS] Ch6. Process Synchronization
+">Prev</a>
+    
+    
+      <a href="/categories/study/2023_OS/ch9" class="pagination--pager" title="[OS] Ch9. Main Memory
+">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/develop/Github_Blog/comment" rel="permalink">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch9" rel="permalink">[OS] Ch9. Main Memory
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-08T00:00:00+09:00">May 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch6" rel="permalink">[OS] Ch6. Process Synchronization
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-12T00:00:00+09:00">April 12, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch5" rel="permalink">[OS] Ch5. CPU Scheduling
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-03T00:00:00+09:00">April 3, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 zi_orv. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/categories/study/2023_OS/ch8";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/categories/study/2023_OS/ch8"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rutuna.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

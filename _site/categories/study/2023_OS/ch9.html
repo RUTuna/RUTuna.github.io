@@ -1,0 +1,1836 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch9. Main Memory | zi_orv</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="zi_orv">
+  
+  <meta property="article:author" content="zi_orv">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch9. Main Memory">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch9">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-05-08T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-05-08T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch9">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "zi_orv",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="-8bYhrDyOZjr61EL8z8964D200AyyTFpWGyPjxkesfo" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="https://rutuna.github.io/assets/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://rutuna.github.io/assets/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://rutuna.github.io/assets/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://rutuna.github.io/assets/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://rutuna.github.io/assets/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://rutuna.github.io/assets/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://rutuna.github.io/assets/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://rutuna.github.io/assets/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://rutuna.github.io/assets/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://rutuna.github.io/assets/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://rutuna.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://rutuna.github.io/assets/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://rutuna.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://rutuna.github.io/assets/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://rutuna.github.io/assets/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/profile.png" alt="zi_orv" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">zi_orv</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="mailto:p000207@naver.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 10</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (8)</a></li>
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Project</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Develop</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/develop/Github_Blog/">Github Blog (2)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Other</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch9. Main Memory">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-05-08T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-05-08T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch9. Main Memory
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-08T00:00:00+09:00">May 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#background">Background</a><ul><li><a href="#--배경-지식">- 배경 지식</a></li><li><a href="#--base-and-limit-registers">- Base and Limit Registers</a></li><li><a href="#--address-binding">- Address Binding</a></li><li><a href="#--logical-vs-physical-address-space">- Logical vs Physical Address Space</a></li><li><a href="#--memory-management-unit-mmu">- Memory-Management Unit (MMU)</a></li><li><a href="#--excutable-files">- Excutable Files</a></li><li><a href="#--two-step-operation-in-most-systems">- Two-step operation (in most systems)</a></li><li><a href="#--linking">- Linking</a></li><li><a href="#--loading">- Loading</a></li></ul></li><li><a href="#swapping">Swapping</a><ul><li><a href="#--swapping">- Swapping</a></li></ul></li><li><a href="#contiguous-memory-allocation">Contiguous Memory Allocation</a><ul><li><a href="#--memory-allocation">- Memory Allocation</a></li><li><a href="#--memory-protection">- Memory Protection</a></li><li><a href="#--partition-scheme">- Partition scheme</a></li><li><a href="#--memory-allocation-in-variable-partition-scheme">- Memory Allocation (in Variable Partition scheme)</a></li><li><a href="#--dynamic-storage-allocation-problem">- Dynamic Storage-Allocation Problem</a></li><li><a href="#--fragmentation">- Fragmentation</a></li></ul></li><li><a href="#paging">Paging</a><ul><li><a href="#--paging">- Paging</a></li><li><a href="#--address-translation-scheme">- Address Translation Scheme</a></li><li><a href="#--fragmentation-in-paging">- Fragmentation in paging</a></li><li><a href="#--free-frames">- Free Frames</a></li><li><a href="#--implementation-of-page-table-with-hardwares-support">- Implementation of Page Table with Hardware’s support</a></li><li><a href="#--memory-protect">- Memory Protect</a></li><li><a href="#--shared-page">- Shared Page</a></li></ul></li><li><a href="#structure-of-the-page-table">Structure of the Page Table</a><ul><li><a href="#--large-page-table-problem">- Large page table problem</a></li><li><a href="#--hirarchical-page-table">- Hirarchical Page Table</a></li><li><a href="#--haded-page-tables">- Haded Page Tables</a></li><li><a href="#--inverted-page-table">- Inverted Page Table</a></li></ul></li><li><a href="#segmentation">Segmentation</a><ul><li><a href="#--segmentation">- Segmentation</a></li><li><a href="#--segmentation-architecture">- Segmentation Architecture</a></li><li><a href="#--segmentation-구현-위해-필요한-hw">- Segmentation 구현 위해 필요한 HW</a></li><li><a href="#---protection-in-segmentation">-  Protection in segmentation</a></li><li><a href="#paging-vs-segmentation">Paging vs Segmentation</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="background">Background</h1>
+
+<h2 id="--배경-지식">- 배경 지식</h2>
+
+<ul>
+  <li>Program 을 실행하기 전 disk 에서 memory 로 가져온 다음에 ‘process’ 로 배치</li>
+  <li>Main Memory &amp; Register : CPU 가 직접 acces 할 수 있는 storage
+    <ul>
+      <li>Register : 접근하는데는 1 CPU clock (CPI) 이하로 걸림</li>
+      <li>
+        <p>Main Memory : 접근에는 많은 cycle 이 필요 → data 를 주고 받기 위해선 cpu 와 memory 간에 bus 를 통해야해서</p>
+
+        <p>→ Processor 에 data가 없는 동안 기다려야하게 되기에 Cache 사용할거에요 ㅇㅇ</p>
+      </li>
+    </ul>
+  </li>
+  <li>Cache : Main Memory 와 CPU Register 사이에 존재</li>
+  <li>올바르게 operation 되기위해 Memory Protection 은 필요함
+    <ul>
+      <li>User process 로부터 OS 보호</li>
+      <li>User process 서로간의 보호</li>
+      <li>Hardware 에서 제공해줘야합니당</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--base-and-limit-registers">- Base and Limit Registers</h2>
+
+<ul>
+  <li>User process 서로 간의 보호를 위하여 process 가 별도의 memory 공간을 가지게 함 → concurrent execution (동시에 실행)도 가능</li>
+  <li>Process 가 access 할 수 있는 legal address 범위를 정하고, 해당 legal address에만 access 할 수 있도록 보장해야함</li>
+  <li>Base, Limit 이라고 불리는 두 Register 의 한 쌍이 logical address space 를 정의
+    <ul>
+      <li>Base Register : 가장 작은 legal <em>‘physical’</em> address</li>
+      <li>Limit Register : 지정된 Range 크기</li>
+    </ul>
+  </li>
+  <li>OS 만이 이 두 Register 값을 바꿀 수 있음 → 즉 OS 가 제공하는 보호 기능</li>
+</ul>
+
+<center>
+<img width="300" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch9.png" />
+</center>
+
+<h3 id="base--limit-registers-로-hardware-address-protection">[Base &amp; Limit Registers 로 Hardware address protection]</h3>
+
+<ul>
+  <li>CPU Hardware가 User mode에서 생성된 모든 address를 Register (base &amp; limit) 과 비교하는 것으로 momory space 보호 → legal address 인지 확인</li>
+  <li>User mode에서 실행 중인 prgram OS 나 다른 User 의 momory 에 접근하려는 등 illegitimate memory 에 접근하려고 하면 trap 발생</li>
+  <li>address 가 <code class="language-plaintext highlighter-rouge">[base, base + limit)</code> 에 속해야함</li>
+</ul>
+
+<center>
+<img width="589" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/f06566b2-c9b2-4c7a-9a00-3a2d0a062938" />
+<br />Hardware address protection with base and limit registers<br />
+</center>
+
+<h2 id="--address-binding">- Address Binding</h2>
+
+<ul>
+  <li>Disk에 저장되어있는 Prgram(process) 들은 실행되기위해 Memory 로 가져와지기를 기다리고 있는데, 이때 <strong>input queue</strong> 에서 기다리고 있음
+    <ol>
+      <li>Input Queue 에서 한 process 선택</li>
+      <li>Disk 에서 Memory 로 Process Load</li>
+      <li>Process 실행되면 Memory 에서 Instruction 와  data에 접근하여 읽어옴</li>
+      <li>실행이 종료되면 Memory 는 다른 process 들이 사용할 수 있도록 Memory space 는 availavle 이라고 decleared</li>
+    </ol>
+  </li>
+</ul>
+
+<p>→ 이 처럼 User prgram 은 실행되기 전에 여러 단계를 거침</p>
+
+<ul>
+  <li>user process 가 physical memory 의 어느 부분에 위치해도 상관 없음 꼭 시작부분부터 시작할 필요 없음</li>
+</ul>
+
+<h3 id="multistep-processing-of-a-user-program">[Multistep processing of a user program]</h3>
+
+<ul>
+  <li>Prgram 이 실행되기 위해 여러 단계를 거치는 것으로 이 과정에서 address 를 binding 함</li>
+  <li>User program (Source Program) 의 address 는 X 와 같이 <strong>symbol address</strong> 로 표시 됨</li>
+  <li>compiler 는 일반적으로 이런 <strong>symbol address</strong>를 “module의 시작으로 부터 14 byte (= 상대경로)” 와 같은 <strong>relocatable address</strong> 로 binding</li>
+  <li>Liker (Likage editor) 또는 Loader가 <strong>relocatble address</strong> 를 “74014” 과 같은 <strong>absolute address</strong> 로 binding</li>
+  <li>다음 3가지 stage 에서 Memory address에 대한 binding 이 일어날 수 있음
+    <ol>
+      <li>Compiler time : compile time 에서 Memory 가 어디에 위치할지를 먼저 알고 있다면, absolute code (compiler code) 를 생성할 수 있음
+        <ul>
+          <li>process가 R 에서 시작한다는 것을 알고 있다면, code 는 R 에서 시작하여 그 위로 확장됨</li>
+          <li>시작 위치가 변경된다면 무조건 code를 recompile 해야함</li>
+        </ul>
+      </li>
+      <li>Load time :  compile time 에서 Memory 가 어디에 위치할지를 모른다면, 반드시 compiler 는 relocatable code 를 생성해야함
+        <ul>
+          <li>최종 binding 은 load time 동안 지연됨</li>
+          <li>시작 위치가 변경된다면 user code 를 다시 load 하여 변경된 값 반영</li>
+        </ul>
+      </li>
+      <li>Execution time : process 가 실행 중에 memory segment 에서 다른 segment 로 이동할 수 있는 경우 binding 은 run time 동안 연기되어야함
+        <ul>
+          <li>Address maps 에 대한 Hardware의 도움이 필요함 → Base &amp; Limit register</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p>→ 효과적으로 구현하기 위한 방법을 알아볼거에여</p>
+
+<center>
+<img width="300" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/5a928c21-bf41-4e26-8ce0-3af13a4ed619" />
+</center>
+
+<h2 id="--logical-vs-physical-address-space">- Logical vs Physical Address Space</h2>
+
+<ul>
+  <li>별도의 Physical address space 로 binding 된 Logical address space</li>
+  <li><strong>Logical address</strong>  : CPU 가 생성, virtual address 라고도 함 (execution-time 에선?)</li>
+  <li><strong>Physical address</strong> : memory unit 에서 볼 수 있는 address</li>
+  <li><strong>Compile-time &amp; Load-time address-binding scheme</strong> (compile-time 과 load-time 에서의 binding 에선) :
+    <ul>
+      <li>Logical address 와 Physical address 동일하게 생성됨 → 주소가 고정적으로</li>
+      <li>memory 에 load 될 때 마다 binding 해줘야함</li>
+    </ul>
+  </li>
+  <li><strong>Execution-time address-binding scheme</strong> (Execution-time 에선) :
+    <ul>
+      <li>Logical(virtual) address 와 Physical address 다르게 생성됩니다 → 주소가 동적으로 할당</li>
+      <li>MMU 가 매팡 해줘야함</li>
+    </ul>
+  </li>
+  <li><strong>Logical address space</strong>  : program 이 생성한 모든 logical address 의 집합 (logical address + mapping 되는 physical address ?? 정보?) → 각 process 마다 가지고 있음</li>
+  <li><strong>Physical address spaece</strong> : physical memory address 의 집합 → process 간 공유 !</li>
+</ul>
+
+<h2 id="--memory-management-unit-mmu">- Memory-Management Unit (MMU)</h2>
+
+<ul>
+  <li>메모리 관리</li>
+  <li>Virtual address → Physical address 로 mapping 기능도 있는 Hardware device</li>
+  <li>Base Register 를 일반화한 MMU schme 으로 설명하고 여기선 Base Register를 이제 Relocatioin Register 라고 부름</li>
+  <li>Relocation register 값은 user program에 의해 생성된 모든 address 에 추가되어 memory 에 전송됨 → (base + addr)
+    <ul>
+      <li>
+        <p>ex) 베이스가 14000에 위치한다면</p>
+
+        <p>사용자가 주소 0을 지정하려고 할 때 해당 주소는 동적으로 위치 14000으로 재배치</p>
+
+        <p>위치 346에 대한 접근은 위치 14346으로</p>
+      </li>
+    </ul>
+  </li>
+  <li>User program 은 logical address만을 다루고 실제 physicla address는 절대 안봄 (절대 다루지 않음)</li>
+  <li>2가지 type 의 address
+    <ul>
+      <li>0 to Max 인 logical address</li>
+      <li>R+0 to R+Max 인 Physical address (base == R 인 경우)</li>
+    </ul>
+  </li>
+</ul>
+
+<pre><code class="language-mermaid">flowchart LR
+  CPU-Virtual_address --&gt; MMU --&gt; MEM-Physical_address
+</code></pre>
+
+<center>
+<img width="500" alt="Untitled 3" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/2f2a6d78-0110-433e-a796-9a81c082bbb4" />
+</center>
+
+<p>Dynamic relocation using a relocation register</p>
+
+<h2 id="--excutable-files">- Excutable Files</h2>
+
+<ul>
+  <li>OS 는 executable file 이 특정 format 을 가질 것이라고 expect
+    <ul>
+      <li>Header Info
+        <ul>
+          <li>Code Locations</li>
+          <li>Data Locations</li>
+        </ul>
+      </li>
+      <li>Code &amp; Data</li>
+      <li>Symbol Table
+        <ul>
+          <li>User program 에서 정의된 것들의 이름 list와 해당 위치들(정의된 곳)</li>
+          <li>User program 에서 사용하는 항목들 중 외부에서 정의된 항목들의 이름 list와 해당 위치들(정의된 곳)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--two-step-operation-in-most-systems">- Two-step operation (in most systems)</h2>
+
+<ul>
+  <li>Linking : Library routine 을 포함한 program set을 결합하여 loadable Image 를 생성
+    <ul>
+      <li>Set 내에서 정의된 Symbole resolving</li>
+      <li>Loader 가 resolving 해야하는 symbol list화</li>
+    </ul>
+  </li>
+  <li>Loading :  loadable Image 를 메모리로 복사하고, 이미 load된 다른 program 연결하여 주소를 필요에 따라 업데이트</li>
+</ul>
+
+<h2 id="--linking">- Linking</h2>
+
+<ul>
+  <li>Static Linking :
+    <ul>
+      <li>Modules 과 사용하는 library들을 포함하여 program copy</li>
+      <li>여기선 모두가 standard 라이브러리 (libc.a, 등) 를 link 함</li>
+      <li>그렇다보니 모든 executabe image 와 모든 runtime 에 있는 process 의 memory 공간을 사용하게 됨 ㅜㅜ</li>
+      <li>standard 라이브러리처럼 공통 라이브러리는 공유할 수 있지 않을까?</li>
+    </ul>
+  </li>
+  <li>Dynamic Linking :
+    <ul>
+      <li>Execution time 까지 linking 연기</li>
+      <li>각 library routin 을 reference 하기 위해 이미지를 포함하는 작은 코드 조각인 <strong>Stub</strong> 사용
+        <ul>
+          <li>적절한 memory-resident (메모리 상주) 라이브러리 루틴을 찾거나 라이브러리가 not present (상주해 있지 않다면) 하다면 라이브러리 load 하는데 사용</li>
+        </ul>
+      </li>
+      <li>Stub 은 자기 자신을 해당 routine 의 주소로 바꾸어서 routine 실행시킬 수 있도록 (라이브러리 사용할 수 있게)</li>
+      <li>Dynamic Linking은 Library 에 특히 유용함!</li>
+      <li>이러한 System 은 <strong>Shared libaries</strong> 라고도 알려져 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--loading">- Loading</h2>
+
+<ul>
+  <li>Static loading : Program memory 로 compiled &amp; linked image 가 이동</li>
+  <li>Dynamic loading :
+    <ul>
+      <li>호출되기 전까진 routine load 안됨 → 모든 routine 이 relocatable load format 으로 disk 에 유지</li>
+      <li>memory-space utilization 측면에서 더 좋음 ! → 사용하지 않은 routine 은 절대 load 되지 않으니까</li>
+      <li>자주 발생하지 않은 사례를 처리하기 위해 많은 양의 코드가 필요한 경우에 유용함!
+        <ul>
+          <li>ex) error routines → error 는 자주 발생하지 않는데 발생해서 처리하려면 많은 양의 코드가 필요하니까</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="400" alt="Untitled 4" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/712d2ccd-529d-44cc-86d5-17adc487ea06" />
+</center>
+
+<center>
+<img width="400" alt="Untitled 5" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/19b8608b-34b1-40fb-ae07-3524dcd5c7c8" />
+</center>
+
+<h1 id="swapping">Swapping</h1>
+
+<h2 id="--swapping">- Swapping</h2>
+
+<ul>
+  <li>원래 process 를 실행하려면 memory 에 실행할 process의 instruction 과 data 가 있어야하지만,  process를 일시적으로 memory 에서 backup storage 로 swap 한 다음(Swap out), 계속 실행하기 위해 다시 memory 로 가져 올 수도 있음 (Swap in)</li>
+  <li>모든 process의 total physical address space이 실제 시스템의 physical memory 를 초과할 수 있도록 허용하여 시스템에서 degree of multiprogramming 를 증가</li>
+  <li>Backup Storage : 모든 user 의 모든 memory copy 본을 수용할 수 있을만큼 충분히 크고 빠른 disk</li>
+  <li>ex) Multiprogramming with RR
+    <ol>
+      <li>Quantum 시간이 지나면 process 끝나자마자 swap out</li>
+      <li>다른 process 를 swap in 해서 memory space 에 넣음</li>
+      <li>이때 schduler 는 memory 에 있는 다른 process 에게 time slice 를 할당</li>
+    </ol>
+
+    <p>→ 이를 통해 프로세스 간 공유 메모리 자원을 효율적으로 관리하면서 실행을 지속 가능</p>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 6" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/c8d8da83-8496-4cab-b702-0c14921fa5b8" />
+</center>
+
+<ul>
+  <li>Roll out, Roll in
+    <ul>
+      <li>swapping 변형으로 Priority-based scheduling 알고리즘에서 사용되는..?</li>
+      <li>priority 가 낮은 process 를 swap out 하여 priority 가 높은 process 를 load 하고 실행할 수 있도록!</li>
+    </ul>
+  </li>
+  <li>System 은 memory image가 disk 나 memory 에 있는 모든 ready-to-run process 들의 <strong>ready queue</strong> 를 유지
+    <ul>
+      <li>만약 Ready Queue 내의 다음 process가 memory 에 없다면? → memory 에 있는 다른 어떤 process 를 swap out</li>
+      <li>이전에 점유했던 space 말고 다른 memory space로 swap back 할 수 있나요? → 넹 !</li>
+    </ul>
+  </li>
+  <li>Swap time 의 대부분은 Trasfer time (data 가져오는 시간) 임 → swapping 은 expensive 해욤
+    <ul>
+      <li>total transfer time 은 swap 되는 memory 양과 직접적으로 비례함</li>
+      <li>ex) backout store 이 trasfer rate 가 50MB/s 인 disk 일 때, 100MB process 의 transfer time 은? → 2초! → 1Ghz CPI 인 경우 2*10^9 CPU cycle 이 됨</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="contiguous-memory-allocation">Contiguous Memory Allocation</h1>
+
+<h2 id="--memory-allocation">- Memory Allocation</h2>
+
+<ul>
+  <li>일반적으로 main memory 는 2개의 partition 으로 나뉨
+    <ol>
+      <li>Resident Operating System (상주하는 OS) → system 마다 다르긴 한데 일반적으로 interrupt vector 와 함께 low memory address 에 보관</li>
+      <li>User process → high memory address 에 보관</li>
+    </ol>
+  </li>
+  <li>process 에 사용 가능한 moemory 를 할당하는 방법
+    <ul>
+      <li>일반적으로 여러 user program 을 main memory 에 상주시키고 싶음 → 그래야 multiprogramming 정도가 높아져 빠르니까</li>
+      <li>그래서 할당하는 방법을 고려해야함 !</li>
+      <li>contiguous allocation : 각 process는 단일 contiguous section (memory의) 에 포함됨</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--memory-protection">- <strong>Memory Protection</strong></h2>
+
+<ul>
+  <li>User process가 자신에게 할당되지 않은 memory 에 접근하지 않도록 해야함 ! ← process간 서로 보호하고 OS의 code 와 data 를 변경하지 못 하도록 보호해야하니까</li>
+  <li>Relocation Register 와 Limit Register 사용 !</li>
+  <li>Relocation Register : physical address 의 가장 작은 값 포함</li>
+  <li>Limit Register : logical addresses의 범위 포함 → 각 logical address는 limit register 보다 작아야함</li>
+  <li>MMU : Logical address 를 dynamically 하게 mapping → 위에서 말한 유닛 .. ! 여기서도 사용되어요</li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 7" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/36234879-e633-4020-9eba-1854637db604" />
+</center>
+
+<h2 id="--partition-scheme">- Partition scheme</h2>
+
+<ul>
+  <li>Partition : 하나의 Memory 를 logical 하게 나눔
+    <ul>
+      <li>나누어진 partition 은 각각 독립적으로 관리될 수 있으며 각 partition 에는 file system 이 할당 됨</li>
+      <li>각 partition 은 딱 하나의 process 만 포함할 수 있음</li>
+    </ul>
+  </li>
+  <li>Fixed Partition scheme
+    <ul>
+      <li>Disk를 미리 정해진 크기의 Partition 들로 나누고, 각 partition 의 크기는 동일한 고정된 크기를 가지고 있음</li>
+      <li>Partition 수에 따라 Degree of Multiprogramming 이 제한 → partition 도, partotion 의 크기도 고정이니까</li>
+      <li>Internal fragmentation 발생 가능</li>
+    </ul>
+  </li>
+  <li>Variable Partition scheme
+    <ul>
+      <li>Load 된 program 크기에 따라 partition 크기 결정</li>
+      <li>External fragmentation</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--memory-allocation-in-variable-partition-scheme">- Memory Allocation (in Variable Partition scheme)</h2>
+
+<ul>
+  <li>Hole : 사용가능한 memory block
+    <ul>
+      <li>처음엔 모든 memory 가 user process에 대해 사용가능하므로 큰 하나의 hole 임 !</li>
+      <li>나중에는 다양한 크기의 hole 들이 memory 전체에 흩어져 있고 이들은 hole set 에 있음</li>
+    </ul>
+  </li>
+  <li>process가 도착하면
+    <ol>
+      <li>system 은 이 process 를 할당할 hole 찾기 위해 hole set 탐색</li>
+      <li>memory의 수용할만큼 큰 hole 에 할당</li>
+      <li>hole 이 너무 큰 경우 2개의 part 로 나뉘어 하나는 process에게 할당, 하나는 다시 hole set에 return</li>
+      <li>그리고 terminate 되면 memory 에서 해제되고 hole set으로</li>
+    </ol>
+
+    <p>→ spilt and merge</p>
+  </li>
+  <li>OS 는 다음 정보를 유지
+    <ul>
+      <li>allocated partitions</li>
+      <li>free partitione (hole) ( == free space == free address )</li>
+    </ul>
+  </li>
+  <li>Dynamic Storage-Allocation 이라고도 함</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 8" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/5e38c336-ceff-471b-9ca9-54aaf8c4f020" />
+</center>
+
+<p>1 → 2 : process 8 해제 ! relase 되고 hole 생김</p>
+
+<p>2 → 3 : process 9 할당 p5 바로 아래 말고 hole 중간에 들어가서 hole 이 2개가 될 수도 있고 암때네 가능</p>
+
+<p>3 → 4 : process 5 해제 ! realse 되고 hole 생김</p>
+
+<h2 id="--dynamic-storage-allocation-problem">- Dynamic Storage-Allocation Problem</h2>
+
+<ul>
+  <li>Free hole set에서 size n 인 요청을 어떻게 충족시킬 것인가 에 대한 문제 → 사용가능한 Hole set 에서 free hole 고르는 방법
+    <ol>
+      <li>First-fit : 충분히 큰 크기를 갖는 첫번째 hole 할당 → 탐색하다 충분히 큰 hole 발견하면 중지하고 할당하고 끝</li>
+      <li>Best-fit : 충분히 큰 크기를 갖는 hole 중에 가장 작은 것 할당</li>
+    </ol>
+    <ul>
+      <li>size에 대해 정렬되어 있지 않다면 전체 list를 다 봐야함</li>
+      <li>가장 작은 leftover hole (찾은 hole 할당 후 남은 부분) 생성 → 할당 후 남은 hole 을 최소화
+        <ol>
+          <li>Worst-fit : 가장 큰 hole 할당</li>
+        </ol>
+      </li>
+      <li>전체 list 다 봐야함</li>
+      <li>가장 큰 leftover hole 생성</li>
+    </ul>
+  </li>
+  <li>시뮬레이션 결과 속도 및 storage 활용 측면에서 First-fit 과 Best-fit이 Worst-fit 보다 우수하다고 보여줌</li>
+</ul>
+
+<h2 id="--fragmentation">- Fragmentation</h2>
+
+<ul>
+  <li>영역이 작은 조각으로 잘리는 단편화 문제</li>
+  <li>First-fit, Best-fit 모두 external fragmentation 문제를 겪음</li>
+  <li>memory 가 낭비되는 문제 ㅠㅠ</li>
+  <li>External Fragmentation :
+    <ul>
+      <li>process가 memory에 load 되고 remove 됨에 따라 free memory space 가 작은 조각들로 나뉘어지게 됨</li>
+      <li>이러한 과정에 의해 Total memory space 는 요청을 만족시킬 정도로 충분하지만, 연속적이지는 않을 때 External Fragmentation 발생</li>
+      <li>그니까 할당 할 수 있을만큼 memory 가 충분한데 그게 작게 나뉘어져 있어서 할당을 못 하게 되는,, → memory 낭비 문제</li>
+    </ul>
+  </li>
+  <li>Internal Fracmentation
+    <ul>
+      <li>일반적으로 memory 를 고정된 크기의 block 으로 나누고, block 단위로 memory에 할당함</li>
+      <li>할당된 memory 가 요청한 memory 크기보다 클 수 있음 (고정된 크기로 나누다 보니까) → 남은 공간은 partition 내부의 memory 지만 사용하지는 않음!</li>
+      <li>이때  Internal Fragmentation 발생하고 이 차이가 Internal Fragmentation</li>
+      <li>ex) 고정 사이즈가 4KB 인데 요청 사이즈나 2KB 인 경우 2KB 만큼이 internal fragment</li>
+    </ul>
+  </li>
+  <li>해결 방법
+    <ol>
+      <li>Compaction</li>
+      <li>Process의 Physical address space가 비연속적이게 할당할 수 있도록 허용 (Non-Contiguous memory allocation 방식 사용)
+        <ol>
+          <li>Paging</li>
+          <li>Segmentation</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="compaction">[compaction]</h3>
+
+<ul>
+  <li>External fragmentation 줄일 수 있는 해결방법</li>
+  <li>memory 내 free space 들을 보아 하나의 큰 block 으로 만드는 것이 목표</li>
+  <li>Only Relocation 이 dynamic, 즉 execution time에 binding 이 될 때만 가능 !! → 즉, 항상 가능한 것은 아닙니다요
+    <ul>
+      <li>Relocation 이 dynamic : Relocation 은 program 이랑 data 가 옮겨지거나, base register 가 새로운 base address로 변경 될 때만 필요함</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>ex) Simplest Compaction Algorithm</strong></p>
+
+<ul>
+  <li>모든 process 들을 memory의 한쪽 끝으로 옮기는 동안 모든 hole 들을 다른 방향으로 이동시킴 (process를 top 으로 올린담에 free 를 bottom 으로 모아버리는,,)</li>
+</ul>
+
+<h3 id="process의-physical-address-space가-비연속적이게-할당">[Process의 Physical address space가 비연속적이게 할당]</h3>
+
+<ul>
+  <li>Physical address space가 비연속적이게 할당할 수 있도록 허용함</li>
+  <li>그럼 작은 조작에도 할당 할 수 있게됨 !</li>
+  <li>이 방법에는 Paging, Segementation 두가지 방법이 있어요
+    <ul>
+      <li>paging : physical memory 를 page 로 나누고 이 page 들을 process 에게 할당</li>
+      <li>segmentation : program 을 segment로 나누고 각 segment 들을 memory 에 할당</li>
+      <li>자세한 차이점은 밑에 적어놨움</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="paging">Paging</h1>
+
+<h2 id="--paging">- Paging</h2>
+
+<ul>
+  <li>Process의 physical address space가 비연속적이 되어도 괜찮다고 허용 → non-contiguous allocation</li>
+  <li>External fragmentation을 피할 수 있고 compaction 도 필요없게 됨</li>
+  <li>physical memory 를 <strong>고정된 사이즈</strong>의 block 인 frames (== pysical pages) 로 나눔</li>
+  <li>logical memory 를 frames과 동일한 크기의 block 인 pages (== virtual pages) 로 나눔</li>
+  <li>모든 free frames 추적</li>
+  <li>n page 크기의 program 을 실행하려면 n 개의 free page 를 찾아 load 하면 됨 !</li>
+  <li>Logical address 가진 page 를 physical address 가진 page (frame) 로 변환하는 page table 필요 !</li>
+  <li>Internal fragmentation 가 발생하긴 함,,, → 고정 크기다 보니까 . .</li>
+</ul>
+
+<h2 id="--address-translation-scheme">- Address Translation Scheme</h2>
+
+<ul>
+  <li>CPU 에서 생성된 address 들(logical, physical)은 2개 영역으로 나뉨</li>
+  <li>Page numper (p) : physical memory 에서 각 page (physical page, frame) 의 base address 를 포함하는 <strong>page table 의 index</strong> 로 사용
+    <ul>
+      <li>virtual 인지 pyshical 인지 확인하는 용도로 사용되기에 이 둘을 나눠야한다??</li>
+    </ul>
+  </li>
+  <li>Page offset (d) : base address 와 결합하여 memory unit 으로 전송되는 memory address</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 9" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/784a962d-b930-4d72-a755-465a98a17063" />
+</center>
+
+<center>
+<img width="300" alt="Untitled 10" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/e093954b-ffad-4a3f-a869-63d5b7ef9617" />
+</center>
+
+<ul>
+  <li>Page size 는 HW 에 의해 정의되며, 512 byte 에서 16MB 범위 내의 2의 거듭제곱 크기로 정의</li>
+  <li>
+    <p>ex) Logical address space 가 2^m 이고, page size 가 2^n 이라면 상위 (m-n) bits는 page number, 하위 n bits 는 page offset</p>
+
+    <center>
+  <img width="200" alt="Untitled 11" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/6f12069c-426f-4a54-a5fa-6a13ef4e86d9" />
+  </center>
+  </li>
+</ul>
+
+<h3 id="example-n2-m4--무조건-시험-">[example. n=2, m=4] <strong>** 무조건 시험 !</strong></h3>
+
+<ul>
+  <li>Page size == frame size = 4 ( $2^n = 2^2$ ) bytes</li>
+  <li>Page number =  $2^{(m-n)}$ = 4 개</li>
+  <li>Logical Address space size = 16 ( $2^m = 2^4$ )
+    <ul>
+      <li>Logical memory size = 4 bytes * 4 pages = 16 bytes</li>
+      <li>page number : 2 bits</li>
+      <li>page offset : 2 bits</li>
+    </ul>
+  </li>
+  <li>Physical Address space size = 32
+    <ul>
+      <li>Physical memory size = 32 bytes (8 frame * 4 bytes)</li>
+      <li>page (frame) number : 8 frames → 3 bits</li>
+      <li>page offset : 2 bits</li>
+    </ul>
+  </li>
+  <li><strong>Logical address 0 의 경우</strong>
+    <ul>
+      <li>0000 이므로 page number 은 00, page offset 은 00</li>
+      <li>page table index 0 번째 값은 5 임! (frame 5)</li>
+      <li>physical memory 5 * 4 bytes 로 이동 후 offset 이 0 이므로 physical address 20 으로 mapping</li>
+    </ul>
+  </li>
+  <li><strong>Logical address 7 의 경우</strong>
+    <ul>
+      <li>0111 이므로 page number 은 01, page offset 은 11</li>
+      <li>page table index 1 번째 값은 6 임! (frame 6)</li>
+      <li>physical memory 6 * 4 bytes 로 이동 후 offset 이 3 이므로 physical address 27 으로 mapping</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="337" alt="Untitled 12" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/09f56d1d-04e8-4adf-95b6-86616e630d53" />
+</center>
+
+<h2 id="--fragmentation-in-paging">- Fragmentation in paging</h2>
+
+<ul>
+  <li>External fragmentation 없음 ! → 요청하는 process 에게 어떤 빈 frame 이든 할당해줄 수 있음</li>
+  <li>Internal fragmentation 은 있어요.. → 고정 크기의 frame 단위로 할당해주다보니 어쩔 수 없죠
+    <ul>
+      <li>frame 단위로 할당해주다보니 마지막으로 할당한 page 내부에서 다 채워지지 않은 경우 internal fragmentation 이 발생할 수 있음</li>
+      <li>최악의 경우 : process 가 (n pages + 1) byte 를 요청하는 경우 (n  + 1) frames 을 할당해주어야하고  마지막 frames 는 거의 전체가 internal fragmentation 이 됨</li>
+    </ul>
+  </li>
+  <li>page size 가 작다면 internal fragmentation 을 줄일 수 있음! 하지만 그 만큼 각 page table 항목에 대한  overhead 는 증가 (frame 수가 증가하니까)
+    <ul>
+      <li>page table 에 대한 overhead 는 page size가 증가할 수록 줄어들어요</li>
+    </ul>
+  </li>
+  <li>Efficition ?? = (n<em>s+1)/(n+1)</em>s</li>
+  <li>32 Bit page table entry 의 경우 page table 이 허용할 수 있는 page number (frame number) 는 ? → 2^32 개</li>
+  <li>만약 이때 page/frame size 가 4KB 라면 system 이 처리할 수 있는 physical memory 크기는? 2^32 * 4 KB = 2^44 bytes</li>
+</ul>
+
+<h2 id="--free-frames">- Free Frames</h2>
+
+<ul>
+  <li>process 가 실행하기 위해 n 개의 page 가 필요하다면 최소 n 개의 free frame 이 memory 에서 available 해야함</li>
+  <li>OS 는 반드시 physical memory 의 세부정보를 알아야함
+    <ul>
+      <li>allocate 또는 available 한 frame 을 추적!</li>
+      <li>어떤 frame 이 할당되었고, 어떤 frame 이 사용가능한지, 총 frame 은 몇개인지 등</li>
+    </ul>
+  </li>
+  <li>process 가 실행되기 위해 system에 도착하면 page 단위로 표현된 크기를 검사하고 각 page 는 하나의 frame 필요</li>
+  <li>즉, process가 n개의 page를 필요로 한다면, 최소 n개의 free frame 이 memory 에서 available 해야하고, 가능하다면 process 에게 할당</li>
+  <li>process의 첫 번째 page는 가능한 frame 중 하나에 load되고, 해당 process의 page table 에 frame 번호가 입력</li>
+  <li>다음 page는 다른 frame에 로드되고, 그 frame 번호가 page table 에 입력되는 식으로 진행</li>
+  <li>즉, process 의 page table 에 page 와 mapping된 frame number 가 들어있음</li>
+</ul>
+
+<center>
+<img width="510" alt="Untitled 13" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/d5e8dd58-2142-459f-ae46-3250f3a60869" />
+<br />Free frames (a) before allocation and (b) after allocation.<br />
+</center>
+
+<h2 id="--implementation-of-page-table-with-hardwares-support">- Implementation of Page Table with Hardware’s support</h2>
+
+<ul>
+  <li>page table 의 pointer 는 다른 register values (ex instruction pointer) 과 같이 각 PCB 에 저장됨</li>
+  <li>Scheduler 가 process 선택할 때 page table 을 변경해야하므로 pagine 방법은 context switch 시간이 증가시킴</li>
+  <li>이러한 page table 을 위해 (context switch 시간을 줄인다던가) 도입된 HW 의 지원들
+    <ol>
+      <li>PTBR</li>
+      <li>TLB</li>
+      <li>ASID</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="page-table-base-register-ptbr">[Page-table base register (PTBR)]</h3>
+
+<ul>
+  <li>Page-table base register (PTBR) 은 page table 을 point 하는 reg</li>
+  <li>page table 변경하려면 PTBR 만 변경하면 되기에 context switch 시간을 줄일 수 있음</li>
+  <li>하지만 이 방식은 더 memory 접근 시간이 더 느려질 수 있음 → 모든 data / instruction 접근하기 위해 2번의 memory 접근이 필요
+    <ol>
+      <li>PTBR를 통해 page table 에 접근</li>
+      <li>page table 에서 number 에 따라 frame 으로의 data / instruction 접근</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="translation-look-aside-buffers-tlbs">[translation look-aside buffers (TLBs)]</h3>
+
+<center>
+<img width="500" alt="Untitled 14" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/9e88d0a8-4198-4425-898c-5532024b03be" />
+</center>
+
+<center>
+<img width="200" alt="Untitled 15" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/5bed9589-2dac-4d8a-96f7-eb1d234b85ff" />
+</center>
+
+<ul>
+  <li>PTBR 의 memory 두번 접근하는 문제 해결</li>
+  <li>특수한 작고 빠른 조회용 hardware chach 로 associative 한 high-speed memory 임</li>
+  <li>각 항목은 key와 value 두 부분으로 구성</li>
+  <li>associative memory 에 값이 주어지만 주어진 key (page #)를 모든 key 들과 동시에 비교하면서 병렬적으로 content 를 검색함</li>
+  <li>TLB : <code class="language-plaintext highlighter-rouge">Address translation(p, f)</code>
+    <ul>
+      <li>p 가 TLB 에 있다면 frame number f 를 얻어 전달</li>
+      <li>없다면 page table 에서 frame number 찾아서 전달</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="address-space-identifiers-asids">[A<strong>ddress-space identifiers (ASIDs)</strong>]</h3>
+
+<ul>
+  <li>TLB 기반</li>
+  <li>일부 TLB 는 TLB 항목에 <strong>address-space identifiers (ASIDs)</strong> 도 저장함</li>
+  <li><strong>ASID :</strong> 어떤 process가 이 page 와 frame 을 쓰고 있는지 각 process 를 고유하게 식별해서 해당 process 에 대한 address space 보호를 제공하는데 사용</li>
+  <li>TLB 이 locigal page number 를 확인하려고(찾으려고?) 할 때 현재 실행중인 process 의 ASID 가 page 와 관련된 ASID 와 일치하는지 확인 → 일치하지 않다면 TLB miss</li>
+  <li>ASID 를 통해 TLB 는 서로 다른 process에 대한 항목을 동시에 포함할 수도 있게됨 ! → ASID 로 확인하면 되니까 ! → 더 효율적이죠</li>
+  <li>별도의 ASID 를 지원하지 않는다면 context switch 마다 TLB 를 flush (삭제) 해야해서 유효하지 않은 주소가 남아있지 않도록 해야함</li>
+</ul>
+
+<h3 id="effective-access-time">[Effective Access Time]</h3>
+
+<ul>
+  <li>Time for associative lookup: <strong>ε</strong></li>
+  <li>Time for memory access: <strong>t</strong></li>
+  <li>Hit ratio : <strong>α</strong></li>
+  <li><strong>Effective Access Time</strong>
+    <ol>
+      <li>page number 가 TLB에 있는 경우(HIT) :  mapping된 memory 접근 → <strong>t</strong></li>
+      <li>TLB에 없다면(MISS) : page table 과 frame number를 위해 메모리에 접근(<strong>t</strong>), 그 이후 원하는 data 에 접근 (<strong>t</strong>) → 총 <strong>2t</strong>
+        <ul>
+          <li>찾는데 <strong>ε</strong> 가 걸리므로 각 경우 걸리는 시간이 <strong>t + ε,  2t + ε</strong> 이고, <strong>α</strong> 에 따라 가중치를 주면</li>
+        </ul>
+
+        <p>→ <strong>Effective Access Time :  <em>EAT = (t + ε) α + (2t + ε)(1 – α) = 2t + ε – αt</em></strong></p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p><strong><em>ex) t=100ns, ε=20ns, α=0.8</em></strong></p>
+
+<p>→ EAT= (100+20)<em>0.8 + (2</em>100+20)*0.2=140</p>
+
+<h2 id="--memory-protect">- Memory Protect</h2>
+
+<ul>
+  <li>Protection bit : paging 환경에서 memory 보호하기 위해 page table 에 저장되는 각 frame 에 대한 protection bit
+    <ul>
+      <li>Read-Write / Read-Only 구별할 수 있는 하나의 bit</li>
+      <li>Read-Only page 에 write 하려고 하면 OS 로 HW trap</li>
+    </ul>
+  </li>
+  <li>Valid-Invlalid bit : page table 의 각 항목에 저장되는 page 의 유효성을 알려주는 bit
+    <ul>
+      <li>Valid : associated page 가 process의 logical address space 에 있기에 legal page → 한마디로 지금 process 에서 해당 page 가 frame 과 연결되어 사용 중이라는</li>
+      <li>Invalid : page 가 process 의 logical address <strong>space</strong> 에 없음</li>
+    </ul>
+  </li>
+  <li>Page-table length register (PTLR) : page table 의 크기를 나타냄
+    <ul>
+      <li>많은 process 들이 사용가능한 address space 의 일부만 사용함 그렇기에 모든 page 에 대해 page table 항목을 생성하는 것은 낭비임 → page table index &lt; avlid page number</li>
+      <li>PTLR을 모든 logical address 와 비교되어 해당 address가 process 의 유효한 범위에 있는지 확인하고, 유효하지 않은 범위면 OS 로 trap</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ex-14-bit-address-space-0-to-16383-with-page-size-2kb--2048-bytes">[<strong>Ex. 14-bit address space (0 to 16383) with page size 2KB (= 2048 bytes)]</strong></h3>
+
+<p>| page0 | 0 - 2047 |
+| — | — |
+| page1 | 2048 - 4095 |
+| page2 | 4096 - 6143 |
+| page3 | 6144 - 8191 |
+| page4 | 8192 - 10239 |
+| page5 | 10240 - 12287 |</p>
+<ul>
+  <li>process 는 실제 0 to 10468 만 사용 → page0-4 전부와 page 5 의 일부</li>
+  <li>page 0-5 는 valid 이기에 page table 을 통해 정상적으로 mapping</li>
+  <li>page 6-7 은 invalid 이기에 page 6, 7 로 address 변환하려는 시도가 있으면 유효하지 않은 page 참조로 OS 로 trap</li>
+  <li><strong><em>이 방식의 문제점</em></strong>
+    <ul>
+      <li>process 는 10468까지만 사용하기로 되어있기에 그 이상 접근하면  illegal 임</li>
+      <li>하지만 page 5 의 참조는 valid 로 되어있기에 12287 까지 address 에 접근하는 건 유효하지만 10469 to 12287 까지의 address 는 유효하지 않음 ㅜㅜ</li>
+      <li>이건 process 가 실제 사용하는 공간보다 훨씬 큰 2KB page size 에 의해 page 내부에서 internal fragmentation 이 발생한 것</li>
+    </ul>
+
+    <p>→ 즉, 할당된 page 중 일부만 사용하기에 사용되지 않는 부분은 유효하지 않은데 valid 로 되어있음</p>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 16" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/234e1100-f91e-41e4-919a-5650ac1c011d" />
+</center>
+
+<h2 id="--shared-page">- Shared Page</h2>
+
+<ul>
+  <li>
+    <p>Paging 의 장점 중 하나는 여러 process가 있는 환경에서 common code 를 공유할 수 있다는 점</p>
+
+    <p>(reentrant인 code : 여러 user 들에게 사용되는 code 인 경우에서)</p>
+  </li>
+  <li>
+    <p>Read-only code의 한 copy 본은 여러 process에서 공유될 수 있음 ! ex) 표준 c 라이브러리, text editor, compiler, window system</p>
+    <ul>
+      <li>read-only 이니까 (reentrant) 실행 중에 변경되지 않음으로 2개 이상의 process가 동일한 code 를 실행할 수 있음</li>
+      <li>이때 copy 본은 physical memroy에 하나만 유지되어도 각 user process 의 pafe table 은 동일한 physical memroy 와 mapping 할 수 있음</li>
+      <li>이 덕에 memory 공간 매우매우 아낄 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="400" alt="Untitled 17" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/8da60ab8-51da-4dab-abe0-e073fc01fe9f" />
+</center>
+
+<h1 id="structure-of-the-page-table">Structure of the Page Table</h1>
+
+<h2 id="--large-page-table-problem">- Large page table problem</h2>
+
+<ul>
+  <li>대부분 현대 컴퓨터 system 은 큰 logical address space (2^32 ~ 2^64) 를 지원하고 이 환경에선 page table 자체가 지나치게 큼</li>
+  <li>32bit logical address space 를 가진 system 에서 page size 가 4KB (2^12) 라면 page table 은 100만개 이상의 entry 로 구성될 수 있음 (2^20 = 2^32/2^12)</li>
+  <li>각 entry 가 4byte 로 구성되어 있다면 각 prcoess 는 page table 만으로도 최대 2^20 * 4 bytes = 4MB 크기의 physical address space가 필요 할 수 잇음</li>
+  <li>이를 main memory 연속적으로 할당하는 것은 비효율 적임 → 비효율적인 이유 개인적으로 찾아서 적어둠
+    <ul>
+      <li>mina memory 의 공간 낭비 : 연속적은 큰 공간을 찾아야하므로 낭비되는 memory 공간이 증가함</li>
+      <li>external fragmentation : address space 내에 page table 이 연속적으로 배치되므로 address space 내에서 external fragmentation</li>
+      <li>page table 크기 변경 어려워짐 : process 의 address space 가 동적으로 변할 수 있기에 page table 크기도 동적으로 조정되어야함. 하지만 연속적으로 할당한다면 새로운 공간을 찾아야하니 어려워짐</li>
+    </ul>
+  </li>
+  <li>이를 해결하기 위해 page table 을 더 작은 조각 나누는 방법을 사용 !</li>
+  <li>Page table Strucutre type
+    <ol>
+      <li>Hieracrchical Paging : Page table 도 page 됨</li>
+      <li>Hashed Page Tables : Hash table 사용</li>
+      <li>Inverted Page Tables :</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--hirarchical-page-table">- Hirarchical Page Table</h2>
+
+<ul>
+  <li>Logical Address Table 을 여러 page table 로 나눔 → 즉 page table 도 paging 됨</li>
+  <li>가장 심플한 건 2단게로 나누는 2 level page table</li>
+</ul>
+
+<center>
+<img width="400" alt="Untitled 18" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/85def88e-c1c6-46e2-a796-765179047cdf" />
+</center>
+
+<h3 id="two-level-paging-example">[Two-level Paging example]</h3>
+
+<center>
+<img width="300" alt="Untitled 19" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/055f3f48-77fa-43ba-9913-f6517d63ce90" />
+</center>
+
+<ul>
+  <li>32 bits system, 4KB (→ 2^12) page size</li>
+  <li>Logical address 은 20 bit 로 구성된 page number 와 12 bit 로 구성된 page offset 으로 나뉨</li>
+  <li>page table 도 page 되니까 page number 은 또 10 bit 의 page number 와 10 bit 의 page offset 으로 나뉨</li>
+  <li>p1 은 outer page table 의 index, p2 는 outer page table 에서의 위치 (displacement)</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 20" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/bfc5b1f9-5015-4e9b-b177-d144c273127a" />
+</center>
+
+<ul>
+  <li>64bits system 에서는 outer page table 이 굉장히 커지게 되므로 two-level paing 이 적합하지 않음</li>
+</ul>
+
+<h2 id="--haded-page-tables">- Haded Page Tables</h2>
+
+<ul>
+  <li>32-bits 이상의 address space 를 처리하기 위한 일반적은 접근 방법 중 하나는 hased page table 을 사용하는 것</li>
+  <li>virtual page number은 page table 에 hash 됨</li>
+  <li>Hash table 의 각 entry 에는 충돌을 처리하기 위해 동일한 위치로 hash 하는 element들의 chain (linked list)가 포함 됨</li>
+  <li>각 elemet 는 다음 3가지로 구성
+    <ol>
+      <li>virtual page number</li>
+      <li>mapping 된 page frame 값</li>
+      <li>linked list 에서의 다음 element 를 가르키는 pointer</li>
+    </ol>
+  </li>
+  <li>Virtual page number은 는 이 chain 에서 match 되는 것이 있는지 비교함! 일치되는 것을 찾은면 해당 physical frame 이 추출</li>
+</ul>
+
+<ol>
+  <li>virtual address의 virtual page number 가 hash table 에 hash 됨</li>
+  <li>virtual page number 는 lisked list 의 첫번째 elem 와 비교</li>
+  <li>일치하는 항목이 있으면 해당 elem 의 두번째 값 (page frame) 이 사용되어 physical addres 생성</li>
+  <li>일치하는 항목이 없다면 elem 의 세번째 값 사용해서 linked list 의 다음 elem 과 비교해 일치하는 것 찾기</li>
+</ol>
+
+<center>
+<img width="500" alt="Untitled 21" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/37f54b57-43a8-4f3a-bb08-dec6b82e4fe3" />
+</center>
+
+<h2 id="--inverted-page-table">- Inverted Page Table</h2>
+
+<ul>
+  <li>ex) UltraSPARC, PowerPC</li>
+  <li>memory 의 실제 page 에 대한 하나의 entry 를 가짐</li>
+  <li>Entry &lt;pid, p&gt;
+    <ul>
+      <li>pid : 해당 page 를 가지고 있는 process로 address space 식별자 역할</li>
+      <li>p : 실제 memory 위치가 저장된 page 의 virtual address
+        <ol>
+          <li>pid 를 통해 page table 에서 pid 와 일치하는 entry 찾기</li>
+          <li>찾았다면 entry 의 index 인 i 를 가진 frame와 매칭 ! 이때 p 를  virtual address로 사용</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>각 page table 을 저장하는데 필요한 memory 는 줄어들지만, page 참조시 table 을 검색하는데 필요한 시간은 늘어남</li>
+  <li>shared memory 구현이 어려움 → pid 식별자가 있으니 공용에 대해서는?</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 22" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/7f2f08d4-7db5-47af-afcc-b90b3255cad7" />
+</center>
+
+<h1 id="segmentation">Segmentation</h1>
+
+<h2 id="--segmentation">- Segmentation</h2>
+
+<ul>
+  <li>memory 에 대한 사용자 관점을 지원하는 memory management scheme</li>
+  <li>program을 서로 다른 크기의 logical unit 인 segment로 분할함!  → program 은 segments의 collection임</li>
+  <li>segment는 다음과 같은 logical unit
+    <ul>
+      <li>main program</li>
+      <li>procedure</li>
+      <li>function</li>
+      <li>method</li>
+      <li>object</li>
+      <li>local variables, global variables</li>
+      <li>common block</li>
+      <li>stack</li>
+      <li>symbol table</li>
+      <li>arrays</li>
+      <li>…</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 23" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/373eceb0-98b6-439f-be0e-6e2f3684575e" />
+<br />User’s view<br />
+</center>
+
+<center>
+<img width="300" alt="Untitled 24" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/6c999d13-111e-4b19-80d8-7355b13f3580" />
+<br />Logical view<br />
+</center>
+
+<h2 id="--segmentation-architecture">- Segmentation Architecture</h2>
+
+<ul>
+  <li>logical address 는 tuple &lt;segment-numer, offset&gt;</li>
+  <li>Segment table : 2차원 주소를 1차원 physical address 로 mapping!
+    <ul>
+      <li>page table과 비슷하지만 크기가 고정이 아님</li>
+    </ul>
+  </li>
+  <li>각 table entry 는
+    <ul>
+      <li>base : segment가 memery 에 상주하는 physical address 의 시작점을 포함</li>
+      <li>limit : 지정된 segment 의 길이 → page table 과 달리 크기가 고정이 아니고 process 의 unit 마다 다를 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 25" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/cf6efc47-e04b-43fd-8047-2460ba571aa6" />
+</center>
+
+<h2 id="--segmentation-구현-위해-필요한-hw">- Segmentation 구현 위해 필요한 HW</h2>
+
+<ul>
+  <li>Segment-table base register (STBR) : memory 에서 segement table 의 위치를 point 하는 reg</li>
+  <li>Segment-table length (limit) register (STLR) : program 이 사용하고 있는 segments 수 를 나타냄</li>
+  <li>segement number s &lt; STLR 일 때 s 는 legal</li>
+</ul>
+
+<h2 id="---protection-in-segmentation">-  Protection in segmentation</h2>
+
+<ul>
+  <li>segment table의 각 entry associate
+    <ul>
+      <li>validation bit가 0 이면 illegal segment</li>
+      <li>read / write / execute 권한</li>
+    </ul>
+  </li>
+  <li>segment 관련된 Protection bit</li>
+  <li>code 는 segment level 에서 공유됨</li>
+  <li>segment 길이가 다양하기 때문에 moemory 할당은 storage-allocation problem</li>
+</ul>
+
+<h3 id="example">[example]</h3>
+
+<center>
+<img width="500" alt="Untitled 26" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/800bf3d8-fdfc-443f-8018-11c353ffdc52" />
+</center>
+
+<ul>
+  <li>limit 인 400 보다 53 이 작기에 ㄱㅊ</li>
+  <li>limit 인 1000 보다 1222 가 크기에 trap</li>
+</ul>
+
+<h2 id="paging-vs-segmentation">Paging vs Segmentation</h2>
+
+<ul>
+  <li>Paging 은 고정 크기, Segmentation 은 가변크기</li>
+  <li>Pagine 은 internel Fragmentation 위험성, Segmentation 은 Externel Fragmentation 위험성</li>
+  <li>paging 은 고정된 크기의 page로 memory 를 분할하고 logical address를 page로 매핑 → 즉 메모리를 분할 !</li>
+  <li>segmentation 은 program을 segment로 분할하고 segment를 physical address에 매핑 → 즉 프로그램을 분할 !</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-05-08">May 8, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch8" class="pagination--pager" title="[OS] Ch8. Deadlock
+">Prev</a>
+    
+    
+      <a href="/categories/develop/Github_Blog/comment" class="pagination--pager" title="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/develop/Github_Blog/comment" rel="permalink">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch8" rel="permalink">[OS] Ch8. Deadlock
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-01T00:00:00+09:00">May 1, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch6" rel="permalink">[OS] Ch6. Process Synchronization
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-12T00:00:00+09:00">April 12, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch5" rel="permalink">[OS] Ch5. CPU Scheduling
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-03T00:00:00+09:00">April 3, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 zi_orv. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/categories/study/2023_OS/ch9";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/categories/study/2023_OS/ch9"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rutuna.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

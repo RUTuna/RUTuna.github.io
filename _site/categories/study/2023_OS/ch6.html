@@ -351,7 +351,7 @@
   <label for="ac-toc">Toggle menu</label>
   <ul class="nav__items">
     <!-- <li>
-      <span class="nav__total">🌴 Total Posts: 8</span>
+      <span class="nav__total">🌴 Total Posts: 10</span>
     </li> -->
     
     
@@ -370,7 +370,7 @@
               
             
               
-                <li><a href="/categories/study/2023_OS/">[2023]Operating System (6)</a></li>
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (8)</a></li>
               
             
           
@@ -544,12 +544,16 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#background">Background</a><ul><li><a href="#--cooperating-processes--ch3-에서-함">- Cooperating Processes → ch3 에서 함</a></li><li><a href="#--synchronization-problem">- Synchronization Problem</a></li><li><a href="#--producer-consumer-problem--ch3-에서-한">- Producer-Consumer Problem → Ch3 에서 한..</a></li><li><a href="#race-condition">Race Condition</a></li></ul></li><li><a href="#the-critical-section-problem">The Critical-Section Problem</a><ul><li><a href="#--critical-section-임계-구역">- Critical Section (임계 구역)</a></li><li><a href="#--solution-to-critical-section-data">- Solution to Critical-Section Data</a></li></ul></li><li><a href="#petersons-solution">Peterson’s Solution</a><ul><li><a href="#--petersons-solution">- Peterson’s Solution</a></li><li><a href="#--petersons-solutuin의-correctness--증명하기">- Peterson’s Solutuin의 correctness  증명하기</a></li><li><a href="#--petsons-solution-단점-개인적으로-정리한-내용">- Petson’s solution 단점 (개인적으로 정리한 내용)</a></li></ul></li><li><a href="#synchronization-hardware-using-lock">Synchronization Hardware (using Lock)</a><ul><li><a href="#--synchronization-hardware">- Synchronization hardware</a></li><li><a href="#--testandset-instruction">- TestAndSet Instruction</a></li><li><a href="#--swap-instruction-cas">- Swap Instruction (CAS)</a></li></ul></li><li><a href="#semaphores">Semaphores</a><ul><li><a href="#--semaphores-with-busy-waiting">- Semaphores (with busy waiting)</a></li><li><a href="#--semaphore-as-general-synchronization-tool">- Semaphore as General Synchronization Tool</a></li><li><a href="#--counting-semaphore">- Counting Semaphore</a></li><li><a href="#--synchronization-problem에서-semaphore-사용하기">- Synchronization Problem에서 semaphore 사용하기</a></li><li><a href="#--semaphore-implementation">- Semaphore Implementation</a></li><li><a href="#--semaphore-without-busy-waiting">- Semaphore without Busy waiting</a></li><li><a href="#--semaphroe-단점">- Semaphroe 단점</a></li><li><a href="#--deadlock--starvation-교착상태와-기아">- Deadlock &amp; Starvation (교착상태와 기아)</a></li><li><a href="#--prioirty-inversion">- Prioirty Inversion</a></li></ul></li><li><a href="#clasic-problems-of-synchronization">Clasic Problems of Synchronization</a><ul><li><a href="#--classical-problems-of-synchronization">- Classical Problems of Synchronization</a></li><li><a href="#--bounded-buffer-problem">- Bounded-Buffer Problem</a></li><li><a href="#--readers-writers-problem">- Readers-Writers Problem</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#background">Background</a><ul><li><a href="#--cooperating-processes--ch3-에서-함">- Cooperating Processes → ch3 에서 함</a></li><li><a href="#--synchronization-problem">- Synchronization Problem</a></li><li><a href="#--producer-consumer-problem--ch3-에서-한">- Producer-Consumer Problem → Ch3 에서 한..</a></li><li><a href="#race-condition">Race Condition</a></li></ul></li><li><a href="#the-critical-section-problem">The Critical-Section Problem</a><ul><li><a href="#--critical-section-임계-구역">- Critical Section (임계 구역)</a></li><li><a href="#--solution-to-critical-section-data">- Solution to Critical-Section Data</a></li></ul></li><li><a href="#petersons-solution">Peterson’s Solution</a><ul><li><a href="#--petersons-solution">- Peterson’s Solution</a></li><li><a href="#--petersons-solutuin의-correctness--증명하기">- Peterson’s Solutuin의 correctness  증명하기</a></li><li><a href="#--petsons-solution-단점-개인적으로-정리한-내용">- Petson’s solution 단점 (개인적으로 정리한 내용)</a></li></ul></li><li><a href="#synchronization-hardware-using-lock">Synchronization Hardware (using Lock)</a><ul><li><a href="#--synchronization-hardware">- Synchronization hardware</a></li><li><a href="#--testandset-instruction">- TestAndSet Instruction</a></li><li><a href="#--swap-instruction-cas">- Swap Instruction (CAS)</a></li></ul></li><li><a href="#semaphores">Semaphores</a><ul><li><a href="#--semaphores-with-busy-waiting">- Semaphores (with busy waiting)</a></li><li><a href="#--semaphore-as-general-synchronization-tool">- Semaphore as General Synchronization Tool</a></li><li><a href="#--counting-semaphore">- Counting Semaphore</a></li><li><a href="#--synchronization-problem에서-semaphore-사용하기">- Synchronization Problem에서 semaphore 사용하기</a></li><li><a href="#--semaphore-implementation">- Semaphore Implementation</a></li><li><a href="#--semaphore-without-busy-waiting">- Semaphore without Busy waiting</a></li><li><a href="#--semaphroe-단점">- Semaphroe 단점</a></li><li><a href="#--deadlock--starvation-교착상태와-기아">- Deadlock &amp; Starvation (교착상태와 기아)</a></li><li><a href="#--prioirty-inversion">- Prioirty Inversion</a></li></ul></li><li><a href="#clasic-problems-of-synchronization">Clasic Problems of Synchronization</a><ul><li><a href="#--classical-problems-of-synchronization">- Classical Problems of Synchronization</a></li><li><a href="#--bounded-buffer-problem">- Bounded-Buffer Problem</a></li><li><a href="#--readers-writers-problem">- Readers-Writers Problem</a></li><li><a href="#--digning-philosophers-problem">- Digning-Philosophers Problem</a></li></ul></li></ul>
 
             </nav>
           </aside>
         
-        <h1 id="background">Background</h1>
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="background">Background</h1>
 
 <h2 id="--cooperating-processes--ch3-에서-함">- Cooperating Processes → ch3 에서 함</h2>
 
@@ -1371,113 +1375,139 @@
   </li>
 </ul>
 
-<center><img width="1193" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/8496d2ff-5915-4c67-9e47-175862e51e85" /><center>
+<center><img width="600" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/8496d2ff-5915-4c67-9e47-175862e51e85" /></center>
 
-- 2가지의 버전이 존재
-    1. **First Readers-Writer Problem** : 어떤 Reader도 다른 Reader가 끝날 때까지 가디라지 않는다! Writer가 기다리고 있으니까 (reader의 priority 가 더 높음)
-        
-        **→ Writer 가 starve 에 빠질 수 있음**
-        
-    2. **Second Readers-Writer Problem** : Writer가 접근하기 위해 대기 중이라면, 다른 어떤 새로운 reader도 read 를 시작할 수 없음 (writer의 priority 가 더 높음)
-        
-        **→ Reader 가 starve 에 빠질 수 있음**
-        
-    - 우리는 첫번째 버전에 대해서 볼 거에욤
-    
-- **Problem** : multiple reader 또는 single writer 가 공유 데이터(Shared Data)에 같은 시간에 접근 할 수 있도록 허용 → 첫번째 버전으로 함 보시죵
-- Shared Data 에는 뭐가 포함?
-    1. **Data Set**
-    2. **Integer readcount** : 0 으로 초기화되고 현재 얼마나 많은 process 들이 obj 를 read 하고 있는지를 의미
-    3. **Semaphore mutex** : 1로 초기화 되고 readcount 를 보호하는 역할
-    4. **Semaphore wrt** : 
-        
-        1로 초기화 되고, writer를 위한 semaphore → writer 가 data set을 수정하기 위해 critical session 에 진입하는 것에 대해
-        
-        첫번째와 마지막 reader도 사용  → writer 가 접근 못하게 막고 풀이 위해
-        
+<ul>
+  <li>2가지의 버전이 존재
+    <ol>
+      <li>
+        <p><strong>First Readers-Writer Problem</strong> : 어떤 Reader도 다른 Reader가 끝날 때까지 가디라지 않는다! Writer가 기다리고 있으니까 (reader의 priority 가 더 높음)</p>
 
-```cpp
-// Writer Process
-do {
-		wait(wrt); // 다른 writer 막기
+        <p><strong>→ Writer 가 starve 에 빠질 수 있음</strong></p>
+      </li>
+      <li>
+        <p><strong>Second Readers-Writer Problem</strong> : Writer가 접근하기 위해 대기 중이라면, 다른 어떤 새로운 reader도 read 를 시작할 수 없음 (writer의 priority 가 더 높음)</p>
 
-		/* Critical Session,
-			 writing is performed */
+        <p><strong>→ Reader 가 starve 에 빠질 수 있음</strong></p>
+      </li>
+    </ol>
 
-		signal(wrt);
-} while (TRUE);
-```
+    <ul>
+      <li>우리는 첫번째 버전에 대해서 볼 거에욤</li>
+    </ul>
+  </li>
+  <li><strong>Problem</strong> : multiple reader 또는 single writer 가 공유 데이터(Shared Data)에 같은 시간에 접근 할 수 있도록 허용 → 첫번째 버전으로 함 보시죵</li>
+  <li>Shared Data 에는 뭐가 포함?
+    <ol>
+      <li><strong>Data Set</strong></li>
+      <li><strong>Integer readcount</strong> : 0 으로 초기화되고 현재 얼마나 많은 process 들이 obj 를 read 하고 있는지를 의미</li>
+      <li><strong>Semaphore mutex</strong> : 1로 초기화 되고 readcount 를 보호하는 역할</li>
+      <li>
+        <p><strong>Semaphore wrt</strong> :</p>
 
-```cpp
-// Reader Process
-do {
-		/* reader 잠시 막아두기 
+        <p>1로 초기화 되고, writer를 위한 semaphore → writer 가 data set을 수정하기 위해 critical session 에 진입하는 것에 대해</p>
+
+        <p>첫번째와 마지막 reader도 사용  → writer 가 접근 못하게 막고 풀이 위해</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Writer Process</span>
+<span class="k">do</span> <span class="p">{</span>
+		<span class="n">wait</span><span class="p">(</span><span class="n">wrt</span><span class="p">);</span> <span class="c1">// 다른 writer 막기</span>
+
+		<span class="cm">/* Critical Session,
+			 writing is performed */</span>
+
+		<span class="n">signal</span><span class="p">(</span><span class="n">wrt</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Reader Process</span>
+<span class="k">do</span> <span class="p">{</span>
+		<span class="cm">/* reader 잠시 막아두기 
 			 read count 변경해야하니까!
-			 그리고 첫번째면 다른 작업 할건데 그 사이에 안 들어오게 */
-		wait(mutex); 
+			 그리고 첫번째면 다른 작업 할건데 그 사이에 안 들어오게 */</span>
+		<span class="n">wait</span><span class="p">(</span><span class="n">mutex</span><span class="p">);</span> 
 
-		readcount++;  // read 하고 있는 (critical session 에 있는) process 수 증가
+		<span class="n">readcount</span><span class="o">++</span><span class="p">;</span>  <span class="c1">// read 하고 있는 (critical session 에 있는) process 수 증가</span>
 
-		if(readcount == 1) // 첫번째 reader 면 writer 가 접근 못 하게 막기
-				wait(wrt); 
-		signal(mutex); // 이제 다른 reader 들어올 수 있게 허용
+		<span class="k">if</span><span class="p">(</span><span class="n">readcount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// 첫번째 reader 면 writer 가 접근 못 하게 막기</span>
+				<span class="n">wait</span><span class="p">(</span><span class="n">wrt</span><span class="p">);</span> 
+		<span class="n">signal</span><span class="p">(</span><span class="n">mutex</span><span class="p">);</span> <span class="c1">// 이제 다른 reader 들어올 수 있게 허용</span>
 
-		/* reading is performed */
+		<span class="cm">/* reading is performed */</span>
 
-		/* reader 잠시 막아두기 
-			 read count 변경해야하니까! */
-		wait (mutex);
+		<span class="cm">/* reader 잠시 막아두기 
+			 read count 변경해야하니까! */</span>
+		<span class="n">wait</span> <span class="p">(</span><span class="n">mutex</span><span class="p">);</span>
 
-		readcount--; // read 하고 있는 (critical session 에 있는) process 수 감소
+		<span class="n">readcount</span><span class="o">--</span><span class="p">;</span> <span class="c1">// read 하고 있는 (critical session 에 있는) process 수 감소</span>
 
-		if (readcount == 0) // 마지막 reader 면 writer 가 접근 풀어주기
-				signal (wrt);
+		<span class="k">if</span> <span class="p">(</span><span class="n">readcount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// 마지막 reader 면 writer 가 접근 풀어주기</span>
+				<span class="n">signal</span> <span class="p">(</span><span class="n">wrt</span><span class="p">);</span>
 
-		signal (mutex) ;
-} while (TRUE);
-```
+		<span class="n">signal</span> <span class="p">(</span><span class="n">mutex</span><span class="p">)</span> <span class="p">;</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
 
-## - Digning-Philosophers Problem
+<h2 id="--digning-philosophers-problem">- Digning-Philosophers Problem</h2>
 
-- 대규모 concirrency-control 문제의 기본적 예제
+<ul>
+  <li>대규모 concirrency-control 문제의 기본적 예제</li>
+</ul>
 
-### [Digning-Philosophers Problem]
+<h3 id="digning-philosophers-problem">[Digning-Philosophers Problem]</h3>
 
-- 철학자 5명이 원형 테이블에서 식사를 하고 있다
-- 테이블 중앙에는 음식이 있고, 5개의 젓가락(한쌍 아니고 한개) 이 철학자 사이에 있다
-- 철학자는 생각을 할 때는 밥을 먹지 않는다.
-- 그러다 철학자가 배가 고파 밥을 먹으려고 할 때, 자신의 왼쪽 또는 오른쪽 젓가락을 잡으려 시도하고 두개의 젓가락을 모두 잡아야 먹을 수 있다
-- 밥을 먹고 나서 철학자는 젓가락을 내려놓고다시 생각에 빠진다
+<ul>
+  <li>철학자 5명이 원형 테이블에서 식사를 하고 있다</li>
+  <li>테이블 중앙에는 음식이 있고, 5개의 젓가락(한쌍 아니고 한개) 이 철학자 사이에 있다</li>
+  <li>철학자는 생각을 할 때는 밥을 먹지 않는다.</li>
+  <li>그러다 철학자가 배가 고파 밥을 먹으려고 할 때, 자신의 왼쪽 또는 오른쪽 젓가락을 잡으려 시도하고 두개의 젓가락을 모두 잡아야 먹을 수 있다</li>
+  <li>밥을 먹고 나서 철학자는 젓가락을 내려놓고다시 생각에 빠진다</li>
+</ul>
 
 <center>
-<img width="504" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/f2022afd-f411-46a0-b7f0-c920c2ed5924" />
+<img width="300" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/f2022afd-f411-46a0-b7f0-c920c2ed5924" />
 </center>
 
-```cpp
-do {
-		wait(chopstick[i]); 
-		wait(chopStick[(i+1) % 5]);
-		//  eat ( ˘༥˘ )		
-		signal(chopstick[i]); 
-		signal(chopstick[(i+1) % 5]);
-		//  think
-} while (TRUE);
-```
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">do</span> <span class="p">{</span>
+		<span class="n">wait</span><span class="p">(</span><span class="n">chopstick</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span> 
+		<span class="n">wait</span><span class="p">(</span><span class="n">chopStick</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span><span class="p">]);</span>
+		<span class="c1">//  eat ( ˘༥˘ )		</span>
+		<span class="n">signal</span><span class="p">(</span><span class="n">chopstick</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span> 
+		<span class="n">signal</span><span class="p">(</span><span class="n">chopstick</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span><span class="p">]);</span>
+		<span class="c1">//  think</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div></div>
 
-- Shared Data
-    1. 음식 (Data Set)
-    2. chopStick(Semaphore로 표현) 배열 (chopStick[5], 다 1로 초기화)
-- Deadlock 발생 하는 경우
-    1. 모든 철학자가 다 자신의 왼쪽 (또는 다 오른쪽) 젓가락을 잡으려고 하면
+<ul>
+  <li>Shared Data
+    <ol>
+      <li>음식 (Data Set)</li>
+      <li>chopStick(Semaphore로 표현) 배열 (chopStick[5], 다 1로 초기화)</li>
+    </ol>
+  </li>
+  <li>Deadlock 발생 하는 경우
+    <ol>
+      <li>모든 철학자가 다 자신의 왼쪽 (또는 다 오른쪽) 젓가락을 잡으려고 하면</li>
+    </ol>
+  </li>
+</ul>
 
-### [Deadlock 해결한 solution]
+<h3 id="deadlock-해결한-solution">[Deadlock 해결한 solution]</h3>
 
-1. 최대 4명만 테이블에 앉게하기
-2. 양쪽 젓가락을 다 잡는 것이 가능한 상태에만 젓가락 잡게 하기
-3. 홀수번째 철학자는 왼쪽 잡고 오른쪽, 짝수번째 철학자는 오른쪽 잡고 왼쪽 잡게 하기
-4. … 더 생각해보기!
-- 근데 이를 만족하는 해결법도 한 철학자를 starve 상태로 만들 수 있다는 것을 알아두쉐여!!
-</center></center>
+<ol>
+  <li>최대 4명만 테이블에 앉게하기</li>
+  <li>양쪽 젓가락을 다 잡는 것이 가능한 상태에만 젓가락 잡게 하기</li>
+  <li>홀수번째 철학자는 왼쪽 잡고 오른쪽, 짝수번째 철학자는 오른쪽 잡고 왼쪽 잡게 하기</li>
+  <li>… 더 생각해보기!
+    <ul>
+      <li>근데 이를 만족하는 해결법도 한 철학자를 starve 상태로 만들 수 있다는 것을 알아두쉐여!!</li>
+    </ul>
+  </li>
+</ol>
 
         
       </section>
@@ -1534,7 +1564,7 @@ do {
 ">Prev</a>
     
     
-      <a href="/categories/develop/Github_Blog/comment" class="pagination--pager" title="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+      <a href="/categories/study/2023_OS/ch8" class="pagination--pager" title="[OS] Ch8. Deadlock
 ">Next</a>
     
   </nav>
@@ -1596,6 +1626,78 @@ do {
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/categories/study/2023_OS/ch9" rel="permalink">[OS] Ch9. Main Memory
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-08T00:00:00+09:00">May 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch8" rel="permalink">[OS] Ch8. Deadlock
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-01T00:00:00+09:00">May 1, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/categories/study/2023_OS/ch5" rel="permalink">[OS] Ch5. CPU Scheduling
 </a>
       
@@ -1608,78 +1710,6 @@ do {
       <span class="page__meta-date">
         <i class="far fa-calendar-alt" aria-hidden="true"></i>
         <time datetime="2023-04-03T00:00:00+09:00">April 3, 2023</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/categories/study/2023_OS/ch4" rel="permalink">[OS] Ch4. Thread
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <i class="far fa-calendar-alt" aria-hidden="true"></i>
-        <time datetime="2023-03-29T00:00:00+09:00">March 29, 2023</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/categories/study/2023_OS/ch3" rel="permalink">[OS] Ch3. Processes
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <i class="far fa-calendar-alt" aria-hidden="true"></i>
-        <time datetime="2023-03-27T00:00:00+09:00">March 27, 2023</time>
       </span>
     
 
