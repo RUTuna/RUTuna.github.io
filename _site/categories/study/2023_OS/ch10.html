@@ -1,0 +1,1892 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch10. Virtual Memory | zi_orv</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="zi_orv">
+  
+  <meta property="article:author" content="zi_orv">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch10. Virtual Memory">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch10">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-05-24T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-05-24T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch10">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "zi_orv",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="-8bYhrDyOZjr61EL8z8964D200AyyTFpWGyPjxkesfo" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="https://rutuna.github.io/assets/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://rutuna.github.io/assets/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://rutuna.github.io/assets/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://rutuna.github.io/assets/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://rutuna.github.io/assets/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://rutuna.github.io/assets/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://rutuna.github.io/assets/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://rutuna.github.io/assets/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://rutuna.github.io/assets/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://rutuna.github.io/assets/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://rutuna.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://rutuna.github.io/assets/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://rutuna.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://rutuna.github.io/assets/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://rutuna.github.io/assets/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/profile.png" alt="zi_orv" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">zi_orv</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="mailto:p000207@naver.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 11</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (9)</a></li>
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Project</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Develop</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/develop/Github_Blog/">Github Blog (2)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Other</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch10. Virtual Memory">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-05-24T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-05-24T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch10. Virtual Memory
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-24T00:00:00+09:00">May 24, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#background">Background</a><ul><li><a href="#--virtual-address-space">- Virtual-Address Space</a></li></ul></li><li><a href="#demand-paging">Demand Paging</a><ul><li><a href="#--demand-paging">- Demand Paging</a></li><li><a href="#--valid-invalid-bit">- Valid-Invalid Bit</a></li><li><a href="#--page-fault">- Page Fault</a></li><li><a href="#--aspect-of-demand-paging">- Aspect of Demand Paging</a></li><li><a href="#--demand-paging-과정">- Demand Paging 과정</a></li><li><a href="#--performance-of-demand-paging">- Performance of Demand Paging</a></li></ul></li><li><a href="#page-replacement">Page Replacement</a><ul><li><a href="#--page-replacement">- Page Replacement</a></li><li><a href="#--basic-page-replacement">- Basic Page Replacement</a></li><li><a href="#--page-replacement-algorithms">- Page Replacement Algorithms</a></li><li><a href="#--first-in-first-out-fifo-algorithm">- First-In-First-Out (FIFO) Algorithm</a></li><li><a href="#--optimal-algorithms">- Optimal Algorithms</a></li><li><a href="#--least-recently-used-lru-algorithm">- Least Recently Used (LRU) Algorithm</a></li><li><a href="#--lru-approximation-algorithms">- LRU Approximation Algorithms</a></li><li><a href="#--counting-algorithms">- Counting Algorithms</a></li></ul></li><li><a href="#allocation-of-frames">Allocation of Frames</a><ul><li><a href="#--allocation-of-frames">- Allocation of Frames</a></li><li><a href="#--fixed-allocatioin">- Fixed Allocatioin</a></li><li><a href="#--prioirty-allocation">- Prioirty Allocation</a></li><li><a href="#--global-vs-local-allocation">- Global vs Local Allocation</a></li></ul></li><li><a href="#memory-mapped-files">Memory-Mapped Files</a><ul><li><a href="#--memory---mapped-files">- Memory - Mapped Files</a></li><li><a href="#--technique-for-all-io">- Technique for all I/O</a></li><li><a href="#--copy-on-write-cow">- Copy-on-Write (COW)</a></li></ul></li><li><a href="#thrashing">Thrashing</a><ul><li><a href="#--thrashing">- Thrashing</a></li><li><a href="#--demand-paging-and-thrashing">- Demand Paging and Thrashing</a></li><li><a href="#--working-set-model">- Working-Set Model</a></li><li><a href="#--keeping-track-of-the-working-set">- Keeping Track of the Working Set</a></li><li><a href="#--page-fault-frequency-schme">- Page-Fault Frequency Schme</a></li></ul></li><li><a href="#allocating-kernel-memory">Allocating Kernel Memory</a><ul><li><a href="#--allocating-kernel-memory">- Allocating Kernel Memory</a></li><li><a href="#--buddy-system">- Buddy System</a></li><li><a href="#--slab-allocator">- Slab Allocator</a></li></ul></li><li><a href="#other-issue">Other Issue</a><ul><li><a href="#--io-interlock">- I/O Interlock</a></li><li><a href="#--prepaging">- Prepaging</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="background">Background</h1>
+
+<h2 id="--virtual-address-space">- Virtual-Address Space</h2>
+
+<ul>
+  <li>결국 우리는 더 많은 multiprogramming 을 원하고 이를 위해선 memory 에 더 많은 것을 load 해야함</li>
+  <li>Virtual Memory : 개발자가 인식하는 logical memory 와 physical memory 를 분리하는 것
+    <ul>
+      <li>
+        <p>오직 program 에서 필요한 부분만 memory 에 올려 실행되도록 함</p>
+
+        <p>→ 각 program 은 더 작은 양의 physical mem 을 사용하므로 더 많은 program 을 동시에 실행 시킬 수 있게 됨</p>
+      </li>
+      <li>
+        <p>그렇기에 Logical address space 는 Physical address space 보다 훨씬 클 수 있음 !</p>
+        <ul>
+          <li>
+            <p>Virtual Memory 덕에 더 효율적인 process 생성 가능</p>
+
+            <p>→ user program 을 memory 에 load 하거나 swap 하는 데 더 적은 I/O 가 필요하므로</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Virtual-Address Space: process가 사용하는 address space</li>
+  <li>보통 0에서 시작하고 연속된 mem 에 존재하는 것으로 간주</li>
+  <li>program 전체가 필요한다고 하더라도 동시에 모든 부분이 필요한 것이 아니기에?</li>
+  <li>오른쪽 이미지에서 text 는 code 를 의미! 여기에는 주로 error handled code 같은거! 수행하는데 cost 가 많이 들지만 빈번하게 발생하므로</li>
+</ul>
+
+<center>
+<img width="500" src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch9.png" />
+<p>Virtual address space of a process in memory</p>
+</center>
+
+<ul>
+  <li>위 사진 처럼 Virtual Memory 가 Physical Memory 보다 훨씬 큼 !</li>
+  <li>뭐 당연히 그래서 Physical Memory 가 모든 Page 를 동시에 laod 할 수 없는거</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/07ae18d6-74e0-4455-8451-068c87b6ae7d" />
+<p>Diagram showing virtual memory that is larger than physical memory</p>
+</center>
+
+<h1 id="demand-paging">Demand Paging</h1>
+
+<h2 id="--demand-paging">- Demand Paging</h2>
+
+<ul>
+  <li>process 생성시 모든 page를 가져오지 않고 필요할 때만 Page 를 Memory 로 가져오는 것 → 즉 accese 하지 않은 page 는 memory 에 load 되지 않음
+    <ul>
+      <li>Less I/O needed : 필요한 page만 메모리로 가져오므로 I/O task가 줄어듬</li>
+      <li>Less Memory meeded : 필요한 age만 memory 에 load 되니까</li>
+      <li>Faster Respnse : 필요한 page 가 이미 mem 에 존재하는 경우 접근 및 실행 시간이 단축되어 Respnse time 이 빨라짐</li>
+      <li>More users</li>
+    </ul>
+  </li>
+  <li>Page 가 필요하다면 page 를 reference하여 가져옴
+    <ul>
+      <li>Invalid reference ( ex. out of bound )→ Abort</li>
+      <li>Not-in-Memory → Disk 에서 Memory 로 가져옴</li>
+    </ul>
+  </li>
+  <li>Lazy swapper : Page 가 필요하지 않은 이상 page 를 memory 로 swap 하지 않음
+    <ul>
+      <li>페이지와 관련된 스왑 작업은 페이지 매니저(pager)가 처리</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--valid-invalid-bit">- Valid-Invalid Bit</h2>
+
+<ul>
+  <li>Page 가 memory 에 있는지 Disk 에 있는지 구별하기 위해 HW 의 도움이 필요함</li>
+  <li>각 Page table entry 에는 valid-inavlid bit 가 있어 이를 구별해줌!
+    <ul>
+      <li>v : in-memory, i : Not-in-Memory</li>
+      <li>모든 entry 는 처음에 i 로 초기화</li>
+    </ul>
+  </li>
+  <li>Translation 중에 Page table entry 가 i 라면 PAGE FALUT</li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/c2475675-e8b2-49e9-a585-a75a2e03fe55" />
+</center>
+
+<center>
+<img width="400" alt="Untitled 3" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/e0a014fc-48a3-43ed-85b5-ca0c019a6884" />
+</center>
+
+<h2 id="--page-fault">- Page Fault</h2>
+
+<ul>
+  <li>Page 에 대한 reference 가 있을 때, page 에 대한 첫번째 reference 가 OS 로 trap 을 전달하는 현상</li>
+  <li>
+    <p>Invalid page 에 대한 접근이 발생할 때 Page Falut 발생</p>
+  </li>
+  <li>Page Falult 과정
+    <ol>
+      <li>OS 는 Internal Table (page table) 를 보고 refernce 가 valide 인지 invalide 인지 확인함</li>
+      <li>만약 Invalid reference 라면 process 종료 (참조 자체가 무효라), refer는 valid 지만 아직 Memory 에 가져오지 않은 경우(valid bit : i) 라면 Memory 에 가져와야함</li>
+      <li>i 라면 일단 trap 발생하고 Free Frame 을 찾기 (ex. free-frame list 에서 가져오기)</li>
+      <li>원하는 page를 새로 할당한 frame 으로 가져오기 (read) 하가 위해 secondary storge operation 를 스케줄링함 (wait quene 에 넣는다는 거) → swap device 에서 physical mem 으로 (swap)</li>
+      <li>
+        <p>Storage read 가 완료되면 Internal table 를 수정하여 page 가 이제 memory 에 있다고 알림</p>
+
+        <p>→ Valid bit 를 v 로 설정</p>
+      </li>
+      <li>
+        <p>Page Falult Trap 으로 중단되었던 Instructure 를 다시 시작함!</p>
+
+        <p>→ process가 원래 memory 에 있었던 것 처럼 page 에 access 가능</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 4" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/dcf5f8d4-a578-48c1-9e1f-d8a2e080d4a7" />
+</center>
+
+<h2 id="--aspect-of-demand-paging">- Aspect of Demand Paging</h2>
+
+<ul>
+  <li>Process 가 시작할 때는 memory에 page 가 없는 상태로 시작 !
+    <ul>
+      <li>OS 가 instrucrion pointer 를 process의 첫번째 instruction 으로 설정하지만, 이는 memory 에 없는 page 에 있는 instruction 이라서 page fault 가 발생함</li>
+      <li>process 가 필요한 page를 한번씩 다 가져올 때 까지는 page fault 가 계속 발생함</li>
+      <li>이렇게 처음 시작할 때 page 가 없는 상태로 시작해서 필요할 때만 page 를 가져오는 것을 <strong>Pure demand paging</strong> 이라고 함</li>
+      <li>cf.) prepaging : 지금 안 필요해도 미리 가져옴</li>
+    </ul>
+  </li>
+  <li>Instruction 에 따라 multiple page 에 access 할 수도 있음 (두개의 page 에 걸쳐져서 있는 경우?) → 이런 경우 multiple page faults 발생 가능 !
+    <ul>
+      <li>하지만 locality of reference 에 이해 이런 경우는 실제 드물긴함</li>
+    </ul>
+
+    <p>ex1 ) <code class="language-plaintext highlighter-rouge">ld r1 r2</code> 가 있을 때 최악의 경우 몇번의 page fault 발생? → ld 에서 2번!</p>
+
+    <p>ex2) <code class="language-plaintext highlighter-rouge">ld r1 addr</code> 가 있을 때 최악의 경우 몇번의 page fault 발생? → ld, addr 에서 각각 2번! 총 4번</p>
+  </li>
+  <li>Demand Paging 을 위해 HW 의 지원이 필요함
+    <ul>
+      <li>Vaild / Invalid bit 를 가진 Page table : memory 에 있는지 Disk 에 있는지 구별하기 위해 page 유효성 비트</li>
+      <li>Secondary memory : 보통 빠른 속도를 가진 disk 로 보조 기억 장치 &amp; 백업 저장 장치
+        <ul>
+          <li>swap device 라고도 하며, swap device 에 의해 사용되는 저장 공간을 swap space 라고 함</li>
+        </ul>
+      </li>
+      <li>Instructoin restart : Page fault 처리 이후 동일한 곳에서 process 가 재시작되어야함</li>
+      <li>+) Dirty Bit : page replcement 할 때 disk 에 write 해야하는지 여부 확인</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--demand-paging-과정">- Demand Paging 과정</h2>
+
+<ol>
+  <li>OS 로 Trap</li>
+  <li>User의 Reg 과 Process state 저장</li>
+  <li>Interrupt 가 page fault 인지 결정</li>
+  <li>page references 가 유효한지 확인하고 disk 에서의 page location 결정</li>
+  <li>Disk 에서 free frame 로 read
+    <ol>
+      <li>Disk 에 대한  Read request 가 처리될 때 까지 Queue 에서 wait</li>
+      <li>Disk seek and/or latency time 동안 wait</li>
+      <li>Page 에서 free frame 으로 전송 시작</li>
+    </ol>
+  </li>
+  <li>Waiting 하는 동안 CPU 는 다른 user 에게 할당</li>
+  <li>Disk I/O subsystem 으로부터 완료되었다고 interrupt 받음</li>
+  <li>6의 다른 user 의 Reg 와 Process state 저장</li>
+  <li>Interrupt 가 disk 에서 온 것인지 결정</li>
+  <li>원하는 Page 가 현재 memory 에 있는 것으로 Page table 와 other table 수정</li>
+  <li>CPU 가 다시 이 Process 에 할당되기를 기다리기</li>
+  <li>할당되었다면 1에서 저장해두었던 user Reg 와 process state, new page table 저장하고, 중단된 instruction 재시작</li>
+</ol>
+
+<ul>
+  <li>크게 보면
+    <ol>
+      <li>PF interrupt sevice</li>
+      <li>Page Read</li>
+      <li>Process Restart</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--performance-of-demand-paging">- Performance of Demand Paging</h2>
+
+<ul>
+  <li>Page Fault Rate : 0 ≤ p ≤ 1
+    <ul>
+      <li>p == 0 : no page fault</li>
+      <li>p == 1 : 모든 reference 는 fault</li>
+    </ul>
+  </li>
+  <li>
+    <p>Effective Access Time (EAT, 유효 엑세스 시간)</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">EAT</span> <span class="o">=</span> <span class="o">=</span> <span class="p">(</span><span class="n">Page</span> <span class="n">Hit</span> <span class="n">Rate</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Memory</span> <span class="n">Acess</span> <span class="n">Time</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">Page</span> <span class="n">Fault</span> <span class="n">Rate</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Page</span> <span class="n">Fault</span> <span class="n">Service</span> <span class="n">Time</span><span class="p">)</span>
+  			<span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Memory</span> <span class="n">Access</span> <span class="n">Time</span><span class="p">)</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="p">((</span><span class="n">page</span> <span class="n">fault</span> <span class="n">overhead</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">swap</span> <span class="n">page</span> <span class="n">out</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">swap</span> <span class="n">page</span> <span class="n">in</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">restart</span> <span class="n">overhead</span><span class="p">))</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="demand-paging-example">[Demand Paging Example]</h3>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="n">Memory</span> <span class="n">access</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">200</span> <span class="n">nanoseconds</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">*</span> <span class="mi">10</span><span class="o">^-</span><span class="mi">6</span> <span class="n">sec</span>
+<span class="o">-</span> <span class="n">Average</span> <span class="n">page</span><span class="o">-</span><span class="n">fault</span> <span class="n">service</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">8</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">10</span><span class="o">^-</span><span class="mi">3</span> <span class="n">sec</span>
+
+<span class="n">EAT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="err">–</span> <span class="n">p</span><span class="p">)</span> <span class="n">x</span> <span class="mi">200</span> <span class="o">+</span> <span class="n">p</span> <span class="p">(</span><span class="mi">8</span> <span class="n">milliseconds</span><span class="p">)</span>
+		<span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="err">–</span> <span class="n">p</span><span class="p">)</span>  <span class="n">x</span> <span class="mi">200</span> <span class="o">+</span> <span class="n">p</span> <span class="n">x</span> <span class="mi">8</span><span class="p">,</span><span class="mo">000</span><span class="p">,</span><span class="mo">000</span>
+		<span class="o">=</span> <span class="mi">200</span> <span class="o">+</span> <span class="n">p</span> <span class="n">x</span> <span class="mi">7</span><span class="p">,</span><span class="mi">999</span><span class="p">,</span><span class="mi">800</span>                 
+</code></pre></div></div>
+
+<ul>
+  <li>p = 0.001 이라면 EAT = 8.2 ms 가 되고 이는 40% 의 성능 저하를 발생</li>
+  <li>성능 저하(performance degradation) 가 10% 미만이길 원한다면
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">220 &gt; 220 + 7999800 * p</code> → <code class="language-plaintext highlighter-rouge">20 &gt; 7999800 * p</code> → <code class="language-plaintext highlighter-rouge">p &lt; 0.0000025</code> 이어야함</li>
+      <li>즉 400000 번에 한번 page fault 가 발생해야함</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="page-replacement">Page Replacement</h1>
+
+<h2 id="--page-replacement">- Page Replacement</h2>
+
+<ul>
+  <li>Page fualt 인데 free frame 이 없다면 ?? → Page replacement 필요 !</li>
+  <li>
+    <p>Page Replacement : memory 에 있지만 실제로 사용하지 않는 page 를 찾아 swap out!</p>
+
+    <p>→ swap out 할 page 를 찾는 여러 algorithms 존재 → page fault 횟수가 가장 적도록..</p>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 5" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/362c4ccf-92b7-4de0-8591-45940ef17d42" />
+</center>
+
+<ul>
+  <li>Page Replacement 를 Page-fault service routine 에 추가해서 memory over-allocation 을 예방</li>
+  <li>Page Replacement 중 Page transfer 과정에 의해 overhead 가 발생하는데 이는 Modify bit (dirty bit) 를 사용해서 줄일 수 있음
+    <ul>
+      <li>수정된 page 만 표시하여 disk에 written 해야하는 page 표시</li>
+      <li>page 가 수정된 경우 HW 에 의해 Modify bit 가 설정됨 → 즉, 설정된 경우 disk 에서 read 된 이후로 수정되었음을 의미</li>
+    </ul>
+  </li>
+  <li>Page replacement 는 logical memory 와 physical memory 를 완벽하게 분리해서 작은 physical memory 로도 큰 virtual memory 를 제공해 줄 수 있음</li>
+</ul>
+
+<h2 id="--basic-page-replacement">- Basic Page Replacement</h2>
+
+<ol>
+  <li>Disk 에서 원하는 page 의 location 찾기</li>
+  <li>Free frame 찾기
+    <ol>
+      <li>Free frame 이 있다면? → 사용하세욤 낼름</li>
+      <li>Free frame 이 없다면?
+        <ul>
+          <li>Page replacement algorithms 을 이용하여 victim frame (희생자,,) 고르기</li>
+          <li>victime page 가 수정되었을(drity) 경우 disk 에 write 하고, 그에 따라 frame table 변경</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>원하는 page 를 새로 생긴 free frame 에 사용하고 page 랑 frame table update</li>
+  <li>trap 에 의해 정지되었던 instrcution 재시작 하여 process 계속 이어가기</li>
+</ol>
+
+<center>
+<img width="600" alt="Untitled 6" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/24e4aaf7-c0c3-4cc8-9dba-3a63d46d86d1" />
+</center>
+
+<h2 id="--page-replacement-algorithms">- Page Replacement Algorithms</h2>
+
+<ul>
+  <li>어떤 frame이 replace 될지를 결정하는 알고리즘으로 page-fault rate 를 최소화하는 것이 목표
+    <ul>
+      <li>+) 일반적으로 frame 수가 증가할 수록 page fault 수는 감소하는 경향</li>
+    </ul>
+  </li>
+  <li>알고리즘 평가하는 법
+    <ul>
+      <li>Page number 만 가지고 있는 <strong>reference string</strong> 을 실행시켜 page fault 수 측정</li>
+      <li>뒤에 나올 예시에서 우리는 <strong>[1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5]</strong> 을 reference string 으로 사용할거에욤 !!</li>
+    </ul>
+  </li>
+  <li>알고리즘 종류
+    <ul>
+      <li>FIFO</li>
+      <li>Optimal (OPT)</li>
+      <li>LRU</li>
+      <li>LRU Approximation
+        <ul>
+          <li>LRU Approximation</li>
+          <li>Second chance</li>
+        </ul>
+      </li>
+      <li>Counting
+        <ul>
+          <li>LFU</li>
+          <li>MFU</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--first-in-first-out-fifo-algorithm">- First-In-First-Out (FIFO) Algorithm</h2>
+
+<ul>
+  <li>각 Page에 memory 에 가져온 시간을 기록하거나, queue 를 사용해서 가져온 순서를 알 수 있도록</li>
+  <li>Page replacement 가 발생하면 oldest page 를 victim 으로 선택 !</li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 7" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/486a306a-4065-497f-82e7-5b873c2b00f6" />
+</center>
+
+<h3 id="example">[Example]</h3>
+
+<ul>
+  <li>
+    <p><strong>Reference string [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5], 3 frmaes</strong></p>
+
+    <center>
+  <img width="600" alt="Untitled 8" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/275ad94c-0e69-4955-ab27-7d3db9590fcd" />
+  </center>
+
+    <p>| Ref String | Mem | Page Fault? |
+  | — | — | — |
+  | 1 | [1] | init |
+  | 2 | [1 2] | init |
+  | 3 | [1 2 3] | init |
+  | 4 | [4 2 3] | 1 out |
+  | 1 | [4 1 3] | 2 out |
+  | 2 | [4 1 2] | 3 out |
+  | 5 | [5 1 2] | 4 out |
+  | 1 | [5 1 2] |  |
+  | 2 | [5 1 2] |  |
+  | 3 | [5 3 2] | 1 out → ref 순서가 아니라 mem에 들어온 순서 |
+  | 4 | [5 3 4] | 2 out |
+  | 5 | [5 3 4] |  |</p>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Page fault rate = 9/12 = 75%</code></li>
+    </ul>
+  </li>
+  <li><strong>Reference string [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5], 4frmaes</strong></li>
+  <li>
+    <p>일반적으로 frame 이 많다면 page fault 수가 감소한다고 했으니, 증가시켜보쟈</p>
+
+    <center>
+  <img width="600" alt="Untitled 9" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/04676317-42c5-4865-a047-c89a458cf60d" />
+  </center>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Page fault rate = 10/12 = 83..3%</code> → 엥 더 안좋아졌네요 ㅋㅋ</li>
+      <li>이렇게 frame 이 늘어날 수록 page fault 가 증가 하는 현상을 <strong>Belady’s Anomaly (Balady 의 역설)</strong> 라고 함 (위에 그래프 확인)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--optimal-algorithms">- Optimal Algorithms</h2>
+
+<ul>
+  <li>앞으로 가장 긴 시간 동안 사용되지 않을 page 를 victim 으로 고름</li>
+  <li>Pafe-fault rate 가 가장 작은 알고리즘으로 Belady’s anomaly 를 벗어나기에 Belady algorithms 이라고 부르기도함</li>
+  <li>하지만 SJF 와 비슷하게 어떤 것이 가장 오래 동안 사용되지 않을지를 모른다는 문제 . . . 그렇기에 성능측정하는 용도로 많이 사용합니다</li>
+</ul>
+
+<h3 id="example-1">[Example]</h3>
+
+<ul>
+  <li>
+    <p><strong>Reference string [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5], 4 frmaes</strong></p>
+
+    <center>
+  <img width="200" alt="Untitled 10" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/c0aa369b-c197-496e-829d-8860f8190d30" />
+  </center>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Page fault rate = 6/12 = 50%</code></li>
+    </ul>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ref String</th>
+      <th>Mem</th>
+      <th>Page Fault?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>[1]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[1 2]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>[1 2 3]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>[1 2 3 4]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>[1 2 3 4]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[1 2 3 4]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>[1 2 3 5]</td>
+      <td>4 out</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>[1 2 3 5]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[1 2 3 5]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>[1 2 3 5]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>[4 2 3 5]</td>
+      <td>1 out → 이땐 그냥 FIFO 야???</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>[4 2 3 5]</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="--least-recently-used-lru-algorithm">- Least Recently Used (LRU) Algorithm</h2>
+
+<ul>
+  <li>가장 오래 동안 사용하지 않은 page 를 victim 으로 고름 → memory 의 temporal locality 속성을 사용한 방법</li>
+  <li>최근에 사용 여부를 결정하기 위해 HW 의 지원이 필요하고 2가지 방식이 존재 → Counter / Stack
+    <ol>
+      <li><strong>Counter implementation</strong></li>
+    </ol>
+    <ul>
+      <li>Logical clock 또는 counter 사용</li>
+      <li>모든 page entry 는 time-of-use 필드를 가지고 있음</li>
+      <li>page 가 refer 될 때 마다 logical clock 을 time-of-use 필드 에 copy 함 → 이런 식으로 마지막에 refer 된 시간을 저장 ! 하지만 매번 참조될 때 마다 이뤄지는 copy 로 인한 overhead</li>
+      <li>Page replacement 가 발생하면 oldest time-of-use field를 serach해서 victim 으로 → 검색하는데 드는 시간으로 인한 overhead
+        <ol>
+          <li><strong>Stack implementation</strong></li>
+        </ol>
+      </li>
+    </ul>
+
+    <center>
+  <img width="600" alt="Untitled 11" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/e82e7473-09a7-4370-8979-71f652c1ec1a" />
+  </center>
+
+    <ul>
+      <li>Double Link 를 사용하는 stack 에 page number 를 저장해 순서 기록</li>
+      <li>page 가 refer 될 때 마다 top 으로 옮김 → 6 개의 pointer 가 변경되어야함 (bottom, bottom -1, origin top의 각 두 link를 변경해야하니)</li>
+      <li>serach 는 필요하지 않아요</li>
+      <li>buttom page 가 victim 으로 설정</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="example-2">[Example]</h3>
+
+<ul>
+  <li>
+    <p><strong>Reference string [1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5], 4 frmaes</strong></p>
+
+    <center>
+  <img width="400" alt="Untitled 12" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/ea475c7a-b6b1-47ca-8a11-8ad752b865d4" />
+  </center>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">Page fault rate = 8/12 = 66.6..6%</code></li>
+    </ul>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ref String</th>
+      <th>Mem</th>
+      <th>Page Fault?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>[1]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[1 2]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>[1 2 3]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>[1 2 3 4]</td>
+      <td>init</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>[1 2 3 4]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[1 2 3 4]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>[1 2 5 4]</td>
+      <td>3 out</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>[1 2 5 4]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>[1 2 5 4]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>[1 2 5 3]</td>
+      <td>4 out</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>[1 2 4 3]</td>
+      <td>5 out</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>[5 2 4 3]</td>
+      <td>1 out</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="--lru-approximation-algorithms">- LRU Approximation Algorithms</h2>
+
+<ul>
+  <li>HW 에서 지원해주지 않는 경우 사용할 수 있는 알고리즘</li>
+  <li>Counter 나 stack 대신 Reference bit 사용
+    <ul>
+      <li>
+        <p>OS 에 의해 처음엔 0 으로 초기화, page 가 refer 되면 1 로 설정</p>
+
+        <p>→ refer 된 것은 알 수 있지만 order는 모른다는 문제 ㅜㅜ</p>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Second Chance</strong>
+    <ul>
+      <li>Reference bit 를 마찬가지로 사용하며 기본적으로 FIFO 방식</li>
+      <li>FIFO 에 의해 page 가 victim 으로 선택되었는데
+        <ol>
+          <li>reference bit 가 1 : bit 를 0으로 바꾸어서 2번째 기회를 주고 다음 FIFO 선택</li>
+          <li>reference bit 가 0 : replace</li>
+        </ol>
+      </li>
+      <li><em>**</em>circular queue 를 사용해서 구현하며 시계 방향으로 선택되기에 clock algorithims 라고도 함</li>
+    </ul>
+  </li>
+  <li>Enhanced Second-Chance Algorithm → 수업시간에 언급하지는 않음
+    <ul>
+      <li>reference bit, modify bit pair 사용
+        <ol>
+          <li>(0, 0) 최근에 사용되지 않았고 수정되지 않음 - 대체하기에 가장 적합한 페이지</li>
+          <li>(0, 1) 최근에 사용되지 않았지만 수정됨 - 대체되기 전에 페이지를 기록해야 하므로 약간 덜 적합합니다.</li>
+          <li>(1, 0) 최근에 사용되었고 깨끗함 - 아마 곧 다시 사용될 것입니다.</li>
+          <li>(1, 1) 최근에 사용되었고 수정됨 - 아마 곧 다시 사용될 것이며, 페이지는 대체되기 전에 보조 저장소로 기록되어야 합니다.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--counting-algorithms">- Counting Algorithms</h2>
+
+<ul>
+  <li>각 Page 가 생성 된 이후로 counter of the number of references 를 유지 → 즉 생성 이후로 참조된 횟수를 계속 셈</li>
+  <li>LFU (least frequently used) Algorithm :
+    <ul>
+      <li>smallest count 를 replace</li>
+      <li>자주 사용되는 page의 reference counter 는 클 것이라는 가정</li>
+    </ul>
+  </li>
+  <li>MFU (most frequently used) Algorithm :
+    <ul>
+      <li>largest count 를 replace?</li>
+      <li>가장 적게 참조된 page 는 최근에 가져와서 아직 사용하지 않은 것이라는 가정</li>
+    </ul>
+  </li>
+  <li>이 방법들은 구현이 비싸고 OPT 를 잘 근사시키지 못하기에 자주 사용되는 방식은 아님</li>
+</ul>
+
+<h1 id="allocation-of-frames">Allocation of Frames</h1>
+
+<h2 id="--allocation-of-frames">- Allocation of Frames</h2>
+
+<ul>
+  <li>사용가능한 frame 수를 넘어서 할당 시킬 수 없고 (page sharing 을 제외하고 생각한다면) , process는 각 process 마다 최소한으로 필요로 하는 page 수가 있음
+    <ul>
+      <li>
+        <p>각 single instrction 이 reference 하는 모든 page 를 수용할 수 있을 정도의 frame 은 있어야함</p>
+
+        <p>→ PF 발생 시 instruction 중지하고 PF 처리한 다음 instruction 재시작하는데, 이때 PF 처리하더라도 inst가 실행 되기 위한 page 정도는 기본적으로 가지고 있어야 재시작이 가능함</p>
+      </li>
+    </ul>
+  </li>
+  <li>ex) IBM 370 - SS MOVE instruction 을 위해 6 page 유지해야함
+    <ul>
+      <li>Instruction : 6 bytes → 아마 2 page</li>
+      <li>‘from’ handling 위한 2 page</li>
+      <li>‘to’ handling 위한 2 page</li>
+    </ul>
+  </li>
+  <li>2가지 allocation schemes
+    <ol>
+      <li>Fixed Allocation</li>
+      <li>Priority Allocation</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--fixed-allocatioin">- Fixed Allocatioin</h2>
+
+<ul>
+  <li>고정된 수의 frame 을 할당하는데 이때 균등하게 할당하냐, 비례하게 할당하냐에 따라서 나뉨
+    <ol>
+      <li>Equal Allocation</li>
+    </ol>
+    <ul>
+      <li>process 에게 동일한 수의 frame 할당</li>
+      <li>ex) 5개의 process가 있고 100 frame 이 있을 때 각 Process 마다 20 frame 씩 할당
+        <ol>
+          <li>Proportional Allocation</li>
+        </ol>
+      </li>
+      <li>process 의 size 에 비례하게 frame 할당 → 즉 각 process가 얼마나 need 하는지를 기반으로 분배</li>
+      <li><code class="language-plaintext highlighter-rouge">s_i = size of process p_i</code></li>
+      <li><code class="language-plaintext highlighter-rouge">S = ∑ s_i</code></li>
+      <li><code class="language-plaintext highlighter-rouge">m = total number of frames</code></li>
+      <li><code class="language-plaintext highlighter-rouge">a_i = allocation for p_i = (s_i/S) * m</code></li>
+      <li>
+        <p>ex) m = 64, s_1 = 10, s_2 = 127</p>
+
+        <p>→ a_1 = (10/137) * 64 = 5, a_2 = (127/137) * 64 = 59</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--prioirty-allocation">- Prioirty Allocation</h2>
+
+<ul>
+  <li>size 대신 priority 에 따라 비례적으로 분배하는 Proportional Allocation</li>
+  <li>P_i 가 Page fault 를 발생시켰다면, frame 중에 replacement 할 것을 고르는데
+    <ul>
+      <li>P_i 의 frame 중에 가져오거나</li>
+      <li>lower priority number 를 가지고 있는 process 로 부터 frame 뺏어옴</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--global-vs-local-allocation">- Global vs Local Allocation</h2>
+
+<ol>
+  <li>Global replacement : process는 모든 frame set 에서 replacement 할 frame 선택할 수 있음 → 즉 한 process 가 다른 process 로 부터 frame 가져올 수 있음
+    <ul>
+      <li>다른 process 의 동작에 영향을 미칠 수 있음</li>
+      <li>ex) 높은 우선순위를 가진 procss 는 낮은 우선순위를 가진 process들로부터 frame 을 가져올 수 있음</li>
+    </ul>
+  </li>
+  <li>Local replacement : 각 process는 각자의 frmae set 에서만 replacement 할 frame 선택할 수 있음</li>
+</ol>
+
+<h1 id="memory-mapped-files">Memory-Mapped Files</h1>
+
+<h2 id="--memory---mapped-files">- Memory - Mapped Files</h2>
+
+<ul>
+  <li>Memory-mappled files I/O 는  disk block 을 memory 의 page 에 mapping 하여 file I/O 를 memory access 처럼 취급할 수 있게 함 → 즉 파일을 memory 에 매핑한다는 소리</li>
+  <li>File 은 demand paging 을 통해 처음 read  되고, file의 page-size적 일부는 file system 에서 physical page 로 read 됨
+    <ul>
+      <li>File 에 대한 Read/Write To/From subsequent 는 memory access로 취급됨</li>
+    </ul>
+  </li>
+  <li>
+    <p>File access 는 read(), write() system call 대신 memory 를 통한 file I/O 로 처리가 됩니당 !!</p>
+
+    <p>→ memory와 file 간에 read / write 하는 것 대신 file 을 직접 memroy 에 mapping 해서 memory 를 읽고 쓰는 것 처럼 처리한다는 말</p>
+  </li>
+  <li>이 방식은 process 들이 memory 의 page 를 공유하는 것과 같은 방식으로 동일한 file 에 mapping 해서 공유할 수 있도록 허용
+    <ul>
+      <li>어떤 process 에 의해 write 된 것은 file의 같은 section 을 mapping 한 다른 process 들도 볼 수 있음</li>
+    </ul>
+  </li>
+  <li>그럼 memory 에 mapping 된 page 는 언제 disk 에 write 되어야할까??
+    <ul>
+      <li>주기적 / file close() 시 / dirty page 탐색</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--technique-for-all-io">- Technique for all I/O</h2>
+
+<ul>
+  <li>Process 는 <code class="language-plaintext highlighter-rouge">mmap()</code> system call 을 통해 file 을 memory 를 매핑하라고 요청할 수 있고, 이를 통해 file 은 process address space 에 mapping됨</li>
+  <li>standard I/O (<code class="language-plaintext highlighter-rouge">open()</code>, <code class="language-plaintext highlighter-rouge">read()</code>, <code class="language-plaintext highlighter-rouge">write()</code>, <code class="language-plaintext highlighter-rouge">close()</code>) 은 일단 mmap() 을 사용하기는 하지만 process address space 가 아니라 kernel addrass space 에 매핑됨
+    <ul>
+      <li>process 는 kernel 과 process 간 복사를 위해 여전히 read() 와 write() 를 수행함</li>
+      <li>그래도 kernel 에 mapping 되어있기에 subsystem  분리 없이 효율적인 메모리 관리를 통해 성능 향상을 제공</li>
+    </ul>
+  </li>
+  <li>COW(Copy-On-Write) 를 사용하여 read/write 가 자주 발생하지 않는 non-shared page 에 대해 최적화할 수 있음</li>
+  <li>shared memory 에 사용될 수 있어 여러 process 가 동일한 file 에 접근 할 수 있고 이를 통해 process 간 data 공유가 편해짐 → IPC(Inter-Process Communication) 없이 데이터를 공유 가능</li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 13" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/b5bedba8-c498-457f-a99f-8533e6650a5a" />
+<p>File sharing</p>
+</center>
+
+<center>
+<img width="600" alt="Untitled 14" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/65c734ed-7f75-4375-a049-d43cd041d5cd" />
+<p>Shared Memory (이를 통해 communication 가능)</p>
+</center>
+
+<h2 id="--copy-on-write-cow">- Copy-on-Write (COW)</h2>
+
+<center>
+<img width="600" alt="Untitled 15" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/ec015742-5681-410c-a859-b2dbc59b3f36" />
+</center>
+
+<ul>
+  <li>page 를 수정 할 경우에만 page 의 copy 을 만들어 수정하고, 수정하지 않을 경우는 따로 copy 하지 않고 원본 공유해서 사용</li>
+  <li>COW 은 parent 와 child 가 처음 부터 memory 은 같은 page 를 공유할 수 있게끔 해줌
+    <ul>
+      <li>shared page 는 COW page 라고 표시해두고 부모랑 자식 중에 하나가 공유된 page 를 수정할 때만 page copy</li>
+      <li>수정할 경우만 copy 하니까 process 생성 할 때 모든 page 를 다 copy 하지 않아도 되어서 더 효율적임</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="thrashing">Thrashing</h1>
+
+<h2 id="--thrashing">- Thrashing</h2>
+
+<ul>
+  <li>
+    <p>process가 실행될 수 있을 만큼 충분한 page 를 memory가 가지고 있지 않다면…</p>
+
+    <p>→ Page fault rate 가 매우 상승 → CPU utilization 이 낮아짐 → OS 는 degree of multiprogamming 증가하려함 → 다른 process 추가 → PF 더 발생 !</p>
+  </li>
+  <li>
+    <p>이 처럼 process 가 busy swapping page in &amp; out 하는 상황 (PF 가 연속적으로 계속해서 발생해서 성능이 갑자기 확 떨어지는 현상) 을 <strong>Thrashing</strong> 이라고 함</p>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 16" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/48eda3cd-c70d-4a26-825f-dc763b7ff516" />
+</center>
+
+<h2 id="--demand-paging-and-thrashing">- Demand Paging and Thrashing</h2>
+
+<ul>
+  <li>Thrashing 을 방지 하기 위해서는 process 가 필요한 만큼의 frame 을 가지고 있어야함 → 이를 위해 locality model 을 사용할거에욤</li>
+  <li>Locality Model
+    <ul>
+      <li>Locality : 함께 활발하게 사용되는 page set</li>
+      <li>process 는 locality 사이를 migrate 할 수 있음</li>
+      <li>program은 여러 locality 으로 구성될 수도 있고, 이들은 서로 겹칠 수도 있음</li>
+    </ul>
+  </li>
+  <li>그럼 Thrashing 이 발생하는 조건은 ? → ∑(size of locality) &gt; (total memory size) 일 때 process의 active page 를 memory 에 유지 하지 못해서 발생</li>
+</ul>
+
+<h2 id="--working-set-model">- Working-Set Model</h2>
+
+<ul>
+  <li>Locality 를 기반으로 한 Model</li>
+  <li>𝚫 ≡ working-set window ≡ fixed number of page reference</li>
+  <li>$WS_i$  = Working set of Process $P_i$ : 최근 𝚫 번의 access 로 reference 된 page들의 set
+    <ul>
+      <li>𝚫 가 너무 작다면 WS 는 locality 전체를 포함하지 못 할 수 있음</li>
+      <li>𝚫 가 너무 크다면 WS 는 여러 locality 들이 겹칠 수 있음</li>
+      <li>𝚫 → ∞ 라면 WS 는 program 실행 중에 참조하는 모든 page를 포함함</li>
+    </ul>
+  </li>
+  <li>$WSS_i$ = Working set size of Process $P_i$ : 최근 𝚫 번의 access 로 reference 된 page들의 수</li>
+  <li>D = $\sum WSS_i$ ≡ Total Demand frames, m = total number of available frame
+    <ul>
+      <li>D &gt; m : process 중 하나 일시 중지하고 swap out 하여 p_i 에게 frame 할당해주어야함</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 17" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/91348e35-2f28-49c1-9453-0509dbb3eabf" />
+</center>
+
+<ul>
+  <li>
+    <p>Page 가 actively 하게 사용된다면 WS 에 포함되어있을거고, 더 이상 사용하지 않는다면 WS 에서 나갈 것임 !</p>
+
+    <p>→ WS 는 Program 의 locality 의 근사라고 할 수 있게되고, 이를 이용해 process 마다 필요한 frame 수를 알 수 있게 될 것임</p>
+  </li>
+</ul>
+
+<h2 id="--keeping-track-of-the-working-set">- Keeping Track of the Working Set</h2>
+
+<ul>
+  <li>WS 는 움직이는 window 이므로 이를 어떤 식으로 움직일지 (변화시킬지)에 대해 알아봅시다</li>
+  <li>
+    <p>매번 refer 가 일어날 때 마다 기록하기엔 overhead 가 굉장히 굉장히 클 것이므로 근사할거에요</p>
+
+    <p>→ Fixed Interver Timer 와 Reference Bit 필요 !</p>
+  </li>
+</ul>
+
+<h3 id="example-𝚫--10000-">[Example 𝚫 = 10,000 ]</h3>
+
+<ul>
+  <li>5000 refer 마다 timer interrupt 발생!</li>
+  <li>각 page 마다 2개의 bit 를 유지 (10,000/5,000 = 2)</li>
+  <li>timer interrupt 발생하면 reference bit 를 조사해서 어떤 page 에 refer 가 일어났는지 기록하기 위해 저장하고 모든 refer bit 를 0으로 설정함</li>
+  <li>
+    <p>2개의 bit 중 하나라도 1 이라면 page 는 Working Set (WS) 에 ! !</p>
+
+    <p>→ 5,000 refer 중에 언제 refer 가 발생했는지 몰라서 정확하진 않아욤,,</p>
+  </li>
+  <li>page 마다 10 bit 를 유지하고 1000 refer 마다 timer interrupt 발생시켜서 더 향상 시킬 수 있음! → timer interrupt 가 자주 발생할 수록 정확도는 올라가지만 cost 도 올라간다링</li>
+</ul>
+
+<h2 id="--page-fault-frequency-schme">- Page-Fault Frequency Schme</h2>
+
+<ul>
+  <li>허용가능한 Page-Fault Rate 정도를 제어 → Upper Bound / Lower Bound 정하기</li>
+  <li>Actual Rate &lt; Lower Bound : process 에 frame 이 너무 많이 할당 된 것이기에 frame 수 감소</li>
+  <li>Actual Rate &gt; Upper Bound : process 에 frame 이 너무 적게 할당 된 것이기에 frame 수 증가 시켜 더 할당</li>
+  <li>이런식으로 feedback 형식으로 제어</li>
+</ul>
+
+<h1 id="allocating-kernel-memory">Allocating Kernel Memory</h1>
+
+<h2 id="--allocating-kernel-memory">- Allocating Kernel Memory</h2>
+
+<ul>
+  <li>Kernenl Memory 는 User Meory 와 다르게 취급해주어야함</li>
+  <li>일반적으로 kernel은 free-memory pool라고 하는 곳에서 memory를 할당
+    <ul>
+      <li>
+        <p>kernenl 은 다양한 크기의 structure를 위해 memory 를 요청</p>
+
+        <p>→  다양한 크기다 보니 메모리를 보존하고 (가능한 빨리 반환하고 재사용하여 누수 방지) fragment 로 인한 낭비를 최소화하려고 함</p>
+      </li>
+      <li>
+        <p>일부 kernel  memeory 는 연속적인 memroy 를 필요로 할 때도 있음</p>
+
+        <p>ex) I/O Device.. virtual memory 없이 바로 physical memory 랑 상호작용하니까?</p>
+      </li>
+    </ul>
+  </li>
+  <li>page 말고 다른 방법을 사용하여 관리함
+    <ol>
+      <li>Buddy System</li>
+      <li>Slab Allocator</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--buddy-system">- Buddy System</h2>
+
+<ul>
+  <li>Physical-contiguous pages 로 구성된 고정된 크기의 segment 에서 memory 를 할당</li>
+  <li>2의 제곱으로 크기로 (power-of-2 allocator) 를 지정하여 메모리를 할당
+    <ul>
+      <li>Request는 2의 제곱으로 크기가 조정하기 위해 요청보다 큰 2의 제곱갑으로 올림 처리함 ex) 4KB, 8KB, 16KB</li>
+      <li>Available 보다 작은 할당이 필요한 경우 현재 chuck를 2개의 buddy 로 분할하여 다음으로 낮은 2의 제곱값으로 분할됨 그리고 이 과정을 가장 근접한 chunk 값을 얻을 떄 까지 진행</li>
+    </ul>
+  </li>
+  <li>장점
+    <ul>
+      <li>사용되지 않은 chunk 를 빠르게 다시 하나로 결합시켜 빈공간을 효율적으로 사용할 수 있음</li>
+    </ul>
+  </li>
+  <li>단점
+    <ul>
+      <li>Fragment… 작은 크기의 request 에 대한 memory 낭비 → 33KB 짜리 요청은 64KB 크기의 segment 만 만족시킬 수 있으니 31KB 가 낭비임</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="example-256kb-크기의-chunk가-available-kernel-은-21kb-를-요청한-경우">[Example 256KB 크기의 Chunk가 available, Kernel 은 21KB 를 요청한 경우]</h3>
+
+<ol>
+  <li>$A_L$ , $A_R$ 을 각각 128KB 로 분할</li>
+  <li>그 중 하나를 $B_L$ , $B_R$ 을 각각 64KB 로 분할</li>
+  <li>그 중 하나를 $C_L$ , $C_R$ 을 각각 32KB 로 분할</li>
+  <li>$C_L$ , $C_R$ 중 하나를 요청을 충족시키기 위해 사용됨</li>
+</ol>
+
+<center>
+<img width="600" alt="Untitled 18" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/b837b75e-f492-40f1-aff4-c75c93bf05fb" />
+</center>
+
+<h2 id="--slab-allocator">- Slab Allocator</h2>
+
+<ul>
+  <li>ALternate Strategy (대체 전략)</li>
+  <li>Slab : 하나 이상의 Physical contiguous page</li>
+  <li>Cache : 하나 이상의 Slab</li>
+  <li>kernel 의 고유한 data structure 마다 cache가 존재
+    <ul>
+      <li>
+        <p>각 cache 는 data structure를 인스턴스화한 object 로 채워져 있음</p>
+
+        <p>ex) File object, Semaphores 를 나타내는 data structure를 위해 별도의 cache 가 존재</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Chche 에 있는 object 수는 slab 의 크기에 따라 달라짐</p>
+
+    <p>ex) 4KB 짜리의 contiguous page 3개로 이루어진 12KB 의 slab은 2KB 짜리 object 를 6개 저장할 수 있음</p>
+  </li>
+  <li>Cahce 가 생성될 때 <strong>free</strong> 라고 표시된 Object 들로 채워짐</li>
+  <li>그리고 Cache 에 Structure 가 저장될 때 Object 들은 <strong>used</strong> 라고 표시됨</li>
+  <li>Slab 이 used Object 들로 가득 찼다면 다음 object는 empty slab 에서 할당 됨
+    <ul>
+      <li>Empty slab 이 없다면 contiguous physical page 에서 새로 slab 을 할당 !</li>
+    </ul>
+  </li>
+  <li>장점
+    <ul>
+      <li>물리적으로 연속된 페이지로 slab 을 구성하기에 fragment 가 없음 !</li>
+      <li>memroy 할당과 해제와 같은 요청을 빠르게 처리할 수 있음 !</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 19" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/dc9ae1d9-9d64-42ea-a724-4ff2f698c200" />
+</center>
+
+<h1 id="other-issue">Other Issue</h1>
+
+<h2 id="--io-interlock">- I/O Interlock</h2>
+
+<ul>
+  <li>page 는 때때로 memory 에 lock 됨
+    <ul>
+      <li>process 가 I/O 요청을 발생하면 해당 요청은 queue 로 들어가고 CPU 는 다른 process 에게 주어짐</li>
+      <li>대기 중인 process 를 위해 memory buffer 의 page 를 교체</li>
+      <li>나중에 지정된 addresss로 I/O 가 발생하는데 해당 address가 다른 process (CPU 넘겨준) 에서 사용중일 수 있음 → 막아야해!</li>
+    </ul>
+  </li>
+  <li>Device에서 file 복사하는데 사용되는 page 들은 page replacment algorithms 에 의해 eviction 으로 선택되지 않도록 lock 되어서 막아야함
+    <ul>
+      <li>Lock bit 는 모든 frame 있어야함</li>
+      <li>Frame 이 lock 이라면 replacement 를 위해 선택되지 않음</li>
+      <li>I/O 가 끝나면 unlock</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--prepaging">- Prepaging</h2>
+
+<ul>
+  <li>Process가 시작될 때 많은 Page fault 가 발생하는 것을 막기 위해 사용</li>
+  <li>Process가 필요로 하는 모든 page, 또는 일부 Page 를 page가 refer 되기 전에 가져옴</li>
+  <li>I/O 랑 Memory 낭비라 prepage 은 잘 사용 안하긴함</li>
+  <li>만약 s pages가 prepage 되고, page 중 a (0≤a≤1) 만큼 사용된다면
+    <ul>
+      <li>s<em>a 만큼의 page fault 를 아끼는 것과 s</em>(1-a) 만큼의 page 를 낭비하는 것 의 cost 비교</li>
+      <li>a 가 0 에 가까우면 → prepaging loses</li>
+      <li>a 가 1 에 가까우면 → prepaging win</li>
+    </ul>
+  </li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-05-24">May 24, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch9" class="pagination--pager" title="[OS] Ch9. Main Memory
+">Prev</a>
+    
+    
+      <a href="/categories/develop/Github_Blog/comment" class="pagination--pager" title="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/develop/Github_Blog/comment" rel="permalink">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch9" rel="permalink">[OS] Ch9. Main Memory
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-08T00:00:00+09:00">May 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch8" rel="permalink">[OS] Ch8. Deadlock
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-01T00:00:00+09:00">May 1, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch6" rel="permalink">[OS] Ch6. Process Synchronization
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-04-12T00:00:00+09:00">April 12, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 zi_orv. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/categories/study/2023_OS/ch10";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/categories/study/2023_OS/ch10"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rutuna.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
