@@ -52,7 +52,7 @@
     
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기 | zi_orv</title>
+<!-- begin _includes/seo.html --><title>[OS] Ch13. File System Interface | zi_orv</title>
 <meta name="description" content="참치는 할 수 있다">
 
 
@@ -65,8 +65,8 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="참치는 할 수 있다">
-<meta property="og:title" content="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기">
-<meta property="og:url" content="http://localhost:4000/categories/develop/Github_Blog/comment">
+<meta property="og:title" content="[OS] Ch13. File System Interface">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch13">
 
 
   <meta property="og:description" content="참치는 할 수 있다">
@@ -77,11 +77,11 @@
 
 
 
-  <meta property="article:published_time" content="2023-07-10T00:00:00+09:00">
+  <meta property="article:published_time" content="2023-05-31T00:00:00+09:00">
 
 
 
-  <meta property="article:modified_time" content="2023-07-10T00:00:00+09:00">
+  <meta property="article:modified_time" content="2023-05-31T00:00:00+09:00">
 
 
 
@@ -90,7 +90,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/categories/develop/Github_Blog/comment">
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch13">
 
 
 
@@ -509,15 +509,15 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기">
+    <meta itemprop="headline" content="[OS] Ch13. File System Interface">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2023-07-10T00:00:00+09:00">
-    <meta itemprop="dateModified" content="2023-07-10T00:00:00+09:00">
+    <meta itemprop="datePublished" content="2023-05-31T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-05-31T00:00:00+09:00">
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch13. File System Interface
 </h1>
           
 
@@ -526,7 +526,7 @@
       
       <span class="page__meta-date">
         <i class="far fa-calendar-alt" aria-hidden="true"></i>
-        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
+        <time datetime="2023-05-31T00:00:00+09:00">May 31, 2023</time>
       </span>
     
 
@@ -544,78 +544,339 @@
           <aside class="sidebar__right sticky">
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-              <ul class="toc__menu"><li><a href="#disqus">DISQUS</a><ul><li><a href="#1-disqus-가입하기">1. DISQUS 가입하기</a></li><li><a href="#2-설정-들어가기">2. 설정 들어가기</a></li><li><a href="#3-minimal-mistakes-github-blog-에-연결">3. minimal mistakes (Github Blog) 에 연결</a></li><li><a href="#4-끝-">4. 끝 !</a></li></ul></li></ul>
+              <ul class="toc__menu"><li><a href="#file-concept">File Concept</a><ul><li><a href="#--file-concept">- File Concept</a></li><li><a href="#--file-structure">- File Structure</a></li><li><a href="#--file-attributes">- File Attributes</a></li><li><a href="#--file-operation">- File Operation</a></li></ul></li><li><a href="#access-methods">Access Methods</a><ul><li><a href="#--sequential-access">- Sequential Access</a></li><li><a href="#--direct-access-random-access">- Direct Access (Random Access)</a></li><li><a href="#--compare">- Compare</a></li></ul></li><li><a href="#directory-structure">Directory Structure</a><ul><li><a href="#--directory-sturcture">- Directory Sturcture</a></li><li><a href="#--disk-structure">- Disk Structure?</a></li><li><a href="#--organize-the-directory-logically-to-obtain">- Organize the Directory (Logically) to Obtain</a></li><li><a href="#--single-level-directory">- Single-Level Directory</a></li><li><a href="#--two-level-directory">- Two-Level Directory</a></li><li><a href="#--tree-structured-directory">- Tree-Structured Directory</a></li><li><a href="#--acyclic-graph-directory">- Acyclic-Graph Directory</a></li><li><a href="#--general-graph-directory">- General Graph Directory</a></li></ul></li><li><a href="#file-system-mounting">File-System Mounting</a><ul><li><a href="#--file-system-mount">- File-system mount</a></li></ul></li><li><a href="#protection">Protection</a><ul><li><a href="#--protection">- Protection</a></li></ul></li></ul>
 
             </nav>
           </aside>
         
-        <h1 id="disqus">DISQUS</h1>
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
 
-<p>내가 작성한 글에 대해 독자와 의사소통 하기 위해서는 댓글 기능은 필수 중에 필수 ! (댓글이 많이 달리진 않겠지만,,,) <br />
-댓글 기능을 사용하기 위해선 여러 방법이 있지만 오늘은 <strong>DISQUS</strong> 을 사용해서 한번 댓글 기능을 추가해보겠다</p>
+<h1 id="file-concept">File Concept</h1>
 
-<h2 id="1-disqus-가입하기">1. DISQUS 가입하기</h2>
-<p><img src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/655d30be-e1e6-4ba3-a004-58dc384e93b3" alt="image" />
-자 먼저 <a href="http://disqus.com">DISQUS 사이트</a>에 접속해서 회원가입을 진행하자 <br /></p>
+<h2 id="--file-concept">- File Concept</h2>
 
-<p><img src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/cd087b37-2b09-4a6e-b58e-ca7ccab64b05" alt="image" />
-이때 반드시 오른쪽을 선택해서 해야한다! 우리는 자기 블로그에다가 댓글 기능을 추가하려는 거니깡 <br />
-첨에 안 보고 그냥 왼쪽 눌렀다가 왜 없지 하면서 한참 찾음,, ^^ <br /><br /></p>
+<ul>
+  <li>Computer 는 다양한 종류의 storage media (magnetic disk, oprical disk .. ) 에 infomation 을 저장</li>
+  <li>OS 는 이런 다양한 storage device 의 physical 속성을 추상화해서 logical storage unit 인 <strong><em>file</em></strong> 을 정의 → storage 에 대해 균등한 logical view 제공</li>
+  <li>File
+    <ul>
+      <li>secondary storage 에 저장된 관련 information 들의 collection의 이름</li>
+      <li>User 들에게 가장 secondary storage 의 가장 작은 할당 단위라고 알려짐</li>
+      <li>일반적으로는 contiguous logical address space</li>
+      <li>File 들의 directory 로 조직되어있음</li>
+    </ul>
+  </li>
+  <li>Type
+    <ul>
+      <li>Data : numberic, character, binary</li>
+      <li>Program</li>
+    </ul>
+  </li>
+</ul>
 
-<p><br /></p>
+<h2 id="--file-structure">- File Structure</h2>
 
-<h2 id="2-설정-들어가기">2. 설정 들어가기</h2>
-<center><img width="400" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/a61a1d7e-93ff-4862-af59-c48ff334c0d6" /></center>
+<ul>
+  <li>File은 type 에 따라 structure 가 정의됨</li>
+  <li>Ex)
+    <ul>
+      <li>Text File : line 들로 조직되어있는 character 들의 sequence</li>
+      <li>Sourece File : subroutines 과 function 들의 sequence</li>
+      <li>Object File : liner 가 이해할 수 있는 block 으로 조직되어있는 byte 들의 sequence</li>
+      <li>Executable File : loader 가 memory 에서 가져와 실행시킬 수 있는 code section 들의 series</li>
+    </ul>
+  </li>
+</ul>
 
-<p>이제 설정에 들어가서 자기 블로그랑 연결을 해줘야한다! setting 을 누른 다음 <br /><br /></p>
-
-<center><img width="300" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/70ee9f0e-e6b3-4d19-a0e3-b728efe69ae2" /></center>
-
-<p>SITE → General 클릭</p>
-
-<center><img width="600" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/8ee40c96-fd61-4d42-b177-dd926729bff4" /></center>
-
-<p>저기 보면 <strong>shortname</strong> 이랑 <strong>Website URL</strong> 이 나올건데 예상하는 대로 잘 넣으면 끝 ! <br />
-아마 shortname은 가입 했을 때 입력했을 건데 아이디 처럼 생각하면 된당 그리고 나중에 minimal mistakes 에 연결 할 때 이거 쓰니까 잘 기억해두기 ~</p>
-
-<h2 id="3-minimal-mistakes-github-blog-에-연결">3. minimal mistakes (Github Blog) 에 연결</h2>
-<p><strong>_config.yml</strong> 를 수정해주자! 총 3 곳을 수정해야한다</p>
-
-<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">// in _config.yml</span>
-<span class="na">comments</span><span class="pi">:</span>
-  <span class="na">provider                </span><span class="pi">:</span> <span class="s2">"</span><span class="s">disqus"</span> <span class="c1"># false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "custom"</span>
-  <span class="na">disqus</span><span class="pi">:</span>
-    <span class="na">shortname             </span><span class="pi">:</span> <span class="s">rutuna</span>
-
-<span class="nn">...</span>
-
-<span class="c1"># Defaults</span>
-<span class="na">defaults</span><span class="pi">:</span>
-  <span class="c1"># _posts</span>
-  <span class="pi">-</span> <span class="na">scope</span><span class="pi">:</span>
-      <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">posts</span>
-    <span class="na">values</span><span class="pi">:</span>
-      <span class="na">layout</span><span class="pi">:</span> <span class="s">single</span>
-      <span class="na">author_profile</span><span class="pi">:</span> <span class="no">true</span>
-      <span class="na">read_time</span><span class="pi">:</span> <span class="c1">#true</span>
-      <span class="na">show_date</span><span class="pi">:</span> <span class="no">true</span>
-      <span class="na">comments</span><span class="pi">:</span> <span class="no">true</span> <span class="c1"># 댓글기능</span>
-<span class="nn">...</span>
-
-</code></pre></div></div>
+<h2 id="--file-attributes">- File Attributes</h2>
 
 <ol>
-  <li>comments의 provider 를 “disqus” 라고 입력</li>
-  <li>comments의 disqus - shortname 에 본인 shortname 입력</li>
-  <li>defaults 의 values - comments 를 true 로 설정해서 comment 기능 활성화</li>
+  <li>Name : 인간이 읽을 수 있는 형태로 유지되는 유일한 정보</li>
+  <li>Identifier : File system 내에서 식별하기 위한 고유한 tag (number)</li>
+  <li>Type : 다양한 type 을 지원하기 위해 system 에 필요한</li>
+  <li>Location : Device 에서 File 위치의 pointer</li>
+  <li>Size : 현재 file size</li>
+  <li>Protection : 누가 read / write / exec 할 수 있는지 제어</li>
+  <li>Time, Data, User Undentification : protection, security, usage monitoring 에 유용한 data 들 . .
+    <ul>
+      <li>파일에 대한 이 정보들은 Disk 에 있는 Directory Structure 에 저장됩니당</li>
+    </ul>
+  </li>
 </ol>
 
-<h2 id="4-끝-">4. 끝 !</h2>
-<center><img width="500" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/dc5aaf5c-0436-4a72-8d74-bec823fb98d1" /></center>
+<h2 id="--file-operation">- File Operation</h2>
 
-<p>위의 사항을 저장하고 push 하면 요로코롬 아주 잘 들어가 있는 것을 확인 할 수 있다 <br /></p>
-<h3 id="local-에서는-확인-안되는거-맞으니까-걱정-말아요-">local 에서는 확인 안되는거 맞으니까 걱정 말아요 !!</h3>
+<ol>
+  <li>Create</li>
+  <li>Write</li>
+  <li>Read</li>
+  <li>Seek (Reposition within file)</li>
+  <li>Delete</li>
+  <li>Truncate</li>
+  <li>Open($F_i$) : Disk 에 있는 Directory structure 에서 $F_i$ entry 를 찾고 entery 내 content 를 memory 로 옮김 (Disk → MEM)</li>
+  <li>Close($F_i$) : Memory 에서 $F_i$ entry 의 content 를 Disk 에 있는 Directory structure 로 옮김 (MEM → Disk)</li>
+</ol>
+
+<h1 id="access-methods">Access Methods</h1>
+
+<h2 id="--sequential-access">- Sequential Access</h2>
+
+<center>
+<img width="500" alt="Untitled" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/94e59f40-3dcd-48ed-9560-31271c3aefb8" />
+</center>
+
+<ul>
+  <li>순서대로 처리되는 것</li>
+  <li>operation
+    <ul>
+      <li>read_next : File 의 다음 block 읽고 current position 을 다음 위치로 이동</li>
+      <li>write_next : File 의 끝에 작성되고 새로 작성된 부분의 끝으로 current position 이동</li>
+      <li>reset</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--direct-access-random-access">- Direct Access (Random Access)</h2>
+
+<ul>
+  <li>순서 상관 없이 아무곳이나 access 하는 거 가능 ! 직접 바로 접근</li>
+  <li>file 은 고정된 길이의 logical record 에 저장</li>
+  <li>n : file 의 시작점이 0인 상대적인 block number</li>
+  <li>operation
+    <ul>
+      <li>read(n) : block n 읽기</li>
+      <li>write(n) : block n 에 쓰기</li>
+      <li>position_file(n) : n 으로 current position 이동</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--compare">- Compare</h2>
+
+<center>
+<img width="500" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/0ab59b24-71d8-47d4-90d3-fa2000f4252e" />
+</center>
+
+<ul>
+  <li>Direct access 에선 pointer 를 직접 옮겨주어야함 ! 그렇기에 원래 sequential-access 인 file 에서 direct-access 방법 사용한다면 굉장히 비효율적이겠쥬</li>
+</ul>
+
+<h1 id="directory-structure">Directory Structure</h1>
+
+<h2 id="--directory-sturcture">- Directory Sturcture</h2>
+
+<ul>
+  <li>모든 file 에 대한 정보를 가진 node 들의 collection으로 disk 에 있음</li>
+  <li>Operation on Directory
+    <ol>
+      <li>Search for a file : Directory 에서 File 찾기</li>
+      <li>Create a file</li>
+      <li>Delete a file</li>
+      <li>List a directory : Directory 내 File 들 리스트업</li>
+      <li>Rename a file</li>
+      <li>Traverse the file system</li>
+    </ol>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/adf219f5-3cf7-4ce9-b6ad-97a06fa30d55" />
+</center>
+
+<h2 id="--disk-structure">- Disk Structure?</h2>
+
+<ul>
+  <li>Disk 는 여러 logical disk (partitions)로 나뉘어짐</li>
+  <li>Disk / Partition 은 file-system 이나 filesystem 으로 farmattted 되지 않은 raw 상태로 사용될 수 도 있음</li>
+  <li>Partitions 은 minidisk, slice 라고 하기도 함</li>
+  <li>File system 을 포함한 entity 를 volume 이라고 함</li>
+  <li>각 volume 은 device directory 나 volumn table of contents 에서 file system 의 정보 를 추적</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 3" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/ee37d7d7-dd38-497b-8650-d4fc8ef61f74" />
+</center>
+
+<ul>
+  <li>Volume 은 device 의 subset 일수도 있고, 전체일수도 있고 여러개가 link 된 걸 수도 있음</li>
+</ul>
+
+<h2 id="--organize-the-directory-logically-to-obtain">- Organize the Directory (Logically) to Obtain</h2>
+
+<ul>
+  <li>Effciency : 빠르게 File 찾기</li>
+  <li>Naming : user 에게 편리한
+    <ul>
+      <li>두 user 가 다른 파일은 같은 이름으로 가질 수 있는가?</li>
+      <li>같은 파일은 다른 이름으로 가질 수 있는가</li>
+    </ul>
+  </li>
+  <li>Grouping : file 속성에 따른 logical grouping
+    <ul>
+      <li>ex) all java program, all games ..</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--single-level-directory">- Single-Level Directory</h2>
+
+<center>
+<img width="500" alt="Untitled 4" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/62bc3392-8c7b-489b-a26b-5ced6364e688" />
+</center>
+
+<ul>
+  <li>모든 user 들은 공통된 하나의 directory 를 공유</li>
+  <li>simple device, embedded system 에 대해서는 아직도 사용 중</li>
+  <li>특징
+    <ul>
+      <li>Simple</li>
+      <li>Naming Problem : 모든 file 이 동일한 directory 에 있기에 name 은 무조건 고유해야함</li>
+      <li>Grouping Problem : 그룹 만들기 불가능</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--two-level-directory">- Two-Level Directory</h2>
+
+<center>
+<img width="500" alt="Untitled 5" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/b7f82fce-636b-4cf9-9a50-20c7cb06e6f0" />
+</center>
+
+<ul>
+  <li>각 user 들은 별도의 directory 를 가짐</li>
+  <li>Path name : <code class="language-plaintext highlighter-rouge">username/filename</code> 형태</li>
+  <li>다른 유저에 대해 동일한 파일 이름을 가질 수 있음</li>
+  <li>Effecient searching</li>
+  <li>Grouping capability 가 없어욤</li>
+</ul>
+
+<h2 id="--tree-structured-directory">- Tree-Structured Directory</h2>
+
+<ul>
+  <li>Directory 들은 subdirectory 들을 가져욤</li>
+  <li>Effecient searching</li>
+  <li>Grouping capability</li>
+  <li>Path name
+    <ul>
+      <li>Absolute Path name : root 에서 시작하는</li>
+      <li>Relative Path name : 현재 directory 에서 시작하는</li>
+    </ul>
+  </li>
+  <li>operation
+    <ul>
+      <li>creat : cur dir 에 file or dir 생성 → <code class="language-plaintext highlighter-rouge">mkdir &lt;dir-name&gt;</code></li>
+      <li>delete file → <code class="language-plaintext highlighter-rouge">rm &lt;file-name&gt;</code></li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 6" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/b7bb6963-df7a-417e-a57e-d351ffafc955" />
+</center>
+
+<h2 id="--acyclic-graph-directory">- Acyclic-Graph Directory</h2>
+
+<ul>
+  <li>Subdirectory 나 file 공유! but cycle 은 없다</li>
+  <li>공유된 directory 나 file 은 file system 에서 둘 이상의 위치에 동시에 존재할 수 있음 → 같은 dir/file 이 다른 dir 에 있을 수 있다 !</li>
+  <li>하나의 copy 본 만 존재하기에 한 user 가 수정하면 그 file 을 공유하는 모든 user 들에게도 적용됨</li>
+  <li>Dir/File 공유는 새로운 directory entity 인 <strong><em>link</em></strong> 로 구현
+    <ul>
+      <li>Link : 같은 file/dir 을 다른 위치에서 참조할 수 있도록 하는 기능, another name (pointer) to an existing file</li>
+      <li>Resolve the link <strong>:</strong> follow pointer to locate the file → pointer 따라 가면서 File 위치 찾는거
+        <ul>
+          <li>OS는 system 의 acyclic 구조를 유지하기 위해 traversing 할 때 link 를 무시함 (link 따라가면 cycle 생길 수 있으니까)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>문제점
+    <ul>
+      <li>Aliasing : 동일한 file 이 여러개의 absolute parh name 을 가질 수 있음 → 공유되는 파일일 경우 경로가 여러개</li>
+      <li>공유 파일 삭제 시 →  Dangling pointer 문제 !
+        <ul>
+          <li>해결 방법
+            <ol>
+              <li>Dangling 상태로 link 유지 : access 시도하면 file 이 존재하지 않음을 인식하기에 resolve link 에 실패</li>
+              <li>File-reference list : 각 파일에 대한 참조 목록을 관리해서 file 에 대한 모든 참조가 사라진 후에 file 삭제 → variable size 라 overhead 발생 가능</li>
+              <li>Link counter : file 에 대한 참조 수를 카운터! 카운터가 0 이 되면 file 삭제</li>
+            </ol>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 7" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/566cc6ee-d9eb-4f9d-b667-522448a092b9" />
+</center>
+
+<h2 id="--general-graph-directory">- General Graph Directory</h2>
+
+<ul>
+  <li>cycle 이 허용되는 graph</li>
+  <li>Tree 에 link가 추가되면 graph 가 되면서 cycle 이 생길 수 있음 cycle 이 생긴다면 tree 를 traverse 할 때 동일한 것을 두번 이상 확인 할 수 있기에 비효율적일 수 있음</li>
+  <li>그렇기에 우리는 정확성과 성능을 위해 두번 traverse 되는 것을 피할거임 !!</li>
+  <li>Garbage Collection 을 이용하여 cycle 관리
+    <ul>
+      <li>Garbage Collection : 할당한 부분 중 사용하지 않는 부분 해제하는</li>
+      <li>모든 reachable file 을 mark 하고, mark 되지 않은 file 들은 free space list 에 수집</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 8" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/b1fe3d12-f821-41ee-9789-3de671ec2bcb" />
+</center>
+
+<h1 id="file-system-mounting">File-System Mounting</h1>
+
+<h2 id="--file-system-mount">- File-system mount</h2>
+
+<ul>
+  <li>File system 에 access 하려면 먼저 mount 를 해야함</li>
+  <li>mount 는 여러 file system 을 하나의 namespace 에 결합</li>
+  <li>unmounted file 은 mount point 에 mount 할 수 있음</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 9" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/7245e3e2-082b-482f-8ab4-21d5215b6cf3" />
+</center>
+
+<h1 id="protection">Protection</h1>
+
+<h2 id="--protection">- Protection</h2>
+
+<ul>
+  <li>File owner/creator 은 file 에 대해 누구에 의해, 어떤 일을 할 수 있는지를 제어</li>
+  <li>Accese Type
+    <ol>
+      <li>Read</li>
+      <li>Write</li>
+      <li>Execute</li>
+      <li>Append</li>
+      <li>Delete</li>
+      <li>List</li>
+    </ol>
+  </li>
+  <li>각 file/dir 을 Access-Control List 에 연결해 user name 과 access type 를 식별화함 → User ID 사용</li>
+</ul>
+
+<!-- ## - Access Lists and Groups
+
+- Read / Write / Execute 에 대한 access mode
+- 
+
+<center>
+<img width="500" alt="Untitled 10" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/4efe033b-5bcc-4e9e-b4fc-a68ad0267675">
+</center>
+
+<center>
+<img width="500" alt="Untitled 11" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/66983947-9d05-43a3-a9f0-24e24b494be8">
+</center> -->
 
         
       </section>
@@ -632,9 +893,9 @@
     <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
     <span itemprop="keywords">
     
-      <a href="/tags/#blog" class="page__taxonomy-item" rel="tag">Blog</a><span class="sep">, </span>
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
     
-      <a href="/tags/#github" class="page__taxonomy-item" rel="tag">Github</a>
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
     
     </span>
   </p>
@@ -651,14 +912,14 @@
     <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
     <span itemprop="keywords">
     
-      <a href="/categories/#github-blog" class="page__taxonomy-item" rel="tag">Github Blog</a>
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
     
     </span>
   </p>
 
 
         
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-07-10">July 10, 2023</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-05-31">May 31, 2023</time></p>
 
 
       </footer>
@@ -668,11 +929,12 @@
       
   <nav class="pagination">
     
-      <a href="/categories/study/2023_OS/ch13" class="pagination--pager" title="[OS] Ch13. File System Interface
+      <a href="/categories/study/2023_OS/ch10" class="pagination--pager" title="[OS] Ch10. Virtual Memory
 ">Prev</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/categories/develop/Github_Blog/comment" class="pagination--pager" title="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+">Next</a>
     
   </nav>
 
@@ -697,7 +959,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/categories/study/2023_OS/ch13" rel="permalink">[OS] Ch13. File System Interface
+        <a href="/categories/develop/Github_Blog/comment" rel="permalink">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
 </a>
       
     </h2>
@@ -708,7 +970,7 @@
       
       <span class="page__meta-date">
         <i class="far fa-calendar-alt" aria-hidden="true"></i>
-        <time datetime="2023-05-31T00:00:00+09:00">May 31, 2023</time>
+        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
       </span>
     
 
@@ -903,8 +1165,8 @@
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/categories/develop/Github_Blog/comment";  /* Replace PAGE_URL with your page's canonical URL variable */
-      this.page.identifier = "/categories/develop/Github_Blog/comment"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+      this.page.url = "http://localhost:4000/categories/study/2023_OS/ch13";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/categories/study/2023_OS/ch13"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
     };
     (function() { /* DON'T EDIT BELOW THIS LINE */
       var d = document, s = d.createElement('script');
