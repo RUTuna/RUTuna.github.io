@@ -1,0 +1,1304 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <style> 
+      ::-webkit-scrollbar{ 
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        width: 0px;
+        background-color: rgba(224, 224, 224, 0.2);
+        /* border-radius: 5px; */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        width: 0px;
+        background-color: rgba(220, 219, 218, 0.6);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        width: 10px;
+        height: 20px;
+        /* background-color: rgba(190, 190, 190, 0.2); */
+        background-color: rgba(193, 192, 191, 0.7);
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        width: 10px;
+        /* background-color: rgba(150, 150, 150, 0.1); */
+        background-color: rgba(224, 224, 224, 0.5);
+        border-radius: 5px;
+        /* background: transparent; */
+        /* border-radius: 10px; */
+      }
+
+      ::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+          width:0px;
+          height: 0px;
+          /* background-color: rgb(14, 221, 24); */
+          /* border-radius: 50%; */
+      }
+    </style>
+    
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[OS] Ch14. File System Implementation | zi_orv</title>
+<meta name="description" content="참치는 할 수 있다">
+
+
+  <meta name="author" content="zi_orv">
+  
+  <meta property="article:author" content="zi_orv">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="참치는 할 수 있다">
+<meta property="og:title" content="[OS] Ch14. File System Implementation">
+<meta property="og:url" content="http://localhost:4000/categories/study/2023_OS/ch14">
+
+
+  <meta property="og:description" content="참치는 할 수 있다">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2023-06-07T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2023-06-07T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/categories/study/2023_OS/ch14">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "zi_orv",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="-8bYhrDyOZjr61EL8z8964D200AyyTFpWGyPjxkesfo" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="a057c3436387347eab603829463c277f1b4445e6">
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="참치는 할 수 있다 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="https://rutuna.github.io/assets/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://rutuna.github.io/assets/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://rutuna.github.io/assets/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://rutuna.github.io/assets/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://rutuna.github.io/assets/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://rutuna.github.io/assets/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://rutuna.github.io/assets/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://rutuna.github.io/assets/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://rutuna.github.io/assets/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="https://rutuna.github.io/assets/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://rutuna.github.io/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://rutuna.github.io/assets/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://rutuna.github.io/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="https://rutuna.github.io/assets/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://rutuna.github.io/assets/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          참치는 할 수 있다
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="https://RUTuna.github.io/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/RUTuna">GitHub</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/profile.png" alt="zi_orv" itemprop="image">
+      
+    </div>
+  
+
+  <!-- 2022.02.17 author content hidden -->
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">zi_orv</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <!-- <button class="btn btn--inverse">Follow</button> -->
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="mailto:p000207@naver.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+            <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i><span class="label">Instagram</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    <!-- <li>
+      <span class="nav__total">🌴 Total Posts: 13</span>
+    </li> -->
+    
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Study in class</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+                <li><a href="/categories/study/2023_OS/">[2023]Operating System (11)</a></li>
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Project</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Develop</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+            <!-- sub-title -->
+            
+              
+                <li><a href="/categories/develop/Github_Blog/">Github Blog (2)</a></li>
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <!-- title -->
+              <span class="nav__sub-title">Other</span>
+              <hr>
+        
+
+        
+        <ul>
+          
+            <!-- sub-title -->
+            
+              
+            
+              
+            
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[OS] Ch14. File System Implementation">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2023-06-07T00:00:00+09:00">
+    <meta itemprop="dateModified" content="2023-06-07T00:00:00+09:00">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[OS] Ch14. File System Implementation
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-06-07T00:00:00+09:00">June 7, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#file-system-structure">File-System Structure</a><ul><li><a href="#--file-system-sturecture">- File-System Sturecture</a></li><li><a href="#--file-system-layer">- File System Layer</a></li><li><a href="#in-memory-file-system-structure">In-Memory File system Structure</a></li></ul></li><li><a href="#file-system-implementation">File-System Implementation</a><ul><li><a href="#--directory-implemstation">- Directory Implemstation</a></li></ul></li><li><a href="#allocation-methods">Allocation Methods</a><ul><li><a href="#--allocation-methos">- Allocation Methos</a></li><li><a href="#--contiguous-allocation">- Contiguous Allocation</a></li><li><a href="#--extent-based-systme">- Extent-Based Systme</a></li><li><a href="#--linked-allocation">- Linked Allocation</a></li><li><a href="#--file-allocation-table">- File-Allocation Table</a></li><li><a href="#--indexed-allocation">- Indexed Allocation</a></li><li><a href="#--performance">- Performance</a></li></ul></li><li><a href="#free-space-management">Free-Space Management</a><ul><li><a href="#--bit-vecotr">- Bit vecotr</a></li><li><a href="#--linked-list">- Linked List</a></li><li><a href="#--grouping">- Grouping</a></li><li><a href="#--counting">- Counting</a></li></ul></li><li><a href="#efficiency-and-performance">Efficiency and Performance</a><ul><li><a href="#--efficiency">- Efficiency</a></li><li><a href="#--performance-1">- Performance</a></li><li><a href="#--page-cache">- Page Cache</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <blockquote>
+  <p>노션으로 작성된 글을 백업 용으로 옮긴 것입니다. 개인적으로 공부하며 작성된 글이기에 틀린 정보가 있을 수 있습니다</p>
+</blockquote>
+
+<h1 id="file-system-structure">File-System Structure</h1>
+
+<h2 id="--file-system-sturecture">- File-System Sturecture</h2>
+
+<ul>
+  <li>File sturecture 은 logical storage unit 으로 관련된 정보들의 collection 임</li>
+  <li>File System 은 Secondary Storage (Disk) 상주하고 있음
+    <ul>
+      <li>storage 에 대한 user interface 와 logical 에서 physical 로의 mapping 을 제공함</li>
+      <li>Data 를 쉽게 저장하고 탐색, 검색 할 수 있게 해줌 → disk에 효과적이고 편리하게 접근 가능하도록 !</li>
+    </ul>
+  </li>
+  <li>File system Design은 이런 것들을 결정합니다
+    <ul>
+      <li>User 에게 어떻게 file system 을 보이게 할 것인지? file이나 file의 속성, 연산자 등을 어떻게 정의할 것인지 !</li>
+      <li>Local File System 에서 Physical Storage Device 로 어떻게 mapping 할 것인지</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>File Control Block (FCB)</strong> : File 과 관련된 정보들(meta data)을 가지고 있는 Storage Structure → PCB 같은 ??</p>
+
+    <center>
+  <img src="https://cdn.jsdelivr.net/gh/RUTuna/RUTuna.github.io/assets/images/posts_img/study/OS/ch14.png" width="300" />
+  </center>
+
+    <ul>
+      <li>Local File system 에 의해 maintatin</li>
+      <li>UNIX file system 의 i-Node 같은 존재</li>
+    </ul>
+  </li>
+  <li><strong>Device Driver</strong> : physical device 를 control</li>
+  <li>File system 은 layer 구조로 구성되어 있어요 !!</li>
+</ul>
+
+<h2 id="--file-system-layer">- File System Layer</h2>
+
+<ul>
+  <li><strong>Logical File System</strong>
+    <ul>
+      <li>Metadata Informageion 을 관리</li>
+      <li>File name 을 FCB 가 관리 중인 file number, file dandle, location 등의 정보로 번역함</li>
+      <li>Directory 관리</li>
+      <li>Protection</li>
+    </ul>
+  </li>
+  <li><strong>File Organication Module</strong>
+    <ul>
+      <li>File 과 logical address, physical block 을 이해
+        <ul>
+          <li>logical block number 에서 physical block number 으로 번역</li>
+          <li>Free space 과 Disk allocation 을 관리</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Basic File System</strong>
+    <ul>
+      <li><em>“retrieve block 123”</em> 과 같은 명령어를  번역해서 Device driver 에게 전달</li>
+      <li>Buffer 는 번역되는 data 를 유지하고, caches 는 자주 사용되는 data 를 유지</li>
+    </ul>
+  </li>
+  <li><strong>I/O control</strong>
+    <ul>
+      <li>Device Driver 가 I/O control layer 에서 I/O Device 들을 관리</li>
+      <li>주어진 <em>“read drive1, cylinder 72, track 2, sector 10, into memory location 1060”</em> 과 같은 명령어를 HW controller 가 이해할 수 있는 톡화된 Low-level 로 변경</li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 1" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/ffc745d0-4fc2-4fec-8b34-94ae443c35a1" />
+</center>
+
+<ul>
+  <li>Layering 구조의 장점
+    <ul>
+      <li>Complecity (복잡도) 와 Redundancy (중복도) 감소</li>
+    </ul>
+  </li>
+  <li>Layering 구조의 단점
+    <ul>
+      <li>Overhead 증가</li>
+      <li>performance 감소</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="in-memory-file-system-structure">In-Memory File system Structure</h2>
+
+<ul>
+  <li>Mount time 에 load되고, mount 해제시에 제거 됨</li>
+  <li>File system 관리와 caching 을 통한 성능 향상을 위해 사용</li>
+  <li>Mount Table : 각각의 mount 된 volumn 에 대한 정보를 가짐</li>
+  <li>Directory-Sturcture Cache : 최근에 접근한 dir 정보</li>
+  <li>System-wide Open-file Table : open file 에 대한 FCB 의 copy 본들을 가짐</li>
+  <li>Per-process Open-file Table : system-wide open-file table 에 있는 entry 들을 가르키는 pointer 들을 가짐</li>
+  <li>Buffer : disk 에서 읽고 쓸 때 file-system block 을 가지고 있음</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 2" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/57ef9e60-78bf-42ee-8e92-7e00975b3569" />
+<p>File Open</p>
+</center>
+
+<center>
+<img width="500" alt="Untitled 3" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/6cfe4291-b106-434e-b403-c76e2fba65d0" />
+<p>File Read</p>
+</center>
+
+<h1 id="file-system-implementation">File-System Implementation</h1>
+
+<h2 id="--directory-implemstation">- Directory Implemstation</h2>
+
+<ul>
+  <li>Directory 는 file의 pointer 를 가지고 있음</li>
+  <li>2가지 구현방식이 있어요
+    <ol>
+      <li>Linear List</li>
+      <li>Hash Table</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="linear-list">[Linear List]</h3>
+
+<ul>
+  <li>File name 의 list 로 Data Block 에 대한 pointer 를 가지고 있음</li>
+  <li>굉장히 간단한 program</li>
+  <li>실행하는데 시간이 많이 들어요..</li>
+  <li>File 이 필요하면 Linear Seacrch 로 file 을 찾아야해욤</li>
+</ul>
+
+<h3 id="hash-table">[Hash Table]</h3>
+
+<ul>
+  <li>Hash Data 구조를 가진 liear list</li>
+  <li>File name 이 주어지면 이를 hashinㅎ 해서 list 에 저장된 해당 file name을 가진 entry 의 pointer 반환</li>
+  <li>Search 하는게 걸리는 시간이 줄어듬</li>
+  <li>하지만 collision 발생 가능성 !
+    <ul>
+      <li>두개의 다른 file name 이 동일한 위치로 hash 되는 경우..</li>
+      <li>보통 hash table 은 고정 크기를 가지므로 더 많은 entry, 를 가지도록 수정해서 해결할 수 있기는 한데 hash func 을 다시 수정해야하기도 하고..</li>
+      <li>Chained-overflow hash table : 각 hash entry 를 linked list 로 해서 overflow 문제 해결 ! 공간을 쉽게 늘릴 수 있죠</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="allocation-methods">Allocation Methods</h1>
+
+<h2 id="--allocation-methos">- Allocation Methos</h2>
+
+<ul>
+  <li>각 File 들에게 disk block 을 어떻게 할당해줄 것인지
+    <ol>
+      <li>Contiguous Allocation</li>
+      <li>Linked Allocation</li>
+      <li>Indexed Allocation</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="--contiguous-allocation">- Contiguous Allocation</h2>
+
+<ul>
+  <li>각 file 은 Disk 에서 연속된 block 을 차지</li>
+  <li>필요한 정보 : Starting Location (block #) 과 length (# of blocks) 만 있으면 됨 ! → 연속되게 할당되니까 시작점이랑 얼마나 가야하는지만 알면 ㅇㅇ</li>
+  <li>적합한 Access Type : Sequential, Random access 둘다 지원 가능</li>
+  <li>Free-space management
+    <ul>
+      <li>File 을 저장하기 위한 space 를 찾을 때 얼마나 필요한지 예측하는데 어려움이 있음 ! 얼마나 필요할지를 모르니까 미리 많이 할당해버리면 External Fragment 발생가능 ㅜㅜ</li>
+      <li>Compaction off-line (file system 을 중지한 상태에서 수행) 또는 on-line (file systme 이 계속 동작되는 상태에서 수행) 필요하게 됨,,</li>
+      <li>공간 낭비,, ㅜㅜ → dynamic storage-allocation problem이 필요하게 됨,, (dynamic storage-allocation problem)</li>
+    </ul>
+  </li>
+  <li>File Grow 불가능 ! 연속되게 할당해놨는데 커지면 다시 그 길이에 맞는 공간 찾아야하니까</li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 4" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/af5475a7-d804-40e1-a841-1b9bf59d5ff4" />
+</center>
+
+<h2 id="--extent-based-systme">- Extent-Based Systme</h2>
+
+<ul>
+  <li>Contiguous Allocation 을 수정한 방식</li>
+  <li>Extent-Based System 에선 Extent 라고 하는 가변 크기의 구조에 disk block 을 할당</li>
+  <li>Extent 는 disk 의 contigous block 임</li>
+  <li>Extent 는 file allocation 을 위해 할당되고, 각 file 은 하나, 또는 하나 이상의 extent 로 수정됨</li>
+</ul>
+
+<h2 id="--linked-allocation">- Linked Allocation</h2>
+
+<ul>
+  <li>각 file 은 disk block 의 linked list임 → 그렇기에 연속되지 않고 흩어져 있을 수 있음</li>
+  <li>마지막에는 -1 (nil pointer) 가 들어있어 끝임을 알 수 있음</li>
+  <li>필요한 정보 : starting address 만 있으면 됨 !</li>
+  <li>적합한 Access Type : Sequntial Access 지원 ! (random access 는 지원 안함)</li>
+  <li>Free-space management system
+    <ul>
+      <li>free block 들은 free space list 에 있어 여기있는 것 요청에 따라 사용하면 됨</li>
+      <li>Space 낭비 없어요 ! (external fragment 없음)</li>
+    </ul>
+  </li>
+  <li>File grow 가능 ! → free block 이 허용하는 한 까지</li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 5" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/c32f9644-002c-4ab9-a5fa-63089f1ebb71" />
+</center>
+
+<h2 id="--file-allocation-table">- File-Allocation Table</h2>
+
+<ul>
+  <li>Linked Allocation 를 변형한 것 중 하나</li>
+  <li>MS-DOS, OS/2 에서 사용</li>
+  <li>각 Volumn 의 시작점에 있는 storage section 을 table 로 사용</li>
+  <li>Table 은 각 block 마다 하나의 entry 를 가지고 block number 로 indexing 됨</li>
+  <li>FAT 는 Linked list 랑 비슷한 방식으로 사용
+    <ul>
+      <li>Directory entry 는 file 의 첫번쨰 block # 을 포함하고, 이 # 으로 인덱싱 된 table entry 에는 다음 block # 이 있음</li>
+      <li>사용되지 않은 block 은 0이 들어있음 ! → 즉 0 인 block 찾아서 사용하면 됨</li>
+    </ul>
+  </li>
+  <li>Free-space management system
+    <ul>
+      <li>첫번째 0-valued table entry 찾아서 할당</li>
+    </ul>
+  </li>
+  <li>FAT 가 캐시 되지 않는한 disk overhead 는 없다???</li>
+</ul>
+
+<center>
+<img width="500" alt="Untitled 6" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/346f8d3c-db82-435b-b349-7e49ee5af30f" />
+</center>
+
+<h2 id="--indexed-allocation">- Indexed Allocation</h2>
+
+<ul>
+  <li>Linked allocation 에서 random access 를 지원하지 않는 문제를 해결하고자 모든 pointer 를 한번에 가져온 index block 사용</li>
+  <li>각 파일은 자신의 index block 을 가지고 이는 storage block address 의 배열
+    <ul>
+      <li>Index block 의 i-th 항복은 file 의 i-th block 을 가리킴</li>
+    </ul>
+  </li>
+  <li>External fragmentation 없이 Dynamic access 를 할 수 있게 해주지만 index block 으로 인한 overhead가 존재</li>
+  <li>적합한 Access Type : <strong>**</strong><strong>**</strong>Sequential, Random access 지원 → 효과적으로 Random access 가능해짐 !</li>
+  <li>Index block 은 얼마나 커야할까요?
+    <ul>
+      <li>모든 file 이 index block 을 가져야하니 최대한 작은게 overhead 가 작겠쬬?</li>
+      <li>하지만 너무 작으면 pointer 를 다 저장하지 못함 (file size 을 다 저장하지 못 한다는 한계)</li>
+      <li>그렇다고 너무 크면 작은 파일을의 경우에는 공간을 낭비하는 꼴이 되겠죠</li>
+      <li>이를 해결하기 위한 3가지 매커니즘
+        <ol>
+          <li>linked scheme : 큰 file 에 대해서는 여러개의 index block 여러개를 부여</li>
+          <li>
+            <p>multi-level indexed : 여러 단계로 나누기! 1th level index block 은 2nd level index block set 을 포인터</p>
+
+            <center>
+ <img width="500" alt="Untitled 7" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/93ad29f1-b422-43f9-bccc-62b294f63e19" />
+ </center>
+          </li>
+          <li>combine scheme
+            <ul>
+              <li>큰 파일은 multi-level 사용해서 여러개 나눠서 할당하고</li>
+              <li>작은 파일은 그냥 index block 하나만 !</li>
+              <li>block size = 4KB이고 12 개의 direct block point 가 i-Node 에 있으면, 48KB 를 직접적으로 address 가능</li>
+            </ul>
+
+            <center>
+ <img width="500" alt="Untitled 8" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/dbcb60d6-e803-4823-b79b-15245953e889" />
+ </center>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 9" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/a409b386-e9ef-436a-8a40-b3be689c55ba" />
+</center>
+
+<h2 id="--performance">- Performance</h2>
+
+<ul>
+  <li>File Access Type 에 따라 최상의 method 는 달라짐!
+    <ul>
+      <li>Contiguous 는 sequential, random access 둘 다 좋음</li>
+      <li>Linked Allocation : Sequential 에 좋지만 random 엔 그닥 좋지 않음</li>
+    </ul>
+  </li>
+  <li>생성 시 Access Type 을 선언해서 contiguous / linked 중 적합한 것 선택!</li>
+  <li>Index allocation 은 더 complex 해욤
+    <ul>
+      <li>inddx block 이 이미 memory 에 있다면 직접 접근 가능 → 하지만 메모리에 유지하려면 상당히 큰 공간 필요 ㅜㅜ</li>
+      <li>메모리 공간 사용 못 한다면 먼저 index block 을 읽고, 그 다음에 원하는 data block 을 읽어야하는 2개의 read 가 필요함 !</li>
+    </ul>
+  </li>
+  <li>하나의 Disk I/O 를 아끼기 위해 Instruction 을 execution path 에 추가하는 것도 합리적인인 방법
+    <ul>
+      <li>Intel Core i7 Extreme Edition 990x (2011) at 3.46Ghz = 159,000 MIPS</li>
+      <li>Typical disk drive at 250 I/Os per second → 59,000 MIPS / 250 = 630 million instructions during one disk I/O</li>
+      <li>Fast SSD drives provide 60,000 IOPS →  159,000 MIPS / 60,000 = 2.65 millions instructions during one disk I/O</li>
+    </ul>
+
+    <p>+) IPS : Instruction Per Seconds, IOPS : I/Os Per Seconds</p>
+  </li>
+</ul>
+
+<h1 id="free-space-management">Free-Space Management</h1>
+
+<h2 id="--bit-vecotr">- Bit vecotr</h2>
+
+<ul>
+  <li>n block 을 가진 Bitmap or Bit vector 사용</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>bit[i] == 1 이면 block[i] 는 free</td>
+          <td>bit[i] == 0 이면 block[i] 난 사용 중</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>1st free block 을 찾기 위해 순차적으로 각 word를 확인해서 non-0 word 인지 아닌지 ! → 0-valued work 면 이미 할당된 block 의 set,,</li>
+  <li>Firest free block number 계산
+    <ul>
+      <li>(# or bits per word) * (# of 0-valued word) + (offset of first 1 bit)</li>
+      <li>(# or bits per word) * (# of 0-valued word) 는 0-valued 인 애들 넘기는,,</li>
+    </ul>
+  </li>
+  <li>많은 system 이 word 에서 1st 1-valued bit 의 offset을 반환하는 명령어를 가지고 있음</li>
+  <li>Bitmap 은 추가 공간을 필요로함,,
+    <ul>
+      <li>
+        <p>ex)</p>
+
+        <p>block size = $2^{12}$ bytes (4KB), disk size = $2^{40}$ bytes (1TB) 면 → n = $2^{40}$ / $2^{12}$ = $2^{38}$ bits (32MB)</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 10" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/d334e388-66de-46d4-9c85-7256f7f0c90b" />
+</center>
+
+<h2 id="--linked-list">- Linked List</h2>
+
+<ul>
+  <li>performance 상관 없다면 요거 사용 → 즉 성능 (속도) 딸린다는 ㅋㅋ link 타고 타고 하는 시간이 있으니까 CPI 를 버리고 mem 을 아낀당</li>
+  <li>free space list 를 만들어서 free space 들을 서로 link 해서 연결</li>
+  <li>첫번째 fress block 을 가르키는 pointer 만 있어면 됨 !!</li>
+  <li>공간 낭비도 없어욤</li>
+</ul>
+
+<center>
+<img width="300" alt="Untitled 11" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/90cae7dc-7579-4f1a-98e0-b4e424c07852" />
+</center>
+
+<h2 id="--grouping">- Grouping</h2>
+
+<ul>
+  <li>first free block 에
+    <ol>
+      <li>n-1 개의 free block 의 address랑</li>
+      <li>다른 free block 의 address 를 가르키는 pointer 저장</li>
+    </ol>
+  </li>
+  <li>많은 free block 의 address 들을 빠르게 찾을 수 있음</li>
+</ul>
+
+<h2 id="--counting">- Counting</h2>
+
+<ul>
+  <li>일반적으로 여러개의 contiguous block 들은 동시에 allocation / free 될 수 있음</li>
+  <li>first free block 의 address 랑 free contiguous block 의 수를 저장 ! → 실제 공간은 연속적으로 사용된다는 가정
+    <ul>
+      <li>각 free space list 의 각 entry 는 이 address 와 count 로 구성</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="efficiency-and-performance">Efficiency and Performance</h1>
+
+<h2 id="--efficiency">- Efficiency</h2>
+
+<ul>
+  <li>Efficiency 는 다음 4가지에 따라 결정
+    <ul>
+      <li>Disk Allocation algorithms, Directory algorithms</li>
+      <li>File의 directory entry 에서 가지고 있는 data type</li>
+      <li>Metadata structure 가 pre-allocation 인지 as-needed allocation 인지</li>
+      <li>Data strucrue 가 고정 size 인지 가변 size 인지</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="--performance-1">- Performance</h2>
+
+<ul>
+  <li>Data 와 metadata를 근처에 같이 유지해야 성능이 조아요</li>
+  <li>Buffer cache : 자주 사용되는 block 을 위한 별도의 main memory section</li>
+  <li>Synchronous write 가끔 app 에서 요청하거나, OS 에서 필요할 때 사용
+    <ul>
+      <li>No buffering / caching : 확인 응답 (acknowledegement) 전에 hit disk 에 write 되어야함</li>
+      <li>Asynchronous write 가 더 일반적이긴 함 (buffer-albe, faster 라서)</li>
+    </ul>
+  </li>
+  <li>Free-behind &amp; read-ahead : 순차적 액세스를 최적화하기 위한 방법
+    <ul>
+      <li>Free-behind: 다음 페이지가 요청되면 페이지를 버퍼에서 제거함</li>
+      <li>Read-ahead: 요청된 페이지와 그 이후의 여러 페이지를 읽고 캐시함</li>
+    </ul>
+  </li>
+  <li>읽기는 쓰기보다 자주 느릴 수 있음</li>
+</ul>
+
+<h2 id="--page-cache">- Page Cache</h2>
+
+<ul>
+  <li>Page cache 는  가상 메모리 기법을 사용하여 디스크 블록 대신 페이지로 파일 데이터를 캐시함</li>
+  <li>디스크 블록을 메모리의 페이지에 매핑함으로써 액세스 가능</li>
+  <li>메모리 매핑 I/O는 페이지 캐시를 사용함</li>
+  <li>메모리 매핑 파일 I/O는 파일 I/O를 일반적인 메모리로 처리할 수 있게 함</li>
+  <li>파일 시스템을 통한 일반적인 I/O는 버퍼 (디스크) 캐시를 사용함</li>
+  <li>별도의 메인 메모리 섹션을 유지하여 버퍼 캐시를 관리함</li>
+</ul>
+
+<center>
+<img width="600" alt="Untitled 12" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/2d10ccab-d319-4946-b19f-c6331775993d" />
+<p>I/O Without a Unified Buffer Cache</p>
+
+</center>
+<center>
+<img width="300" alt="Untitled 13" src="https://github.com/RUTuna/RUTuna.github.io/assets/87251867/7b9ae717-673f-4b42-a04f-ab7928e3c629" />
+<p>I/O using a unified buffer cache</p>
+</center>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#os" class="page__taxonomy-item" rel="tag">OS</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B0%95%EC%9D%98%ED%95%84%EA%B8%B0" class="page__taxonomy-item" rel="tag">강의필기</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#2023-operating-system" class="page__taxonomy-item" rel="tag">[2023]Operating System</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-06-07">June 7, 2023</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/categories/study/2023_OS/ch13" class="pagination--pager" title="[OS] Ch13. File System Interface
+">Prev</a>
+    
+    
+      <a href="/categories/develop/Github_Blog/comment" class="pagination--pager" title="[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/develop/Github_Blog/comment" rel="permalink">[Github blog] DISQUS로 minimal mistakes 에 commnet 기능 추가하기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-07-10T00:00:00+09:00">July 10, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch13" rel="permalink">[OS] Ch13. File System Interface
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-31T00:00:00+09:00">May 31, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch10" rel="permalink">[OS] Ch10. Virtual Memory
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-24T00:00:00+09:00">May 24, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/categories/study/2023_OS/ch9" rel="permalink">[OS] Ch9. Main Memory
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2023-05-08T00:00:00+09:00">May 8, 2023</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://github.com/RUTuna" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://www.instagram.com/zi_orv" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-instagram" aria-hidden="true"></i> Instagram</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 zi_orv. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/categories/study/2023_OS/ch14";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/categories/study/2023_OS/ch14"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://rutuna.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
